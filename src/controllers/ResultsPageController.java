@@ -39,6 +39,8 @@ public class ResultsPageController extends HttpServlet {
 			
 			String term = request.getParameter("term");
 			String limit = request.getParameter("limit");
+			String radius = request.getParameter("radius"); //Maybe need to add a check to see if empty
+		
 			if(term == null || limit == null || term.isEmpty() || limit.isEmpty()) {
 				RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
 				requestDispatcher.forward(request, response);	
@@ -47,10 +49,10 @@ public class ResultsPageController extends HttpServlet {
 				ResponseModel rm = new ResponseModel();
 				CollageGenerationModel collagemodel = new CollageGenerationModel();
 				GoogleImageRequestModel googleimagemodel = new GoogleImageRequestModel(collagemodel);
-				System.out.println("not encioded yet "+ term);
+	
 				googleimagemodel.APIImageSearch(term);
 				
-				if(!rm.checkParameters(term, limitInteger) || !rm.getSearchResults()) {
+				if(!rm.checkParameters(term, limitInteger, Integer.parseInt(radius)) || !rm.getSearchResults()) {
 					RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
 					requestDispatcher.forward(request, response);
 				}else {

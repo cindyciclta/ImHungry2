@@ -6,6 +6,7 @@ import java.util.Map;
 
 public class ResponseModel {
 	private int limit;
+	private int radius;
 	
 	private String term;
 	private ApiCallInterface<RestaurantModel> restaurants  = new YelpRequestModel();
@@ -64,6 +65,26 @@ public class ResponseModel {
 		this.limit = limit;
 		return true;
 	}
+	public boolean checkParameters(String term, int limit, int radius) {
+		if(limit < 0) {
+			return false;
+		}
+		if(radius < 0) {
+			return false;
+		}
+		
+		if(term == null) {
+			return false;
+		}
+		term = term.trim();
+		if(term.isEmpty()) {
+			return false;
+		}
+		this.term = term;
+		this.limit = limit;
+		this.radius = radius;
+		return true;
+	}
 	
 	public boolean getSearchResults() {
 		boolean response = true;
@@ -75,7 +96,7 @@ public class ResponseModel {
 		
 		// TODO: add the yelp API here
 		YelpRequestModel yelp = new YelpRequestModel();
-		response = yelp.checkParameters(term, limit);
+		response = yelp.checkParameters(term, limit,radius);
 		responseCode = yelp.completeTask();
 		this.restaurants = yelp;
 		

@@ -16,26 +16,26 @@ private static MockYelpRequestModel cached;
 	@BeforeClass
 	public static void setUp() {
 		cached = new MockYelpRequestModel();
-		assertTrue(cached.yelp.checkParameters("coffee", 5));
-		assertEquals(ResponseCodeModel.OK, cached.completeTask("coffee",5));
+		assertTrue(cached.yelp.checkParameters("coffee", 5, 1000));
+		assertEquals(ResponseCodeModel.OK, cached.completeTask("coffee",5, 1000)); //added radius: 1000
 	}
 	
 	@Test
 	public void testInvalidLimit() {
 		//YelpRequestModel e = new YelpRequestModel();
-		assertFalse(cached.yelp.checkParameters("coffee", -5));
+		assertFalse(cached.yelp.checkParameters("coffee", -5, 1000));
 	}
 	
 	@Test
 	public void testNullTerm() {
 		//YelpRequestModel e = new YelpRequestModel();
-		assertFalse(cached.yelp.checkParameters(null, 5));
+		assertFalse(cached.yelp.checkParameters(null, 5, 1000));
 	}
 	
 	@Test
 	public void testEmptyTerm() {
 		//YelpRequestModel e = new YelpRequestModel();
-		assertFalse(cached.yelp.checkParameters(" ", 5));
+		assertFalse(cached.yelp.checkParameters(" ", 5, 1000));
 	}
 	
 	@Test
@@ -106,13 +106,13 @@ private static MockYelpRequestModel cached;
 	}
 	@Test
 	public void testExistingResults() {
-		assertEquals(ResponseCodeModel.OK, cached.completeTask("coffee", 5));
+		assertEquals(ResponseCodeModel.OK, cached.completeTask("coffee", 5, 1000));
 		assertNotNull(cached.yelp.getResults());
 	}	
 	@Test
 	public void testBadRequest() {
 		cached.yelp.responseCode = 300;
-		assertEquals(ResponseCodeModel.OK, cached.completeTask("coffee", 5));
+		assertEquals(ResponseCodeModel.OK, cached.completeTask("coffee", 5, 1000));
 		assertNotNull(cached.yelp.getResults());
 	}
 	

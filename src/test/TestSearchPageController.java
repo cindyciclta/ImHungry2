@@ -1,9 +1,15 @@
 package test;
 
 import controllers.SearchPageController;
+import models.DatabaseModel;
+
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import java.io.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.*;
@@ -11,6 +17,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -25,9 +32,30 @@ public class TestSearchPageController extends Mockito{
 
     @Mock
     RequestDispatcher rd;
+    
+    public static int id = -1;
+    public static final String username = "search";
+    public static final String password = "search";
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		if(!DatabaseModel.userExists(username)) {
+			DatabaseModel.insertUser(username, password.toCharArray());
+			id = DatabaseModel.signInUser(username, password.toCharArray());
+		}
+	}
+	
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+		// Delete added user
+		Class.forName("com.mysql.jdbc.Driver");
+		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/ImHungry?user=root&password=root&useSSL=false");
+		
+		// the mysql insert statement to have date of upload
+		String query = "DELETE from users where user_name = (?)";
+		PreparedStatement preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+	    preparedStmt.setString (1, username);
+	    preparedStmt.executeUpdate();
 	}
 	
 	@Before

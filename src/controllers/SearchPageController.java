@@ -29,17 +29,13 @@ public class SearchPageController extends HttpServlet {
 			
 			// Search action
 			if(action == null || action.isEmpty() || action.equals("redirect")) {
-			  // Results action
-			  String term = request.getParameter("term");
-			  String limit = request.getParameter("limit");
-			  String radius = request.getParameter("radius")
-			if(term == null || limit == null || term.isEmpty() || limit.isEmpty()) {
-				RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
-				requestDispatcher.forward(request, response);
+			  RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
+			  requestDispatcher.forward(request, response);
 			} else if(action.equals("search")) {
 				// Results action
 				String term = request.getParameter("term");
 				String limit = request.getParameter("limit");
+				String radius = request.getParameter("radius");
 				if(term == null || limit == null || term.isEmpty() || limit.isEmpty()) {
 					RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
 					requestDispatcher.forward(request, response);	
@@ -51,7 +47,11 @@ public class SearchPageController extends HttpServlet {
 					RequestDispatcher requestDispatcher = request.getRequestDispatcher("ResultsPageController?action=results&term=" +term+ "&limit=" + limit);
 					requestDispatcher.forward(request, response);
 				}
-      }
+			}else {
+				RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
+				  requestDispatcher.forward(request, response);
+			}
+		}
 	}
 
 }

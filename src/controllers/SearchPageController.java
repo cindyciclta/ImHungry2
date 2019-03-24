@@ -20,6 +20,11 @@ public class SearchPageController extends HttpServlet {
 
 		// Check id is correct
 		String token = request.getParameter("token");
+		
+		if(token == null) {
+			token = (String)request.getAttribute("token");
+		}
+		
 		Integer id = RedirectionController.tokens.get(token);
 		if(id == null) {
 			RequestDispatcher requestDispatcher = request.getRequestDispatcher("SignInView.jsp");
@@ -30,6 +35,7 @@ public class SearchPageController extends HttpServlet {
 			// Search action
 			if(action == null || action.isEmpty() || action.equals("redirect")) {
 			  RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
+			  request.setAttribute("token", token);
 			  requestDispatcher.forward(request, response);
 			} else if(action.equals("search")) {
 				// Results action
@@ -38,18 +44,20 @@ public class SearchPageController extends HttpServlet {
 				String radius = request.getParameter("radius");
 				if(term == null || limit == null || term.isEmpty() || limit.isEmpty()) {
 					RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
+					request.setAttribute("token", token);
 					requestDispatcher.forward(request, response);	
 				}else {
 					String decodedValue = URLDecoder.decode(term, "UTF-8");
 					term.trim();
 					System.out.println(term);
 					System.out.println(decodedValue);
-					RequestDispatcher requestDispatcher = request.getRequestDispatcher("ResultsPageController?action=results&term=" +term+ "&limit=" + limit);
+					RequestDispatcher requestDispatcher = request.getRequestDispatcher("ResultsPageController?action=results&term=" +term+ "&limit=" + limit + "&radius=" + radius);
 					requestDispatcher.forward(request, response);
 				}
 			}else {
-				RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
-				  requestDispatcher.forward(request, response);
+				 RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
+				 request.setAttribute("token", token);
+				 requestDispatcher.forward(request, response);
 			}
 		}
 	}

@@ -1,1 +1,11 @@
 /target/
+
+# ignore binary compiled files from running
+bin
+
+# ignore mac files
+.DS_Store
+
+.classpath
+.project
+.settings

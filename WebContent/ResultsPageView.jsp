@@ -44,22 +44,24 @@
         .nested-tr {
             background-color: inherit;
         }
-
-
+		
+		body, html {
+			height: 100%;
+			font-family: "Comic Sans MS", cursive, sans-serif;
+		}
+		
         /*.navbar.fixed-right {
             position: fixed;
             top: 0;
             right: 0;
             z-index: 0;
         }*/
-
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<meta charset="ISO-8859-1">
 	<title>Results Page</title>
 </head>
-<body>
-
+<body class="p-3 mb-2 bg-dark text-white">
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
@@ -173,7 +175,6 @@
 		}
 	
 	</script>
-	
 	<div id="outer-wrapper" class="container" style="height: 100vh">
         <div class="row my-5">
             <div class="col h-100">
@@ -202,13 +203,13 @@
                     <!-- TODO table here -->
                     <div class="row">
                         <div class="col mx-4">
-                            <table class="table table-striped table-borderless">
+                            <table class="table-dark table-striped table-borderless">
                                 <thead>
                                     <tr>
                                         <h3>Restaurants</h3>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody>	                                
                                 	<%
 									for(int i = 0 ; i < rm.getNumberOfRestaurants() ; i++){
 										Map<String, String> resultsFields = rm.getFormattedRestaurantResultsAt(i);
@@ -222,7 +223,7 @@
                                 
                                     <tr onclick=<%="redirectToRestaurant(\"" + "/ImHungry/RedirectionController?action=restaurant&term="+term +"&index=" + index + "&item=" + i + "\")"%>>
                                         <td class="col">
-                                            <table class="table">
+                                            <table class="table text-white">
                                                 <tbody>
                                                     <tr style="background-color: inherit;">
                                                         <td><%=resultsFields.get("name")%></td>
@@ -245,7 +246,7 @@
                             </table>
                         </div>
                         <div class="col mx-4">
-                            <table class="table table-striped table-borderless">
+                            <table class="table-dark table-striped table-borderless">
                                 <thead>
                                     <tr>
                                         <h3>Recipes</h3>
@@ -266,7 +267,7 @@
                                     <tr onclick=<%="redirectToRecipe(\"" + "/ImHungry/RedirectionController?action=recipe&term="+ecodedValue +"&index=" + index + "&item=" + i + "\")"%>>
                               
                                         <td class="col">
-                                            <table class="table">
+                                            <table class="table text-white">
                                                 <tbody>
                                                     <tr style="background-color: inherit;">
                                                         <td><%=resultsFields.get("name")%></td>
@@ -319,8 +320,6 @@
                 </div>
             </div>
         </div>
-        
     </div>
-
 </body>
 </html>

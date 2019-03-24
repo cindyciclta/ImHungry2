@@ -13,7 +13,4 @@ public class DatabaseModel {
 	public static boolean insertUser(String username, char[] password) {
 		return false; // return false if user not added
 	}
-	
-	
-
 }

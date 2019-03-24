@@ -46,6 +46,10 @@ body{
 
 <body>
 
+<%
+	String token = request.getParameter("token");
+%>
+
 <script>
 	function redirectToResults(){
 		
@@ -55,14 +59,11 @@ body{
 			var query = document.getElementById("termInput").value;
 			var limit = document.getElementById("limitInput").value;
 			var trimmed = query.replace(" ", "_");
+			
 			window.location = '/ImHungry/SearchPageController?action=search&term='+encodeURIComponent(trimmed) + "&limit=" + limit;
 		}, 1000);
-		
-		
-		
 	}
 </script>
-
 
 <div class="container mt-5 h-100">
 	<div class="h-100 row justify-content-center align-items-center">

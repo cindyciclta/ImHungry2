@@ -19,41 +19,38 @@ public class SearchPageController extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		// Check id is correct
-		Object id = request.getAttribute("id");
+		String token = request.getParameter("token");
+		Integer id = RedirectionController.tokens.get(token);
 		if(id == null) {
 			RequestDispatcher requestDispatcher = request.getRequestDispatcher("SignInView.jsp");
 			requestDispatcher.forward(request, response);
 		}else {
-			int idValue = (int)id;
-			if(idValue == -1) {
-				RequestDispatcher requestDispatcher = request.getRequestDispatcher("SignInView.jsp");
-				requestDispatcher.forward(request, response);
-			}
-		}
-		
-		String action = request.getParameter("action");
-		
-		// Search action
-		if(action == null || action.isEmpty() || action.equals("redirect")) {
-			RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
-			requestDispatcher.forward(request, response);
-		} else if(action.equals("search")) {
-			// Results action
-			String term = request.getParameter("term");
-			String limit = request.getParameter("limit");
-			if(term == null || limit == null || term.isEmpty() || limit.isEmpty()) {
+			String action = request.getParameter("action");
+			
+			// Search action
+			if(action == null || action.isEmpty() || action.equals("redirect")) {
 				RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
-				requestDispatcher.forward(request, response);	
+				requestDispatcher.forward(request, response);
+			} else if(action.equals("search")) {
+				// Results action
+				String term = request.getParameter("term");
+				String limit = request.getParameter("limit");
+				if(term == null || limit == null || term.isEmpty() || limit.isEmpty()) {
+					RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
+					requestDispatcher.forward(request, response);	
+				}else {
+					String decodedValue = URLDecoder.decode(term, "UTF-8");
+					term.trim();
+					System.out.println(term);
+					System.out.println(decodedValue);
+					RequestDispatcher requestDispatcher = request.getRequestDispatcher("ResultsPageController?action=results&term=" +term+ "&limit=" + limit);
+					requestDispatcher.forward(request, response);
+				}
 			}else {
-				String decodedValue = URLDecoder.decode(term, "UTF-8");
-				term.trim();
-				System.out.println(term);
-				System.out.println(decodedValue);
-				RequestDispatcher requestDispatcher = request.getRequestDispatcher("ResultsPageController?action=results&term=" +term+ "&limit=" + limit);
+				RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
 				requestDispatcher.forward(request, response);
 			}
 		}
-		
 	}
 
 }

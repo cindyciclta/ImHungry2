@@ -44,6 +44,13 @@ public class SignUpController extends HttpServlet {
 					requestDispatcher.forward(request, response);
 		    	}else {
 		    		id = DatabaseModel.signInUser(username, password.toCharArray());
+		    		String token = "";
+		    		for(int i = 0 ; i < 100 ; i++) {
+		    			token += String.valueOf((int)(Math.random() * 9  + 1));
+		    		}
+		    		RedirectionController.tokens.put(token, id);
+		    		
+		    		
 			    	RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageController");
 					request.setAttribute("id", id);
 			    	requestDispatcher.forward(request, response);

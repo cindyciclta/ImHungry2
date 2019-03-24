@@ -75,6 +75,8 @@
 	int length = (int) request.getAttribute("length");
 	String term = (String) request.getAttribute("term");
 	String token = (String)request.getAttribute("token");
+	String pg = (String) request.getAttribute("page");
+	int pagenumber = Integer.parseInt(pg);
 	%>
 	
 	<script>
@@ -212,7 +214,8 @@
                                 </thead>
                                 <tbody>	                                
                                 	<%
-									for(int i = 0 ; i < rm.getNumberOfRestaurants() ; i++){
+                                	for (int i = 5 * (pagenumber - 1) ; i < 5 * (pagenumber - 1) + 5 ; i++) {
+									//for(int i = 0 ; i < rm.getNumberOfRestaurants() ; i++){
 										Map<String, String> resultsFields = rm.getFormattedRestaurantResultsAt(i);
 										
 										// Skip do not show results

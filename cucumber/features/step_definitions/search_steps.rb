@@ -4,7 +4,7 @@
 Given(/^I searched for "([^"]*)"$/) do |arg1|
   visit "http://localhost:8080/ImHungry/SearchPageController"
   fill_in 'termInput', :with => arg1
-  fill_in 'radiusInput', :with => 2000
+  fill_in 'radiusInput', :with => 3000
   page.find('div#emojiButton.img-container').click
   expect(page).to have_css('h1', text: arg1, wait: 50)
 end
@@ -83,7 +83,7 @@ Given(/^I searched for item "([^"]*)" with "([^"]*)" results and was redirected 
   visit 'http://localhost:8080/ImHungry/SearchPageController'
   fill_in('termInput', with: arg1)
   fill_in('limitInput', with: arg2)
-  fill_in 'radiusInput', :with => 2000
+  fill_in 'radiusInput', :with => 3000
   page.find('div#emojiButton.img-container').click
   expect(page).to have_css('h1', text: arg1, wait: 50)
 end
@@ -304,5 +304,3 @@ end
 Then(/^I am the "([^"]*)" page$/) do |arg1|
   expect(page).to have_css('h1', text: arg1)
 end
-
-

@@ -23,8 +23,10 @@ public class SignInController extends HttpServlet {
 		String username = request.getParameter("username");
 	    String password = request.getParameter("password");
 	    
+	    int id = -1;
+	    
 	    try {
-	    	int id = DatabaseModel.signInUser(username, password.toCharArray());
+	    	id = DatabaseModel.signInUser(username, password.toCharArray());
 	    	
 	    	// Check if valid
 		    if(id != -1) {

@@ -70,6 +70,8 @@ public class DatabaseModel {
 			returnVal = false;
 		}
 		
+		username = username.trim();
+		
 		// the mysql insert statement to have date of upload
 		String sql = "INSERT INTO users (user_name, user_password) VALUES (?, SHA1(?))";
 		PreparedStatement preparedStmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);

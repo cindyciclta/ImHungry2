@@ -105,6 +105,7 @@ public class TestResultsPageController extends Mockito{
         when(request.getParameter("action")).thenReturn( "results" );
         when(request.getParameter("term")).thenReturn( "chicken" );
         when(request.getParameter("limit")).thenReturn( "5" );
+        when(request.getParameter("radius")).thenReturn( "1000" );
         when(request.getRequestDispatcher("ResultsPageView.jsp")).thenReturn(rd);
         when(request.getRequestDispatcher("SearchPageView.jsp")).thenReturn(rd);
         new ResultsPageController().service(request, response);
@@ -116,6 +117,7 @@ public class TestResultsPageController extends Mockito{
         when(request.getParameter("action")).thenReturn( "results" );
         when(request.getParameter("term")).thenReturn( "chicken" );
         when(request.getParameter("limit")).thenReturn( "-5" );
+        when(request.getParameter("radius")).thenReturn( "1000" );
         when(request.getRequestDispatcher("ResultsPageView.jsp")).thenReturn(rd);
         when(request.getRequestDispatcher("SearchPageView.jsp")).thenReturn(rd);
         new ResultsPageController().service(request, response);

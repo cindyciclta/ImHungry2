@@ -54,7 +54,7 @@ Scenario: Select a recipe (RTPF6c)
 Scenario: Go to search page (RTPF8)
 
 	When I clicks the "Return to Search" button
-	Then I am on the "I'm Hungry" page'
+	Then I am on the "I'm Hungry" page
 
 Scenario: No results because small radius
 	

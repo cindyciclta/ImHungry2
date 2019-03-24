@@ -46,6 +46,10 @@ body{
 
 <body>
 
+<%
+	String token = request.getParameter("token");
+%>
+
 <script>
 	function redirectToResults(){
 		
@@ -56,14 +60,10 @@ body{
 			var limit = document.getElementById("limitInput").value;
 			var radius = document.getElementById("radiusInput").value;
 			var trimmed = query.replace(" ", "_");
-			window.location = '/ImHungry/SearchPageController?action=search&term='+encodeURIComponent(trimmed) + "&limit=" + limit + "&radius=" + radius;
+      window.location = '/ImHungry/SearchPageController?action=search&term='+encodeURIComponent(trimmed) + "&limit=" + limit + "&radius=" + radius;
 		}, 1000);
-		
-		
-		
 	}
 </script>
-
 
 <div class="container mt-5 h-100">
 	<div class="h-100 row justify-content-center align-items-center">

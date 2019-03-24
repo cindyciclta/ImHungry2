@@ -74,6 +74,7 @@
 	JSONArray jsArray = (JSONArray) request.getAttribute("jsonarray");
 	int length = (int) request.getAttribute("length");
 	String term = (String) request.getAttribute("term");
+	String token = (String)request.getAttribute("token");
 	%>
 	
 	<script>
@@ -309,11 +310,13 @@
                             </li>
                            
                             <li class="nav-item mb-3">
-		                       <input class="btn btn-secondary" onclick=<%="redirectManageList("+ index +")"%> type="button" value="Manage Lists">
+		                       <input class="btn btn-secondary" onclick=<%="redirectManageList("+ index +")"%> type="button" value="Manage Lists"/>
 		                   </li>
                             <li class="nav-item">
-                            	
-                                <a class="btn btn-secondary" onclick=<%="redirectToRecipe(\"" + "/ImHungry/ResultsPageController?action=search&term="+ term +"&index=" + index + "\")"%>>Return to Search</a>
+                                <a class="btn btn-secondary" onclick=<%="redirectToRecipe(\"" + "/ImHungry/ResultsPageController?action=search&term="+ term +"&index=" + index +  "&token=" + token + "\")"%>>Return to Search</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-secondary" onclick=<%="redirectToRecipe(\"" + "/ImHungry/SignInView.jsp\")"%>>Sign Out</a>
                             </li>
                         </ul>
                     </div>

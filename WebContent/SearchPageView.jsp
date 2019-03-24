@@ -55,7 +55,7 @@ body{
 			var query = document.getElementById("termInput").value;
 			var limit = document.getElementById("limitInput").value;
 			var trimmed = query.replace(" ", "_");
-			window.location = '/ImHungry/SearchPageController?action=search&term='+encodeURIComponent(trimmed) + "&limit=" + limit;
+			window.location = '/ImHungry/SearchPageController?action=search&term='+encodeURIComponent(trimmed) + "&limit=" + limit + "&page=1";
 		}, 1000);
 		
 		

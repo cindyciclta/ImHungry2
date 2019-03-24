@@ -39,6 +39,7 @@ public class ResultsPageController extends HttpServlet {
 			
 			String term = request.getParameter("term");
 			String limit = request.getParameter("limit");
+			String page = request.getParameter("page");
 			if(term == null || limit == null || term.isEmpty() || limit.isEmpty()) {
 				RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
 				requestDispatcher.forward(request, response);	
@@ -66,6 +67,7 @@ public class ResultsPageController extends HttpServlet {
 					request.setAttribute("term", term);
 					request.setAttribute("length", urllist.size());
 					request.setAttribute("jsonarray", jsArray);
+					request.setAttribute("page", page);
 					requestDispatcher.forward(request, response);
 				}
 			}

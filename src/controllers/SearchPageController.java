@@ -28,6 +28,7 @@ public class SearchPageController extends HttpServlet {
 			// Results action
 			String term = request.getParameter("term");
 			String limit = request.getParameter("limit");
+			String page = request.getParameter("page");
 			if(term == null || limit == null || term.isEmpty() || limit.isEmpty()) {
 				RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
 				requestDispatcher.forward(request, response);	
@@ -36,7 +37,7 @@ public class SearchPageController extends HttpServlet {
 				term.trim();
 				System.out.println(term);
 				System.out.println(decodedValue);
-				RequestDispatcher requestDispatcher = request.getRequestDispatcher("ResultsPageController?action=results&term=" +term+ "&limit=" + limit);
+				RequestDispatcher requestDispatcher = request.getRequestDispatcher("ResultsPageController?action=results&term=" +term+ "&limit=" + limit + "&page="+page);
 				requestDispatcher.forward(request, response);
 			}
 		}

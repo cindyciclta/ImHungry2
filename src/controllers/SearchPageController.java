@@ -17,6 +17,19 @@ public class SearchPageController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		// Check id is correct
+		Object id = request.getAttribute("id");
+		if(id == null) {
+			RequestDispatcher requestDispatcher = request.getRequestDispatcher("SignInView.jsp");
+			requestDispatcher.forward(request, response);
+		}else {
+			int idValue = (int)id;
+			if(idValue == -1) {
+				RequestDispatcher requestDispatcher = request.getRequestDispatcher("SignInView.jsp");
+				requestDispatcher.forward(request, response);
+			}
+		}
 		
 		String action = request.getParameter("action");
 		

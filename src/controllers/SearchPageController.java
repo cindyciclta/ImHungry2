@@ -42,6 +42,7 @@ public class SearchPageController extends HttpServlet {
 				String term = request.getParameter("term");
 				String limit = request.getParameter("limit");
 				String radius = request.getParameter("radius");
+				String page = request.getParameter("page");
 				if(term == null || limit == null || term.isEmpty() || limit.isEmpty()) {
 					RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
 					request.setAttribute("token", token);
@@ -51,7 +52,7 @@ public class SearchPageController extends HttpServlet {
 					term.trim();
 					System.out.println(term);
 					System.out.println(decodedValue);
-					RequestDispatcher requestDispatcher = request.getRequestDispatcher("ResultsPageController?action=results&term=" +term+ "&limit=" + limit + "&radius=" + radius);
+					RequestDispatcher requestDispatcher = request.getRequestDispatcher("ResultsPageController?action=results&term=" +term+ "&limit=" + limit + "&radius=" + radius + "&page=" + page);
 					requestDispatcher.forward(request, response);
 				}
 			}else {

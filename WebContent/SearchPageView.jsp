@@ -47,7 +47,7 @@ body{
 <body>
 
 <%
-	String token = request.getParameter("token");
+	String token = (String)request.getAttribute("token");
 %>
 
 <script>
@@ -60,7 +60,7 @@ body{
 			var limit = document.getElementById("limitInput").value;
 			var radius = document.getElementById("radiusInput").value;
 			var trimmed = query.replace(" ", "_");
-      window.location = '/ImHungry/SearchPageController?action=search&term='+encodeURIComponent(trimmed) + "&limit=" + limit + "&radius=" + radius;
+      window.location = '/ImHungry/SearchPageController?action=search&term='+encodeURIComponent(trimmed) + "&token=" + <%=token %> + "&limit=" + limit + "&radius=" + radius;
 		}, 1000);
 	}
 </script>

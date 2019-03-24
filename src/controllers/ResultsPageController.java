@@ -33,10 +33,15 @@ public class ResultsPageController extends HttpServlet {
 				RedirectionController.removeResponse(Integer.parseInt(index));
 			}
 			
-			RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
 			String token = request.getParameter("token");
-			request.setAttribute("token", token);
-			requestDispatcher.forward(request, response);
+			if(token == null) {
+				RequestDispatcher requestDispatcher = request.getRequestDispatcher("SignInView.jsp");
+				requestDispatcher.forward(request, response);
+			}else {
+				RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
+				request.setAttribute("token", token);
+				requestDispatcher.forward(request, response);
+			}
 		}else if(action.equals("results")) {
 			
 			String term = request.getParameter("term");
@@ -44,7 +49,10 @@ public class ResultsPageController extends HttpServlet {
 			String radius = request.getParameter("radius"); //Maybe need to add a check to see if empty
 			String token = request.getParameter("token");
 			String page = request.getParameter("page");
-			if(term == null || limit == null || term.isEmpty() || limit.isEmpty()) {
+			if(token == null) {
+				RequestDispatcher requestDispatcher = request.getRequestDispatcher("SignInView.jsp");
+				requestDispatcher.forward(request, response);
+			}if(term == null || limit == null || term.isEmpty() || limit.isEmpty()) {
 				RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
 				requestDispatcher.forward(request, response);	
 			}else {
@@ -77,8 +85,9 @@ public class ResultsPageController extends HttpServlet {
 					requestDispatcher.forward(request, response);
 				}
 			}
-			
-			
+		}else {
+			RequestDispatcher requestDispatcher = request.getRequestDispatcher("SignInView.jsp");
+			requestDispatcher.forward(request, response);
 		}
 	}
 

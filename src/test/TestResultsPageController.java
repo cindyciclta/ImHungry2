@@ -38,7 +38,17 @@ public class TestResultsPageController extends Mockito{
 	@Test
     public void testInvalidAction() throws Exception {
         when(request.getParameter("action")).thenReturn( null );
+        when(request.getParameter("token")).thenReturn( "fakeToken" );
         when(request.getRequestDispatcher("SearchPageView.jsp")).thenReturn(rd);
+        new ResultsPageController().service(request, response);
+        verify(rd).forward(request, response);
+    }
+	
+	@Test
+    public void testInvalidActionInvalidToken() throws Exception {
+        when(request.getParameter("action")).thenReturn( null );
+        when(request.getParameter("token")).thenReturn( null );
+        when(request.getRequestDispatcher("SignInView.jsp")).thenReturn(rd);
         new ResultsPageController().service(request, response);
         verify(rd).forward(request, response);
     }
@@ -46,6 +56,7 @@ public class TestResultsPageController extends Mockito{
 	@Test
     public void testInvalidActionEmpty() throws Exception {
         when(request.getParameter("action")).thenReturn( "" );
+        when(request.getParameter("token")).thenReturn( "fakeToken" );
         when(request.getRequestDispatcher("SearchPageView.jsp")).thenReturn(rd);
         new ResultsPageController().service(request, response);
         verify(rd).forward(request, response);
@@ -54,6 +65,7 @@ public class TestResultsPageController extends Mockito{
 	@Test
     public void testSearchInvalid() throws Exception {
         when(request.getParameter("action")).thenReturn( "results" );
+        when(request.getParameter("token")).thenReturn( "fakeToken" );
         when(request.getParameter("term")).thenReturn( null );
         when(request.getParameter("limit")).thenReturn( "5" );
         when(request.getRequestDispatcher("SearchPageView.jsp")).thenReturn(rd);
@@ -64,6 +76,7 @@ public class TestResultsPageController extends Mockito{
 	@Test
     public void testSearchInvalidEmpty() throws Exception {
         when(request.getParameter("action")).thenReturn( "results" );
+        when(request.getParameter("token")).thenReturn( "fakeToken" );
         when(request.getParameter("term")).thenReturn( "" );
         when(request.getParameter("limit")).thenReturn( "5" );
         when(request.getRequestDispatcher("SearchPageView.jsp")).thenReturn(rd);
@@ -74,6 +87,7 @@ public class TestResultsPageController extends Mockito{
 	@Test
     public void testSearchInvalidLimit() throws Exception {
         when(request.getParameter("action")).thenReturn( "results" );
+        when(request.getParameter("token")).thenReturn( "fakeToken" );
         when(request.getParameter("term")).thenReturn( "chicken" );
         when(request.getParameter("limit")).thenReturn( null );
         when(request.getRequestDispatcher("SearchPageView.jsp")).thenReturn(rd);
@@ -84,6 +98,7 @@ public class TestResultsPageController extends Mockito{
 	@Test
     public void testSearchRemoveOld() throws Exception {
         when(request.getParameter("action")).thenReturn( "" );
+        when(request.getParameter("token")).thenReturn( "fakeToken" );
         when(request.getParameter("index")).thenReturn( "0" );
         when(request.getRequestDispatcher("SearchPageView.jsp")).thenReturn(rd);
         new ResultsPageController().service(request, response);
@@ -94,6 +109,7 @@ public class TestResultsPageController extends Mockito{
     public void testSearchInvalidLimitEmpty() throws Exception {
         when(request.getParameter("action")).thenReturn( "results" );
         when(request.getParameter("term")).thenReturn( "chicken" );
+        when(request.getParameter("token")).thenReturn( "fakeToken" );
         when(request.getParameter("limit")).thenReturn( "" );
         when(request.getRequestDispatcher("SearchPageView.jsp")).thenReturn(rd);
         new ResultsPageController().service(request, response);
@@ -104,6 +120,7 @@ public class TestResultsPageController extends Mockito{
     public void testSearchValid() throws Exception {
         when(request.getParameter("action")).thenReturn( "results" );
         when(request.getParameter("term")).thenReturn( "chicken" );
+        when(request.getParameter("token")).thenReturn( "fakeToken" );
         when(request.getParameter("limit")).thenReturn( "5" );
         when(request.getParameter("radius")).thenReturn( "1000" );
         when(request.getRequestDispatcher("ResultsPageView.jsp")).thenReturn(rd);
@@ -113,18 +130,27 @@ public class TestResultsPageController extends Mockito{
     }
 	
 	@Test
+    public void testSearchInvalidActionResults() throws Exception {
+        when(request.getParameter("action")).thenReturn( "fakeResults" );
+        when(request.getParameter("term")).thenReturn( "chicken" );
+        when(request.getParameter("token")).thenReturn( "fakeToken" );
+        when(request.getParameter("limit")).thenReturn( "5" );
+        when(request.getParameter("radius")).thenReturn( "1000" );
+        when(request.getRequestDispatcher("SignInView.jsp")).thenReturn(rd);
+        new ResultsPageController().service(request, response);
+        verify(rd).forward(request, response);
+    }
+	
+	@Test
     public void invalidParamValid() throws Exception {
         when(request.getParameter("action")).thenReturn( "results" );
         when(request.getParameter("term")).thenReturn( "chicken" );
         when(request.getParameter("limit")).thenReturn( "-5" );
+        when(request.getParameter("token")).thenReturn( "fakeToken" );
         when(request.getParameter("radius")).thenReturn( "1000" );
         when(request.getRequestDispatcher("ResultsPageView.jsp")).thenReturn(rd);
         when(request.getRequestDispatcher("SearchPageView.jsp")).thenReturn(rd);
         new ResultsPageController().service(request, response);
         verify(rd).forward(request, response);
     }
-	
-	
-	
-
 }

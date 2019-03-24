@@ -60,7 +60,7 @@ body, html {
 				var query = document.getElementById("termInput").value;
 				var limit = document.getElementById("limitInput").value;
 				var trimmed = query.replace(" ", "_");
-				window.location = '/ImHungry/SearchPageController?action=search&term='+encodeURIComponent(trimmed) + "&limit=" + limit;
+				window.location = '/ImHungry/SearchPageController?action=search&term='+encodeURIComponent(trimmed) + "&limit=" + limit + "&page=1";
 			}, 1000);
 			
 			
@@ -108,7 +108,7 @@ body, html {
 			var limit = document.getElementById("limitInput").value;
 			var radius = document.getElementById("radiusInput").value;
 			var trimmed = query.replace(" ", "_");
-      window.location = '/ImHungry/SearchPageController?action=search&term='+encodeURIComponent(trimmed) + "&token=" + <%=token %> + "&limit=" + limit + "&radius=" + radius;
+      window.location = '/ImHungry/SearchPageController?action=search&term='+encodeURIComponent(trimmed) + "&token=" + <%=token %> + "&limit=" + limit + "&radius=" + radius + "&page=1";
 		}, 1000);
 	}
 </script>

@@ -49,50 +49,33 @@ body, html {
 </style>
 </head>
 
+
 <body class="p-3 mb-2 bg-dark text-white">
-	<script>
-		function redirectToResults(){
-			
-			document.getElementById("emojiImage").src = "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/155/grinning-face_1f600.png";
-			
-			setTimeout(function(){
-				var query = document.getElementById("termInput").value;
-				var limit = document.getElementById("limitInput").value;
-				var trimmed = query.replace(" ", "_");
-				window.location = '/ImHungry/SearchPageController?action=search&term='+encodeURIComponent(trimmed) + "&limit=" + limit;
-			}, 1000);
-			
-			
-		}
-	</script>
-	<div class="container mt-5 h-100">
-		<div class="h-100 row justify-content-center align-items-center">
-			<div class="container">
-			  <form>
-				  <div class="container">
-				  	<div class="row justify-content-center align-items-center">
-				  		<h1>I'm Hungry</h1>
-				 	 </div>
-				  </div>
-			  	<br>
-			  	<br>
-			  	
-			  	<div class="container">
-			  		<div class="row justify-content-center align-items-center">
-			  			<div class="form-row">
-			  				<div id="searchBar" class="form-group col-md-7">
-			  					<input class="form-control mr-sm-2" type="search" id="termInput" placeholder="Enter food" aria-label="Search">
-			  				</div>
-			  				<div id="numResults" class="form-group col-md-2">
-			  					<input class="form-control mr-sm-2" type="number" min="1" value="5" id="limitInput" title="Number of items to show in results">
-			  				</div>
-			  				<div id="searchRadius" class="form-group col-md-3">
-			  					<input class="form-control mr-sm-2" type="number" min="1" placeholder="radius" id="radiusInput">
-			  				</div>
-			  			</div>
-			  		</div>
-			  </div>
-			  
+
+
+<%
+	String token = request.getParameter("token");
+%>
+
+<script>
+	function redirectToResults(){
+		
+		document.getElementById("emojiImage").src = "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/155/grinning-face_1f600.png";
+		
+		setTimeout(function(){
+			var query = document.getElementById("termInput").value;
+			var limit = document.getElementById("limitInput").value;
+			var radius = document.getElementById("radiusInput").value;
+			var trimmed = query.replace(" ", "_");
+      window.location = '/ImHungry/SearchPageController?action=search&term='+encodeURIComponent(trimmed) + "&limit=" + limit + "&radius=" + radius;
+		}, 1000);
+	}
+</script>
+
+<div class="container mt-5 h-100">
+	<div class="h-100 row justify-content-center align-items-center">
+		<div class="container">
+		  <form>
 			  <div class="container">
 			  	<div class="row justify-content-center align-items-center">
 			  		<div class="form-group">

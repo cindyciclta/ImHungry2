@@ -4,6 +4,7 @@
 Given(/^I searched for "([^"]*)"$/) do |arg1|
   visit "http://localhost:8080/ImHungry/SearchPageController"
   fill_in 'termInput', :with => arg1
+  fill_in 'radiusInput', :with => 3000
   page.find('div#emojiButton.img-container').click
   expect(page).to have_css('h1', text: arg1, wait: 50)
 end
@@ -82,15 +83,27 @@ Given(/^I searched for item "([^"]*)" with "([^"]*)" results and was redirected 
   visit 'http://localhost:8080/ImHungry/SearchPageController'
   fill_in('termInput', with: arg1)
   fill_in('limitInput', with: arg2)
+  fill_in 'radiusInput', :with => 3000
   page.find('div#emojiButton.img-container').click
   expect(page).to have_css('h1', text: arg1, wait: 50)
+end
+
+Given(/^I searched for item "([^"]*)" with "([^"]*)" radius and was redirected to the Results page$/) do |arg1, arg2|
+  visit 'http://localhost:8080/ImHungry/SearchPageController'
+  fill_in('termInput', with: arg1)
+  fill_in('radiusInput', with: arg2)
+  fill_in 'limitInput', :with => 20
+  page.find('div#emojiButton.img-container').click
+  expect(page).to have_css('h1', text: arg1, wait: 50)
+end
+
+Then(/^I should not see any restaurants$/) do
+	expect(page).not_to have_content('minutes of driving')
 end
 
 Then(/^I should see "([^"]*)" as the first result for "([^"]*)"$/) do |arg1, arg2|
   expect(page).to have_content(arg2 + ' ' + arg1)
 end
-
-
 
 # Recipe and Restaurant Page
 
@@ -104,7 +117,6 @@ end
 
 Then(/^I should see an image$/) do
   page.should have_css('img')
-
 end
 
 Then(/^I should see the prep and cook time of the dish$/) do
@@ -208,7 +220,6 @@ end
 Then(/^I should see the name, address, stars, driving minutes, and price range for the restaurants$/) do
   # expect(page).to have_content('Name')
   # expect(page).to have_content('address')
-  expect(page).to have_content('★')
   expect(page).to have_content('minutes of driving')
   expect(page).to have_content(' to ')
 end
@@ -223,7 +234,6 @@ end
 
 Then(/^I should see the name, stars, and prep time for the recipes$/) do
   # expect(page).to have_content('Name')
-  expect(page).to have_content('★')
   expect(page).to have_content('Prep:')
   expect(page).to have_content('Cook:')
 end
@@ -255,6 +265,11 @@ When(/^I enter a negative value$/) do
   page.find('div#emojiButton.img-container').click
 end
 
+When(/^I enter a negative radius$/) do
+  fill_in 'radiusInput', with: '-1'
+  page.find('div#emojiButton.img-container').click
+end
+
 Then(/^the text box should not accept the value$/) do
   expect(page).to have_current_path('/ImHungry/SearchPageController', wait: 10)
 end
@@ -263,7 +278,7 @@ When(/^I hover over the text box$/) do
   find(:css, '#numResults').hover
 end
 
-Then(/^text should appear saying “Number of items to show in results”$/) do
+Then(/^text should appear saying "Number of items to show in results"$/) do
   page.find('#limitInput')[ 'Number of items to show in results']
 end
 
@@ -289,5 +304,3 @@ end
 Then(/^I am the "([^"]*)" page$/) do |arg1|
   expect(page).to have_css('h1', text: arg1)
 end
-
-

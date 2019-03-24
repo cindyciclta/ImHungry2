@@ -24,6 +24,8 @@ public class RedirectionController extends HttpServlet {
 	 * 
 	 */
 	public static Map<Integer, ResponseModel> responses = new HashMap<>();
+	public static Map<String, Integer> tokens = new HashMap<>();
+	
 	private static int index = 0;
 	
 	private static final long serialVersionUID = 1L;

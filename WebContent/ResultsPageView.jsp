@@ -74,6 +74,7 @@
 	JSONArray jsArray = (JSONArray) request.getAttribute("jsonarray");
 	int length = (int) request.getAttribute("length");
 	String term = (String) request.getAttribute("term");
+	String token = (String)request.getAttribute("token");
 	String pg = (String) request.getAttribute("page");
 	int pagenumber = Integer.parseInt(pg);
 	%>
@@ -213,7 +214,7 @@
                                 </thead>
                                 <tbody>	                                
                                 	<%
-                                	 for (int i = 5 * (pagenumber - 1) ; i < 5 * (pagenumber - 1) + 5 ; i++) {
+                                	for (int i = 5 * (pagenumber - 1) ; i < 5 * (pagenumber - 1) + 5 ; i++) {
 									//for(int i = 0 ; i < rm.getNumberOfRestaurants() ; i++){
 										Map<String, String> resultsFields = rm.getFormattedRestaurantResultsAt(i);
 										
@@ -312,11 +313,13 @@
                             </li>
                            
                             <li class="nav-item mb-3">
-		                       <input class="btn btn-secondary" onclick=<%="redirectManageList("+ index +")"%> type="button" value="Manage Lists">
+		                       <input class="btn btn-secondary" onclick=<%="redirectManageList("+ index +")"%> type="button" value="Manage Lists"/>
 		                   </li>
                             <li class="nav-item">
-                            	
-                                <a class="btn btn-secondary" onclick=<%="redirectToRecipe(\"" + "/ImHungry/ResultsPageController?action=search&term="+ term +"&index=" + index + "\")"%>>Return to Search</a>
+                                <a class="btn btn-secondary" onclick=<%="redirectToRecipe(\"" + "/ImHungry/ResultsPageController?action=search&term="+ term +"&index=" + index +  "&token=" + token + "\")"%>>Return to Search</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-secondary" onclick=<%="redirectToRecipe(\"" + "/ImHungry/SignInView.jsp\")"%>>Sign Out</a>
                             </li>
                         </ul>
                     </div>

@@ -20,6 +20,7 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 	private static final String API_KEY = "XV6c8H4T5PriBv2QO0smCcFhMU3d3axPXDY6yEWAekPe9ErQZI70EFyipPyig8g1J-1RozjFY14vs14_ZC3o9_3pAlhqDw74zA7iTg-u9OkWNlcQ7n2HmKPOKht6XHYx";
 	private String term;
 	private int limit;
+	private int radius = 1000;
 	private List<RestaurantModel> results;
 	public int responseCode;
 	public YelpRequestModel() {
@@ -31,11 +32,30 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 	}
 	
 	
-	public boolean checkParameters(String term, int limit) {
+//	public boolean checkParameters(String term, int limit) {
+//		if(limit < 0) {
+//			return false;
+//		}
+//		
+//		if(term == null) {
+//			return false;
+//		}
+//		term = term.trim();
+//		if(term.isEmpty()) {
+//			return false;
+//		}
+//		this.term = term;
+//		this.limit = limit;
+//		return true;
+//	}
+	
+	public boolean checkParameters(String term, int limit, int radius) {
 		if(limit < 0) {
 			return false;
 		}
-		
+		if(radius < 0) {
+			return false;
+		}
 		if(term == null) {
 			return false;
 		}
@@ -45,13 +65,14 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 		}
 		this.term = term;
 		this.limit = limit;
+		this.radius = radius;
 		return true;
 	}
 	
 	@Override
 	public ResponseCodeModel completeTask() {
 		try {
-			String url = "https://api.yelp.com/v3/businesses/search?term="+term+"&latitude=34.021217&longitude=-118.287093";
+			String url = "https://api.yelp.com/v3/businesses/search?term="+term+"&latitude=34.02056373251961&longitude=-118.28544706106186&radius="+ radius;
 			URL obj = new URL(url);
 			HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 			con.setRequestMethod("GET");
@@ -67,7 +88,7 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 			String response = "";
 			while((line = br.readLine()) != null) {
 				response += line;
-				//System.out.println(line);
+				System.out.println(line);
 			}
 			if(!response.isEmpty())
 			{
@@ -129,6 +150,11 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 	        return ResponseCodeModel.INTERNAL_ERROR;
 	    }  
 		return ResponseCodeModel.OK;
+	}
+	public static void main(String [] args) {
+		YelpRequestModel model = new YelpRequestModel();
+		model.checkParameters("pizza", 5, 300);
+		model.completeTask();	
 	}
 
 	@Override

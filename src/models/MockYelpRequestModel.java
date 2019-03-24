@@ -27,7 +27,7 @@ public class MockYelpRequestModel {
 	
 	// mocks a call to request - checks if the request is in cache
 	// or caches the request fresh
-	public ResponseCodeModel completeTask(String term, int limit) {
+	public ResponseCodeModel completeTask(String term, int limit, int radius) {
  		ResponseCodeModel responseResult = ResponseCodeModel.OK;
 
 		if (ExistRequest(term) != null) {
@@ -35,9 +35,10 @@ public class MockYelpRequestModel {
 	 		this.results = ExistRequest(term);
 			term = "";
 			limit = 5;	
+			radius = 1000;
 			return responseResult;
 		} 
-		yelp.checkParameters(term, limit);
+		yelp.checkParameters(term, limit, radius);
 		this.mockStorage.put(term, yelp.getResults());
 		return yelp.completeTask();	
 	}

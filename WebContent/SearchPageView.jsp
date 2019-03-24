@@ -54,8 +54,9 @@ body{
 		setTimeout(function(){
 			var query = document.getElementById("termInput").value;
 			var limit = document.getElementById("limitInput").value;
+			var radius = document.getElementById("radiusInput").value;
 			var trimmed = query.replace(" ", "_");
-			window.location = '/ImHungry/SearchPageController?action=search&term='+encodeURIComponent(trimmed) + "&limit=" + limit;
+			window.location = '/ImHungry/SearchPageController?action=search&term='+encodeURIComponent(trimmed) + "&limit=" + limit + "&radius=" + radius;
 		}, 1000);
 		
 		

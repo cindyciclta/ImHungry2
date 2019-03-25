@@ -77,6 +77,8 @@ public class ResultsPageController extends HttpServlet {
 
 					request.setAttribute("token", token);
 					request.setAttribute("response", rm);
+					request.setAttribute("limit", limit);
+					request.setAttribute("radius", radius);
 					request.setAttribute("index", indexInt);
 					request.setAttribute("term", term);
 					request.setAttribute("length", urllist.size());

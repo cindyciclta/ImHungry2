@@ -56,6 +56,7 @@ public class SignUpController extends HttpServlet {
 			    	requestDispatcher.forward(request, response);
 		    	}
 		    }catch(Exception e) {
+		    	System.out.println(e.getMessage());
 		    	RequestDispatcher requestDispatcher = request.getRequestDispatcher("SignUpView.jsp");
 				requestDispatcher.forward(request, response);
 		    }

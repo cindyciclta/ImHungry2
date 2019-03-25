@@ -252,8 +252,16 @@ Then(/^I should see a text box to enter number of results$/) do
   page.should have_field('limitInput')
 end
 
+Then(/^I should see a text box to enter search radius$/) do
+  page.should have_field('radiusInput')
+end
+
 Then(/^the default value should be (\d+)$/) do |arg1|
   page.should have_field('limitInput', with: arg1)
+end
+
+Then(/^the default radius should be (\d+)$/) do |arg1|
+  page.should have_field('radiusInput', with: arg1)
 end
 
 Then(/^I should see a button labeled "([^"]*)"$/) do |arg1|

@@ -16,6 +16,8 @@ Scenario: Check prompt, text box, default value, button (SPF2, SPF3.1, SPF4)
 	Then I should see prompt text enter food
 	And I should see a text box to enter number of results
 	And the default value should be 5
+	And I should see a text box to enter search radius
+	And the default radius should be 5
 	And I should see a button labeled "Feed me!"
 
 Scenario: Check negative search values (SPF3.2)

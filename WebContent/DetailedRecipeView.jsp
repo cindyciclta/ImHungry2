@@ -1,13 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="java.util.Map"%> 
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-<title>THREEEE TEEEEEEEEEEENNNNNNN</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+	integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<title>Recipe Info - I'm Hungry</title>
 
 <style>
 		@media print {
@@ -92,9 +91,7 @@
 	int index = (int)request.getAttribute("index");
 	int item = (int)request.getAttribute("item");
 	String link = fields.get("imageUrl");
-	
 	%>
-
 	<div id="wrapper" class="container">
 		<div class="row">
 	    	<div class="col-md-8">
@@ -215,7 +212,6 @@
 		           </div>
 		       	</div>
 		      </div>
-	    	
   		</div>
 	</div>
 </body>

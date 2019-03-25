@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="models.ResponseModel"%>   
 <%@page import="models.CollageGenerationModel"%>   
 <%@page import="models.GoogleImageRequestModel"%> 
@@ -10,9 +9,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<!-- Eclipse put this here.. -->
-    <!-- <meta charset="ISO-8859-1"> -->
-
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -20,10 +16,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <title>Insert title here</title>
-
     <style type="text/css">
-        
         body {
      		background-color: #f5f5f5;
         }
@@ -35,11 +28,9 @@
         #collage-wrapper {
             height: 40vh;
             width: 50vw;
+            position: relative;
+            padding: 0;
         }
-
-        .overlays {
-            position: absolute;
-        } 
 
         .nested-tr {
             background-color: inherit;
@@ -49,17 +40,9 @@
 			height: 100%;
 			font-family: "Comic Sans MS", cursive, sans-serif;
 		}
-		
-        /*.navbar.fixed-right {
-            position: fixed;
-            top: 0;
-            right: 0;
-            z-index: 0;
-        }*/
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<meta charset="ISO-8859-1">
-	<title>Results Page</title>
+	<title>Results Page - I'm Hungry</title>
 </head>
 <body class="p-3 mb-2 bg-dark text-white">
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -76,15 +59,13 @@
 	String term = (String) request.getAttribute("term");
 	String token = (String)request.getAttribute("token");
 	String pg = (String) request.getAttribute("page");
-	// TODO : get limit and radius
+	//TODO exception thrown here when going 'back to results'
 	int lim = Integer.parseInt((String)request.getAttribute("limit"));
 	int rad = Integer.parseInt((String)request.getAttribute("radius"));
 	int pagenumber = Integer.parseInt(pg);
 	%>
 	
 	<script>
-		
-
 		$( document ).ready(function() {
 	        console.log( "ready!" );
 	        var js = <%= jsArray %>;
@@ -93,27 +74,9 @@
 	        	if (i < size) {
 		        	var string = JSON.stringify(js[i]);
 		        	var refactorstring = string.substr(1).slice(0,-1);
-		        	showImage(refactorstring);
+		        	addImage(refactorstring, i);
 	        	}
 			}
-
-	        $('img').each(function() {
-	            var deg = randomIntFromInterval(-45, 45);
-	            console.log('rotated', deg)
-	            var numberOfImages = $('img').length;
-	            var rotate = 'rotate(' + deg + 'deg)';
-	            //console.log($(this).height());
-	            var width = (100-5)/((numberOfImages <= 10) ? numberOfImages : 10)*2;
-	            $(this).css({ 
-	                '-webkit-transform': rotate,
-	                '-moz-transform': rotate,
-	                '-o-transform': rotate,
-	                '-ms-transform': rotate,
-	                'transform': rotate,
-	                //'width': width+'%'
-	                'width': 15+'vw'
-	            });
-	        });
 	    });
 	
 	    // min = minimum rotation in degrees, max = maximum rotation in degrees
@@ -121,40 +84,30 @@
 	        return Math.floor(Math.random()*(max-min+1)+min);
 	    }
 	
-	    function showImage(url) {
-	        // myImage : ID of image on which to place new image
-	
+	    function addImage(url, index) {
 	        var destination = document.getElementById('collage-wrapper');
-	        
-	        console.log('here', $('#collage-wrapper').width());
-	        
-	        margin = 20;
-	        
-	        l = destination.offsetLeft + $('#collage-wrapper').width()/4;
-	        t = destination.offsetTop + $('#collage-wrapper').height()/4;
-	        //w = destination.width;
-	        //h = destination.height;
-	        w = $('#collage-wrapper').width()/2
-	        h = $('#collage-wrapper').height()/2
-	        
-	        // Location inside the image
-	        offX = parseInt(Math.random() * w);
-	        offY = parseInt(Math.random() * h);
-	        
-	        if(offX > margin) offX -= margin;
-	        if(offY > margin) offY -= margin;
-	
-	        l += offX;
-	        t += offY;
-	
 	        var newImage = document.createElement("img");
-	        //newImage.setAttribute('src', 'https://res.cloudinary.com/teepublic/image/private/s--fX47AfFz--/t_Preview/b_rgb:0f7b47,c_limit,f_jpg,h_630,q_90,w_630/v1465397214/production/designs/536781_1.jpg');
 	        
 	        newImage.setAttribute('src', url);
-	        newImage.setAttribute('class', 'overlays');
-	        newImage.style.left = l + "px";
-	        newImage.style.top = t + "px";
-	        console.log(document.body.appendChild(newImage));
+	        newImage.style.left = (4*index) + "vw";
+	        newImage.style.zIndex = index;
+	        newImage.style.top = "7vh";
+	        newImage.style.position = "absolute";
+	        newImage.style.minWidth = "25%";
+	        newImage.style.minHeight = "55%";
+	        newImage.style.maxWidth = "35%";
+	        newImage.style.maxHeight = "70%";
+	        
+	    	//Apply random rotation between -45 and 45
+	    	var degree = Math.floor(Math.random() * 91) - 45;
+	    	var rotate = 'rotate(' + degree + 'deg)';
+	    	newImage.style.WebkitTransform = rotate;
+	    	newImage.style.MozTransform = rotate;
+	    	newImage.style.OTransform = rotate;
+	    	newImage.style.msTransform = rotate;
+	    	newImage.style.transform = rotate;
+	    	
+	        console.log(destination.appendChild(newImage));
 	    }
 	
 		function redirectToRecipe(link){
@@ -175,7 +128,6 @@
 			var e = document.getElementById("managelistselect");
 			list = e.options[e.selectedIndex].value;
 			if(list != ""){
-				//window.location.replace("/ImHungry/RedirectionController?action=managelist" +"&index=" + index + "&list=" + list+ "&=term" + term);
 				redirectToResult("/ImHungry/RedirectionController?action=managelist" +"&index=" + index + "&list=" + list);
 			}
 		}
@@ -184,20 +136,7 @@
 	<div id="outer-wrapper" class="container" style="height: 100vh">
         <div class="row my-5">
             <div class="col h-100">
-                <div id="collage-wrapper" class="container my-6 mr-5 pr-5 pb-5">
-                    <!-- TODO Collage here -->
-
-                    <!-- <img src="https://res.cloudinary.com/teepublic/image/private/s--fX47AfFz--/t_Preview/b_rgb:0f7b47,c_limit,f_jpg,h_630,q_90,w_630/v1465397214/production/designs/536781_1.jpg" class="img-fluid">
-                    <img src="https://res.cloudinary.com/teepublic/image/private/s--fX47AfFz--/t_Preview/b_rgb:0f7b47,c_limit,f_jpg,h_630,q_90,w_630/v1465397214/production/designs/536781_1.jpg" class="img-fluid">
-                    <img src="https://res.cloudinary.com/teepublic/image/private/s--fX47AfFz--/t_Preview/b_rgb:0f7b47,c_limit,f_jpg,h_630,q_90,w_630/v1465397214/production/designs/536781_1.jpg" class="img-fluid">
-                    <img src="https://res.cloudinary.com/teepublic/image/private/s--fX47AfFz--/t_Preview/b_rgb:0f7b47,c_limit,f_jpg,h_630,q_90,w_630/v1465397214/production/designs/536781_1.jpg" class="img-fluid">
-                    <img src="https://res.cloudinary.com/teepublic/image/private/s--fX47AfFz--/t_Preview/b_rgb:0f7b47,c_limit,f_jpg,h_630,q_90,w_630/v1465397214/production/designs/536781_1.jpg" class="img-fluid">
-                    <img src="https://res.cloudinary.com/teepublic/image/private/s--fX47AfFz--/t_Preview/b_rgb:0f7b47,c_limit,f_jpg,h_630,q_90,w_630/v1465397214/production/designs/536781_1.jpg" class="img-fluid">
-                    <img src="https://res.cloudinary.com/teepublic/image/private/s--fX47AfFz--/t_Preview/b_rgb:0f7b47,c_limit,f_jpg,h_630,q_90,w_630/v1465397214/production/designs/536781_1.jpg" class="img-fluid">
-                    <img src="https://res.cloudinary.com/teepublic/image/private/s--fX47AfFz--/t_Preview/b_rgb:0f7b47,c_limit,f_jpg,h_630,q_90,w_630/v1465397214/production/designs/536781_1.jpg" class="img-fluid">
-                    <img src="https://res.cloudinary.com/teepublic/image/private/s--fX47AfFz--/t_Preview/b_rgb:0f7b47,c_limit,f_jpg,h_630,q_90,w_630/v1465397214/production/designs/536781_1.jpg" class="img-fluid">
-                    <img src="https://res.cloudinary.com/teepublic/image/private/s--fX47AfFz--/t_Preview/b_rgb:0f7b47,c_limit,f_jpg,h_630,q_90,w_630/v1465397214/production/designs/536781_1.jpg" class="img-fluid"> -->
-
+                <div id="collage-wrapper">
                 </div>
 
                 <div id="title-wrapper" class="container my-5">
@@ -206,7 +145,6 @@
                 </div>
 
                 <div id="results-wrapper" class="container">
-                    <!-- TODO table here -->
                     <div class="row">
                         <div class="col mx-4">
                             <table class="table-dark table-hover table-striped table-borderless">
@@ -278,7 +216,6 @@
                                 	reci_upperbound = rm.getNumberOfRecipes();
                                 }
                                 for (int i = 5 * (pagenumber - 1) ; i < reci_upperbound ; i++) {
-								//for(int i = 0 ; i < rm.getNumberOfRecipes() ; i++){
 									Map<String, String> resultsFields = rm.getFormattedRecipeResultsAt(i);
 									
 									// Skip do not show results

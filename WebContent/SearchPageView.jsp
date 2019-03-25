@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,12 +7,8 @@
 https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
 integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
 crossorigin="anonymous">
-
+<title>Search - I'm Hungry</title>
 <style>
-
-/* body{
-	background: #f5f5f5;
-} */
 
 .img-container {
 	position: relative;
@@ -66,8 +61,6 @@ p7 {
 				var trimmed = query.replace(" ", "_");
 				window.location = '/ImHungry/SearchPageController?action=search&term='+encodeURIComponent(trimmed) + "&limit=" + limit + "&page=1";
 			}, 1000);
-			
-			
 		}
 	</script>
 	<div class="container mt-5 h-100">

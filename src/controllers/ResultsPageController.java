@@ -76,9 +76,6 @@ public class ResultsPageController extends HttpServlet {
 					JSONArray jsArray = new JSONArray (urllist);
 
 					request.setAttribute("token", token);
-					// TODO: add limit and radius
-					request.setAttribute("limit", limit);
-					request.setAttribute("radius", radius);
 					request.setAttribute("response", rm);
 					request.setAttribute("index", indexInt);
 					request.setAttribute("term", term);

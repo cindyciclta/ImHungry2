@@ -1,5 +1,6 @@
 package test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -23,11 +24,21 @@ public class TestDatabaseModel{
 	
 	public static void deleteUser(String username) throws Exception{
 		Class.forName("com.mysql.jdbc.Driver");
-		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/ImHungry?user=root&password=NewPassword&useSSL=false");
+		Connection conn = DatabaseModel.getConnection();
+		
+		// clean the searches database as well
+		int id = DatabaseModel.GetUserID(username);
+		
+		String query = "DELETE from searches where user_id = (?)";
+		PreparedStatement preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+	    preparedStmt.setInt (1, id);
+	    preparedStmt.executeUpdate();
+	    preparedStmt.close();
+		
 		
 		// the mysql insert statement to have date of upload
-		String query = "DELETE from users where user_name = (?)";
-		PreparedStatement preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+		query = "DELETE from users where user_name = (?)";
+		preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 	    preparedStmt.setString (1, username);
 	    preparedStmt.executeUpdate();
 	}
@@ -115,7 +126,6 @@ public class TestDatabaseModel{
 		DatabaseModel.insertUser(username, password.toCharArray());
 		int id = DatabaseModel.GetUserID("test");
 		assertTrue(DatabaseModel.AddSearchToHistory(id,"pizza", 5, 1000));
-		
 		deleteUser(username);
 	}
 	@Test
@@ -133,7 +143,13 @@ public class TestDatabaseModel{
 		String username = "test";
 		String password = "test";
 		DatabaseModel.insertUser(username, password.toCharArray());
-		assertTrue(DatabaseModel.AddSearchToHistory(-1,"pizza", 5, 1000));
+		assertFalse(DatabaseModel.AddSearchToHistory(-1,"pizza", 5, 1000));
 		deleteUser(username);
+	}
+	
+	@Test
+	public void getInvalidUsernameID() throws Exception{
+		String username = "aaaajhklhjkh";
+		assertEquals(-1, DatabaseModel.GetUserID(username));
 	}
 }

@@ -22,7 +22,7 @@
 <div class="container mt-5 h-100">
 	<div class="h-100 row justify-content-center align-items-center">
 		<div class="container">
-		  <form method="post" action="/SignInController">
+		  <form method="post" action="/ImHungry/SignInController">
 			  <div class="container">
 			  	<div class="row justify-content-center align-items-center">
 			  		<h1>Sign In To I'm Hungry</h1>
@@ -35,7 +35,7 @@
 		  		<div class="row justify-content-center align-items-center">
 		  			<div class="form-row">
 		  				<div id="searchBar" class="form-group col-md-12">
-		  					<input class="form-control mr-sm-2" type="text" name="username" placeholder="Username...">
+		  					<input class="form-control mr-sm-2" type="text" id="username" name="username" placeholder="Username...">
 		  				</div>
 		  			</div>
 		  		</div>
@@ -45,7 +45,7 @@
 		  		<div class="row justify-content-center align-items-center">
 		  			<div class="form-row">
 		  				<div id="searchBar" class="form-group col-md-12">
-		  					<input class="form-control mr-sm-2" type="password"  name="password" placeholder="Password...">
+		  					<input class="form-control mr-sm-2" type="password" id="password" name="password" placeholder="Password...">
 		  				</div>
 		  			</div>
 		  		</div>
@@ -56,6 +56,16 @@
 		  			<div class="form-row">
 		  				<div id="searchBar" class="form-group col-md-12">
 		  					<input class="form-control mr-sm-2" type="submit"/>
+		  				</div>
+		  			</div>
+		  		</div>
+		   </div>
+		   
+		   <div class="container">
+		  		<div class="row justify-content-center align-items-center">
+		  			<div class="form-row">
+		  				<div id="searchBar" class="form-group col-md-12">
+		  					<h3><a href="/ImHungry/SignUpView.jsp">Sign Up Here</a></h3>
 		  				</div>
 		  			</div>
 		  		</div>

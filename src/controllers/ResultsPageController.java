@@ -33,15 +33,26 @@ public class ResultsPageController extends HttpServlet {
 				RedirectionController.removeResponse(Integer.parseInt(index));
 			}
 			
-			RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
-			requestDispatcher.forward(request, response);
+			String token = request.getParameter("token");
+			if(token == null) {
+				RequestDispatcher requestDispatcher = request.getRequestDispatcher("SignInView.jsp");
+				requestDispatcher.forward(request, response);
+			}else {
+				RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
+				request.setAttribute("token", token);
+				requestDispatcher.forward(request, response);
+			}
 		}else if(action.equals("results")) {
 			
 			String term = request.getParameter("term");
 			String limit = request.getParameter("limit");
 			String radius = request.getParameter("radius"); //Maybe need to add a check to see if empty
-		
-			if(term == null || limit == null || term.isEmpty() || limit.isEmpty()) {
+			String token = request.getParameter("token");
+			String page = request.getParameter("page");
+			if(token == null) {
+				RequestDispatcher requestDispatcher = request.getRequestDispatcher("SignInView.jsp");
+				requestDispatcher.forward(request, response);
+			}if(term == null || limit == null || term.isEmpty() || limit.isEmpty()) {
 				RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
 				requestDispatcher.forward(request, response);	
 			}else {
@@ -54,25 +65,29 @@ public class ResultsPageController extends HttpServlet {
 				
 				if(!rm.checkParameters(term, limitInteger, Integer.parseInt(radius)) || !rm.getSearchResults()) {
 					RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
+					request.setAttribute("token", token);
 					requestDispatcher.forward(request, response);
 				}else {
 					RequestDispatcher requestDispatcher = request.getRequestDispatcher("ResultsPageView.jsp");
 					int indexInt = RedirectionController.addResponse(rm);
 					
+					
 					ArrayList<String> urllist = (ArrayList<String>) collagemodel.getList();
 					JSONArray jsArray = new JSONArray (urllist);
 
-
+					request.setAttribute("token", token);
 					request.setAttribute("response", rm);
 					request.setAttribute("index", indexInt);
 					request.setAttribute("term", term);
 					request.setAttribute("length", urllist.size());
 					request.setAttribute("jsonarray", jsArray);
+					request.setAttribute("page", page);
 					requestDispatcher.forward(request, response);
 				}
 			}
-			
-			
+		}else {
+			RequestDispatcher requestDispatcher = request.getRequestDispatcher("SignInView.jsp");
+			requestDispatcher.forward(request, response);
 		}
 	}
 

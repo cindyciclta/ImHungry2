@@ -214,7 +214,16 @@
                                 </thead>
                                 <tbody>	                                
                                 	<%
-                                	for (int i = 5 * (pagenumber - 1) ; i < 5 * (pagenumber - 1) + 5 ; i++) {
+                                	System.out.println("page number=" + pagenumber);
+		                    		int rest_upperbound = 0;
+                    				System.out.println("number of restaurants" + rm.getNumberOfRestaurants());
+		                            if ((5 * (pagenumber - 1) + 5) < rm.getNumberOfRestaurants()) {
+		                            	rest_upperbound = (5 * (pagenumber - 1) + 5);
+		                            } else {
+		                            	rest_upperbound = rm.getNumberOfRestaurants();
+		                            }
+                                	for (int i = 5 * (pagenumber - 1) ; i < rest_upperbound ; i++) {
+                                		System.out.println("i=" + i);
 									//for(int i = 0 ; i < rm.getNumberOfRestaurants() ; i++){
 										Map<String, String> resultsFields = rm.getFormattedRestaurantResultsAt(i);
 										
@@ -259,7 +268,14 @@
                                 <tbody>
                                 <%
                                 String ecodedValue = URLEncoder.encode(term, "UTF-8");
-								for(int i = 0 ; i < rm.getNumberOfRecipes() ; i++){
+                                int reci_upperbound = 0;
+                                if ((5 * (pagenumber - 1) + 5) < rm.getNumberOfRecipes()) {
+                                	reci_upperbound = (5 * (pagenumber - 1) + 5);
+                                } else {
+                                	reci_upperbound = rm.getNumberOfRecipes();
+                                }
+                                for (int i = 5 * (pagenumber - 1) ; i < reci_upperbound ; i++) {
+								//for(int i = 0 ; i < rm.getNumberOfRecipes() ; i++){
 									Map<String, String> resultsFields = rm.getFormattedRecipeResultsAt(i);
 									
 									// Skip do not show results

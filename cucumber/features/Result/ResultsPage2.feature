@@ -6,10 +6,9 @@ Background:
 
 	Given I searched for item "Vegetarian" with "3" results and was redirected to the Results page
 
-Scenario: Check background color, text size, title text size, collage, title, drop down (F1, F2, RTPF1, RTPF2, RTPF3.1)
+Scenario: Check text size, title text size, collage, title, drop down (F1, F2, RTPF1, RTPF2, RTPF3.1)
 
-	Then I should see background color "rgba(245, 245, 245, 1)"
-	And I should see a title
+	Then I should see a title
 	And I should see a result in default text size
 	And I should see an image
 	And I should see the title "Results for Vegetarian"

@@ -6,9 +6,8 @@ Background:
 
 	Given I am on the search page
 
-Scenario: Check background color, text size (F1, F2)
+Scenario: text size (F1, F2)
 
-	Then I should see background color "rgba(245, 245, 245, 1)"
 	Then I should see a title
 
 Scenario: Check prompt, text box, default value, button (SPF2, SPF3.1, SPF4)

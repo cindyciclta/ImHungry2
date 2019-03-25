@@ -9,8 +9,10 @@ import java.sql.Statement;
 import java.util.Vector;
 
 public class DatabaseModel {
+	static final String SQL_PASSWORD = "root"; // SET YOUR MYSQL PASSWORD HERE TO GET DATABASE WORKING!!!!!!!!
 	
 	public static int signInUser(String username, char[] password) throws Exception {
+		
 		// Get from SQL
 		Connection conn = null;
 		ResultSet rs = null;
@@ -34,7 +36,7 @@ public class DatabaseModel {
 	
 	private static Connection getConnection() throws ClassNotFoundException, SQLException{
 		Class.forName("com.mysql.jdbc.Driver");
-		return DriverManager.getConnection("jdbc:mysql://localhost/ImHungry?user=root&password=root&useSSL=false");
+		return DriverManager.getConnection("jdbc:mysql://localhost/ImHungry?user=root&password=" + SQL_PASSWORD + "&useSSL=false");
 	}
 	
 	public static boolean userExists(String username) throws Exception {

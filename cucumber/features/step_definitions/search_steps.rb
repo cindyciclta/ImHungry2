@@ -25,10 +25,6 @@ Given(/^I clicks the "([^"]*)" button$/) do |arg1|
   page.find('a.btn.btn-secondary', text: arg1).click
 end
 
-Then(/^I should see background color "([^"]*)"$/) do |arg1|
-   expect(find('body').native.css_value('background-color')).to eq(arg1)
-end
-
 Then(/^I should see a title$/) do
   find('h1')
 end

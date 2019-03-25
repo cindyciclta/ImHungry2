@@ -6,10 +6,9 @@ Background:
 	Given I searched for "Pasta"
 	And I clicked the link for "Pasta Pomodoro"
 
-Scenario: Check background color, text size, title text size, image, title (F1, F2, RCPF1, RCPF2)
+Scenario: Check text size, title text size, image, title (F1, F2, RCPF1, RCPF2)
 
-	Then I should see background color "rgba(245, 245, 245, 1)"
-	And I should see "Pasta Pomodoro" as a title
+	Then I should see "Pasta Pomodoro" as a title
 	And I should see a result in default text size
 	And I should see an image
 	

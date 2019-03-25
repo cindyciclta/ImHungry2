@@ -7,10 +7,9 @@ Background:
 	Given I searched for "chinese"
 	And I clicked the link for "Northern Cafe"
 
-Scenario: Check background color, text size, title text size, appropriate fields (F1, F2, RSPF1)
+Scenario: Check text size, title text size, appropriate fields (F1, F2, RSPF1)
 
-	Then I should see background color "rgba(245, 245, 245, 1)"
-	And I should see "Northern Cafe" as a title
+	Then I should see "Northern Cafe" as a title
 	And I should see a result in default text size
 	And I should see the name, address, phone number, and link for the restaurant
 	

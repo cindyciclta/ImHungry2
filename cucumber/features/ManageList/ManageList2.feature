@@ -12,10 +12,9 @@ Background:
 	And I selected "To Explore" from the drop down
 	And I clicked the "Manage Lists" button
 
-Scenario: Check background color, text size, title text size (F1, F2)
+Scenario: Check text size, title text size (F1, F2)
 
-	Then I should see background color "rgba(245, 245, 245, 1)"
-	And I should see a title
+	Then I should see a title
 	And I should see a result in default text size
 	
 Scenario: Select a list item (RTPF7a.1, LMPF1, LMPF2)

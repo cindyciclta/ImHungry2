@@ -76,6 +76,9 @@
 	String term = (String) request.getAttribute("term");
 	String token = (String)request.getAttribute("token");
 	String pg = (String) request.getAttribute("page");
+	// TODO : get limit and radius
+	int lim = Integer.parseInt((String)request.getAttribute("limit"));
+	int rad = Integer.parseInt((String)request.getAttribute("radius"));
 	int pagenumber = Integer.parseInt(pg);
 	%>
 	
@@ -342,6 +345,29 @@
                 </div>
             </div>
         </div>
-    </div>
+        <!-- TODO pagination -->
+		<div class="container my-6 mr-5 pr-5 pb-5">
+			<nav aria-label="...">
+				<ul class="pagination pagination-lg">
+				<% 
+					int maxPages = Math.max(rm.getNumberOfRecipes() / 5, rm.getNumberOfRestaurants() / 5);
+					for (int k = 1 ; k <= maxPages ; k++){
+						if (pagenumber == k) {
+				%>
+						<li class="page-item active" aria-current="page">
+							<span class="page-link"><%=k%><span class="sr-only">(current)</span></span>
+						</li>
+				<%
+						} else {
+				%>
+						<li class="page-item"><a class="page-link" href=<%="/ImHungry/SearchPageController?action=search&term=" + term + "&token=" + token + "&limit=" + lim + "&radius=" + rad + "&page=" + k %>><%= k %></a></li>
+				<%
+						}
+				   }
+				%>					
+				</ul>
+			</nav>
+		</div>
+	</div>
 </body>
 </html>

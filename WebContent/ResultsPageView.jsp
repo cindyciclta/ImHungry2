@@ -203,7 +203,7 @@
                     <!-- TODO table here -->
                     <div class="row">
                         <div class="col mx-4">
-                            <table class="table-dark table-striped table-borderless">
+                            <table class="table-dark table-hover table-striped table-borderless">
                                 <thead>
                                     <tr>
                                         <h3>Restaurants</h3>
@@ -246,7 +246,7 @@
                             </table>
                         </div>
                         <div class="col mx-4">
-                            <table class="table-dark table-striped table-borderless">
+                            <table class="table-dark table-hover table-striped table-borderless">
                                 <thead>
                                     <tr>
                                         <h3>Recipes</h3>

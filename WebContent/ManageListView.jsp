@@ -100,7 +100,7 @@
                <div class="row">
                    <div class="col-lg-10">
                        <div class="container">
-                           <table class="table-dark table-striped table-borderless">
+                           <table class="table-dark table-hover table-striped table-borderless">
                                <thead>
                                </thead>
                                <tbody>

@@ -46,6 +46,10 @@ body, html {
 	
 }
 
+p7 {
+	font-size: 25px;
+}
+
 </style>
 </head>
 
@@ -88,7 +92,7 @@ body, html {
 			  					<input class="form-control mr-sm-2" type="number" min="1" value="5" id="limitInput" title="Number of items to show in results">
 			  				</div>
 			  				<div id="searchRadius" class="form-group col-md-3">
-			  					<input class="form-control mr-sm-2" type="number" min="1" value="1000" placeholder="radius" id="radiusInput">
+			  					<input class="form-control mr-sm-2" type="number" min="1" placeholder="radius" id="radiusInput">
 			  				</div>
 			  			</div>
 			  		</div>
@@ -135,6 +139,41 @@ body, html {
 			  </div>
 			</div>
 		</div>
+		<div class="container mt-5 h-100">
+			<div class="h-100 row justify-content-center align-items-center">
+				<div class="container">
+				  	<div class="row justify-content-center align-items-center">
+						<p7>Search History</p7>
+					</div>
+				</div>
+				<div class="container">
+					<div class="row justify-content-center align-items-center">
+						<table class="table-dark table-hover table-stripped table-borderless">
+							<thead>
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										<p1>blaadfsdghh</p1>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p1>blah</p1>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p1>blah</p1>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
 		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
 		crossorigin="anonymous"></script>

@@ -52,11 +52,21 @@ public class TestSearchPageController extends Mockito{
 	public static void tearDownAfterClass() throws Exception {
 		// Delete added user
 		Class.forName("com.mysql.jdbc.Driver");
-		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/ImHungry?user=root&password=root&useSSL=false");
+		Connection conn = DatabaseModel.getConnection();
+		
+		
+		// clean the searches database as well
+		int id = DatabaseModel.GetUserID(username);
+		
+		String query = "DELETE from searches where user_id = (?)";
+		PreparedStatement preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+	    preparedStmt.setInt (1, id);
+	    preparedStmt.executeUpdate();
+	    preparedStmt.close();
 		
 		// the mysql insert statement to have date of upload
-		String query = "DELETE from users where user_name = (?)";
-		PreparedStatement preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+		query = "DELETE from users where user_name = (?)";
+		preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 	    preparedStmt.setString (1, username);
 	    preparedStmt.executeUpdate();
 	    

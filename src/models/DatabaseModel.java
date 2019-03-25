@@ -32,7 +32,7 @@ public class DatabaseModel {
 		return returnVal;
 	}
 	
-	private static Connection getConnection() throws ClassNotFoundException, SQLException{
+	public static Connection getConnection() throws ClassNotFoundException, SQLException{
 		Class.forName("com.mysql.jdbc.Driver");
 		return DriverManager.getConnection("jdbc:mysql://localhost/ImHungry?user=root&password=root&useSSL=false");
 	}
@@ -111,8 +111,6 @@ public class DatabaseModel {
 		preparedStmt.executeUpdate();
 
 		close(conn, preparedStmt, null);
-
-
 		return true;
 	}
 	public static int GetUserID(String username) throws Exception{
@@ -132,11 +130,9 @@ public class DatabaseModel {
 		close(conn, preparedStmt, rs);
 		return -1;
 	}
-	public static Vector<String> GetSearchHistory(int userid) throws Exception {
-// Check password
+	public static Vector<SearchTermModel> GetSearchHistory(int userid) throws Exception {
 		Connection conn = getConnection();
-		Vector<String> results = new Vector<String>();
-		if(conn == null) return null;
+		Vector<SearchTermModel> results = new Vector<>();
 		Statement st = conn.createStatement();
 
 		ResultSet rs = null;
@@ -146,7 +142,11 @@ public class DatabaseModel {
 			return null;
 		}
 		while (rs.next()) {
-			results.add(rs.getString("term"));
+			SearchTermModel s = new SearchTermModel();
+			s.term = rs.getString("term");
+			s.limit = rs.getInt("limit_search");
+			s.radius = rs.getInt("radius");
+			results.add(s);
 		}
 
 		conn.close();
@@ -154,6 +154,5 @@ public class DatabaseModel {
 		st.close();
 		return results;
 	}
-
 
 }

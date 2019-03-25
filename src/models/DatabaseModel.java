@@ -6,10 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Vector;
 
 public class DatabaseModel {
 	
-	public static int signInUser(String username, char[] password) throws Exception{
+	public static int signInUser(String username, char[] password) throws Exception {
 		// Get from SQL
 		Connection conn = null;
 		ResultSet rs = null;
@@ -27,8 +28,7 @@ public class DatabaseModel {
 	    	 returnVal = rs.getInt("user_id");
 	    }
 	    
-	    rs.close();
-		conn.close();
+		close(conn, preparedStmt, rs);
 		return returnVal;
 	}
 	
@@ -53,8 +53,7 @@ public class DatabaseModel {
 	    if(rs.next()) {
 	    	 returnVal = true;
 	    }
-	    rs.close();
-		conn.close();
+		close(conn, preparedStmt, rs);
 		return returnVal;
 
 	}
@@ -80,7 +79,81 @@ public class DatabaseModel {
 		preparedStmt.setString(2, String.valueOf(password)); 
 		int affectedRows = preparedStmt.executeUpdate();
 		
-		conn.close();
+		close(conn, preparedStmt, null);
 		return returnVal;
 	}
+	private static void close(Connection conn, PreparedStatement st, ResultSet rs) throws Exception {
+		// Result sets, statements do not need to be closed, as they are ended by the connectionProxy closing
+
+		if(conn != null) {
+			conn.close();
+		}
+	}
+	
+	public static boolean AddSearchToHistory(int userid, String term, int limit, int radius) throws Exception {
+
+		if(userid < 0) {
+			return false;
+		}
+		term = term.trim();
+		Connection conn =null;
+		PreparedStatement preparedStmt = null;
+
+		conn = getConnection();
+		String sql = "INSERT INTO searches (user_id, term, limit_search, radius) VALUES (?, ?, ?, ?)";
+		
+//			preparedStmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+		preparedStmt = conn.prepareStatement(sql);
+		preparedStmt.setInt(1, userid);
+		preparedStmt.setString(2, term);
+		preparedStmt.setInt(3, limit);
+		preparedStmt.setInt(4, radius);
+		preparedStmt.executeUpdate();
+
+		close(conn, preparedStmt, null);
+
+
+		return true;
+	}
+	public static int GetUserID(String username) throws Exception{
+		
+		Connection conn =null;
+		PreparedStatement preparedStmt = null;
+		ResultSet rs = null;
+
+		conn = getConnection();
+		String query = "SELECT * from users where user_name = (?)";
+		preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+	    preparedStmt.setString (1, username);
+	    rs = preparedStmt.executeQuery();
+	    if(rs.next()) {
+	    	return rs.getInt("user_id");
+	    }
+		close(conn, preparedStmt, rs);
+		return -1;
+	}
+	public static Vector<String> GetSearchHistory(int userid) throws Exception {
+// Check password
+		Connection conn = getConnection();
+		Vector<String> results = new Vector<String>();
+		if(conn == null) return null;
+		Statement st = conn.createStatement();
+
+		ResultSet rs = null;
+
+		rs = st.executeQuery("SELECT * FROM searches WHERE user_id = " + Integer.toString(userid));
+		if(rs == null) {
+			return null;
+		}
+		while (rs.next()) {
+			results.add(rs.getString("term"));
+		}
+
+		conn.close();
+		rs.close();
+		st.close();
+		return results;
+	}
+
+
 }

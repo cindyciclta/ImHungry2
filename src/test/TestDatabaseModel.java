@@ -23,7 +23,7 @@ public class TestDatabaseModel{
 	
 	public static void deleteUser(String username) throws Exception{
 		Class.forName("com.mysql.jdbc.Driver");
-		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/ImHungry?user=root&password=root&useSSL=false");
+		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/ImHungry?user=root&password=NewPassword&useSSL=false");
 		
 		// the mysql insert statement to have date of upload
 		String query = "DELETE from users where user_name = (?)";
@@ -105,6 +105,35 @@ public class TestDatabaseModel{
 		
 		DatabaseModel.insertUser(username, password.toCharArray());
 		assertTrue(DatabaseModel.signInUser(username, new char[5]) == -1);
+		deleteUser(username);
+	}
+	
+	@Test
+	public void testSearchHistory() throws Exception{
+		String username = "test";
+		String password = "test";
+		DatabaseModel.insertUser(username, password.toCharArray());
+		int id = DatabaseModel.GetUserID("test");
+		assertTrue(DatabaseModel.AddSearchToHistory(id,"pizza", 5, 1000));
+		
+		deleteUser(username);
+	}
+	@Test
+	public void testGetSearchHistory() throws Exception{
+		String username = "test";
+		String password = "test";
+		DatabaseModel.insertUser(username, password.toCharArray());
+		int id = DatabaseModel.GetUserID("test");
+		assertTrue(DatabaseModel.AddSearchToHistory(id,"pizza", 5, 1000));
+		assertNotNull(DatabaseModel.GetSearchHistory(id));
+		deleteUser(username);
+	}
+	@Test
+	public void testSearchHistoryInvalidUserid() throws Exception{
+		String username = "test";
+		String password = "test";
+		DatabaseModel.insertUser(username, password.toCharArray());
+		assertTrue(DatabaseModel.AddSearchToHistory(-1,"pizza", 5, 1000));
 		deleteUser(username);
 	}
 }

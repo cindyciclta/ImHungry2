@@ -76,9 +76,6 @@
 	String term = (String) request.getAttribute("term");
 	String token = (String)request.getAttribute("token");
 	String pg = (String) request.getAttribute("page");
-	// TODO : get limit and radius
-	int lim = Integer.parseInt((String)request.getAttribute("limit"));
-	int rad = Integer.parseInt((String)request.getAttribute("radius"));
 	int pagenumber = Integer.parseInt(pg);
 	%>
 	
@@ -217,16 +214,7 @@
                                 </thead>
                                 <tbody>	                                
                                 	<%
-                                	System.out.println("page number=" + pagenumber);
-		                    		int rest_upperbound = 0;
-                    				System.out.println("number of restaurants" + rm.getNumberOfRestaurants());
-		                            if ((5 * (pagenumber - 1) + 5) < rm.getNumberOfRestaurants()) {
-		                            	rest_upperbound = (5 * (pagenumber - 1) + 5);
-		                            } else {
-		                            	rest_upperbound = rm.getNumberOfRestaurants();
-		                            }
-                                	for (int i = 5 * (pagenumber - 1) ; i < rest_upperbound ; i++) {
-                                		System.out.println("i=" + i);
+                                	for (int i = 5 * (pagenumber - 1) ; i < 5 * (pagenumber - 1) + 5 ; i++) {
 									//for(int i = 0 ; i < rm.getNumberOfRestaurants() ; i++){
 										Map<String, String> resultsFields = rm.getFormattedRestaurantResultsAt(i);
 										
@@ -271,14 +259,7 @@
                                 <tbody>
                                 <%
                                 String ecodedValue = URLEncoder.encode(term, "UTF-8");
-                                int reci_upperbound = 0;
-                                if ((5 * (pagenumber - 1) + 5) < rm.getNumberOfRecipes()) {
-                                	reci_upperbound = (5 * (pagenumber - 1) + 5);
-                                } else {
-                                	reci_upperbound = rm.getNumberOfRecipes();
-                                }
-                                for (int i = 5 * (pagenumber - 1) ; i < reci_upperbound ; i++) {
-								//for(int i = 0 ; i < rm.getNumberOfRecipes() ; i++){
+								for(int i = 0 ; i < rm.getNumberOfRecipes() ; i++){
 									Map<String, String> resultsFields = rm.getFormattedRecipeResultsAt(i);
 									
 									// Skip do not show results
@@ -345,29 +326,6 @@
                 </div>
             </div>
         </div>
-        <!-- TODO pagination -->
-		<div class="container my-6 mr-5 pr-5 pb-5">
-			<nav aria-label="...">
-				<ul class="pagination pagination-lg">
-				<% 
-					int maxPages = Math.max(rm.getNumberOfRecipes() / 5, rm.getNumberOfRestaurants() / 5);
-					for (int k = 1 ; k <= maxPages ; k++){
-						if (pagenumber == k) {
-				%>
-						<li class="page-item active" aria-current="page">
-							<span class="page-link"><%=k%><span class="sr-only">(current)</span></span>
-						</li>
-				<%
-						} else {
-				%>
-						<li class="page-item"><a class="page-link" href=<%="/ImHungry/SearchPageController?action=search&term=" + term + "&token=" + token + "&limit=" + lim + "&radius=" + rad + "&page=" + k %>><%= k %></a></li>
-				<%
-						}
-				   }
-				%>					
-				</ul>
-			</nav>
-		</div>
-	</div>
+    </div>
 </body>
 </html>

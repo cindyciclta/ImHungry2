@@ -59,7 +59,6 @@
 	String term = (String) request.getAttribute("term");
 	String token = (String)request.getAttribute("token");
 	String pg = (String) request.getAttribute("page");
-	//TODO exception thrown here when going 'back to results'
 	int lim = Integer.parseInt((String)request.getSession().getAttribute("limit"));
 	int rad = Integer.parseInt((String)request.getSession().getAttribute("radius"));
 	int pagenumber;

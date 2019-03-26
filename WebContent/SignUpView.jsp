@@ -34,8 +34,8 @@
 		  	<div class="container">
 		  		<div class="row justify-content-center align-items-center">
 		  			<div class="form-row">
-		  				<div id="searchBar" class="form-group col-md-12">
-		  					<input class="form-control mr-sm-2" type="text" name="username" placeholder="Username...">
+		  				<div class="form-group col-md-12">
+		  					<input id="username" class="form-control mr-sm-2" type="text" name="username" placeholder="Username...">
 		  				</div>
 		  			</div>
 		  		</div>
@@ -44,8 +44,8 @@
 		   <div class="container">
 		  		<div class="row justify-content-center align-items-center">
 		  			<div class="form-row">
-		  				<div id="searchBar" class="form-group col-md-12">
-		  					<input class="form-control mr-sm-2" type="password"  name="password" placeholder="Password...">
+		  				<div class="form-group col-md-12">
+		  					<input id="password" class="form-control mr-sm-2" type="password"  name="password" placeholder="Password...">
 		  				</div>
 		  			</div>
 		  		</div>
@@ -54,8 +54,8 @@
 		   <div class="container">
 		  		<div class="row justify-content-center align-items-center">
 		  			<div class="form-row">
-		  				<div id="searchBar" class="form-group col-md-12">
-		  					<input class="form-control mr-sm-2" type="password"  name="confirm_password" placeholder="Confirm Password...">
+		  				<div class="form-group col-md-12">
+		  					<input id="passwordConf" class="form-control mr-sm-2" type="password" name="confirm_password" placeholder="Confirm Password...">
 		  				</div>
 		  			</div>
 		  		</div>
@@ -64,8 +64,8 @@
 		   <div class="container">
 		  		<div class="row justify-content-center align-items-center">
 		  			<div class="form-row">
-		  				<div id="searchBar" class="form-group col-md-12">
-		  					<input class="form-control mr-sm-2" type="submit"/>
+		  				<div class="form-group col-md-12">
+		  					<input id="signUpSubmit" class="form-control mr-sm-2" type="submit"/>
 		  				</div>
 		  			</div>
 		  		</div>

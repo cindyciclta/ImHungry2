@@ -108,8 +108,24 @@ Given(/^I searched for item "([^"]*)" with "([^"]*)" radius and was redirected t
   expect(page).to have_css('h1', text: arg1, wait: 50)
 end
 
+Given(/^I have navigated to the sign up page$/) do
+  visit "http://localhost:8080/ImHungry/SignInView.jsp"
+  page.find('#signUpLink').click
+end
+
+Given(/^I sign up with username "([^"]*)" and password "([^"]*)"$/) do |arg1, arg2|
+  fill_in 'username', :with => arg1
+  fill_in 'password', :with => arg2
+  fill_in 'passwordConf', :with => arg2
+  page.find('#signUpSubmit').click
+end
+
+Then(/^I should be on the sign up page$/) do
+  expect(page).to have_css('#passwordConf')
+end
+
 Then(/^I should not see any restaurants$/) do
-	expect(page).not_to have_content('minutes of driving')
+  expect(page).not_to have_content('minutes of driving')
 end
 
 Then(/^I should see "([^"]*)" as the first result for "([^"]*)"$/) do |arg1, arg2|

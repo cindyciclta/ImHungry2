@@ -54,7 +54,7 @@
 		  		<div class="row justify-content-center align-items-center">
 		  			<div class="form-row">
 		  				<div id="searchBar" class="form-group col-md-12">
-		  					<input class="form-control mr-sm-2" type="submit"/>
+		  					<input id="signInButton" class="form-control mr-sm-2" type="submit"/>
 		  				</div>
 		  			</div>
 		  		</div>

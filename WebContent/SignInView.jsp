@@ -64,7 +64,7 @@
 		  		<div class="row justify-content-center align-items-center">
 		  			<div class="form-row">
 		  				<div id="searchBar" class="form-group col-md-12">
-		  					<h3><a href="/ImHungry/SignUpView.jsp">Sign Up Here</a></h3>
+		  					<h3><a href="/ImHungry/SignUpView.jsp" id="signUpLink">Sign Up Here</a></h3>
 		  				</div>
 		  			</div>
 		  		</div>

@@ -310,7 +310,7 @@ When(/^I enter a negative radius$/) do
 end
 
 Then(/^the text box should not accept the value$/) do
-  expect(page).to have_current_path('/ImHungry/SearchPageController', wait: 10)
+  expect(page).to have_css('h1', text: "I'm Hungry")
 end
 
 When(/^I hover over the text box$/) do

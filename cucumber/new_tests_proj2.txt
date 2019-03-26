@@ -1,0 +1,7 @@
+New tests for project 2 (located at the bottom of respective feature file):
+
+Test signing up with duplicate account in SignUp.feature
+Test that there is a radius text box SearchPage.feature
+Test default 1000 radius SearchPage.feature
+Test negative radius SearchPage.feature
+Test that putting tiny radius gives no restaurant results ResultsPage.feature

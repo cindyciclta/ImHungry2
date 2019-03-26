@@ -2,7 +2,12 @@
 # Manage List Page
 
 Given(/^I searched for "([^"]*)"$/) do |arg1|
-  visit "http://localhost:8080/ImHungry/SearchPageController"
+  visit "http://localhost:8080/ImHungry/SignInView.jsp"
+  fill_in 'username', :with => "test"
+  fill_in 'password', :with => "test"
+  page.find('#signInButton').click
+  expect(page).to have_css('h1', text: "I'm Hungry", wait: 50)
+  
   fill_in 'termInput', :with => arg1
   fill_in 'radiusInput', :with => 3000
   page.find('div#emojiButton.img-container').click
@@ -76,7 +81,12 @@ end
 # RPFF7
 
 Given(/^I searched for item "([^"]*)" with "([^"]*)" results and was redirected to the Results page$/) do |arg1, arg2|
-  visit 'http://localhost:8080/ImHungry/SearchPageController'
+  visit "http://localhost:8080/ImHungry/SignInView.jsp"
+  fill_in 'username', :with => "test"
+  fill_in 'password', :with => "test"
+  page.find('#signInButton').click
+  expect(page).to have_css('h1', text: "I'm Hungry", wait: 50)
+  
   fill_in('termInput', with: arg1)
   fill_in('limitInput', with: arg2)
   fill_in 'radiusInput', :with => 3000
@@ -85,7 +95,12 @@ Given(/^I searched for item "([^"]*)" with "([^"]*)" results and was redirected 
 end
 
 Given(/^I searched for item "([^"]*)" with "([^"]*)" radius and was redirected to the Results page$/) do |arg1, arg2|
-  visit 'http://localhost:8080/ImHungry/SearchPageController'
+  visit "http://localhost:8080/ImHungry/SignInView.jsp"
+  fill_in 'username', :with => "test"
+  fill_in 'password', :with => "test"
+  page.find('#signInButton').click
+  expect(page).to have_css('h1', text: "I'm Hungry", wait: 50)
+  
   fill_in('termInput', with: arg1)
   fill_in('radiusInput', with: arg2)
   fill_in 'limitInput', :with => 20
@@ -237,7 +252,11 @@ end
 # Search Page
 
 Given(/^I am on the search page$/) do
-  visit "http://localhost:8080/ImHungry/SearchPageController"
+  visit "http://localhost:8080/ImHungry/SignInView.jsp"
+  fill_in 'username', :with => "test"
+  fill_in 'password', :with => "test"
+  page.find('#signInButton').click
+  expect(page).to have_css('h1', text: "I'm Hungry", wait: 50)
 end
 
 Then(/^I should see prompt text enter food$/) do

@@ -60,9 +60,14 @@
 	String token = (String)request.getAttribute("token");
 	String pg = (String) request.getAttribute("page");
 	//TODO exception thrown here when going 'back to results'
-	int lim = Integer.parseInt((String)request.getAttribute("limit"));
-	int rad = Integer.parseInt((String)request.getAttribute("radius"));
-	int pagenumber = Integer.parseInt(pg);
+	int lim = Integer.parseInt((String)request.getSession().getAttribute("limit"));
+	int rad = Integer.parseInt((String)request.getSession().getAttribute("radius"));
+	int pagenumber;
+	try {
+		pagenumber = Integer.parseInt(pg);
+	} catch (Exception e) {
+		pagenumber = 1;
+	}
 	%>
 	
 	<script>

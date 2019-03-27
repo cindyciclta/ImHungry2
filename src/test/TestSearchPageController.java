@@ -197,6 +197,29 @@ public class TestSearchPageController extends Mockito{
         verify(rd).forward(request, response);	
 	}
 	
+	@Test
+	public void testExceptionInAdding() throws Exception{
+		when(request.getParameter("token")).thenReturn( token );
+        when(request.getParameter("action")).thenReturn( "search" );
+        when(request.getParameter("term")).thenReturn( "chicken" );
+        when(request.getParameter("limit")).thenReturn( "5asdf" );
+        when(request.getRequestDispatcher("SearchPageView.jsp")).thenReturn(rd);
+        new SearchPageController().service(request, response);
+        verify(rd).forward(request, response);	
+	}
+	
+	@Test
+	public void testExceptionInGetting() throws Exception{
+		RedirectionController.tokens.put("123123123", -1);
+		when(request.getParameter("token")).thenReturn( "123123123" );
+        when(request.getParameter("action")).thenReturn( "search" );
+        when(request.getParameter("term")).thenReturn( "chicken" );
+        when(request.getParameter("limit")).thenReturn( "5" );
+        when(request.getRequestDispatcher("SearchPageView.jsp")).thenReturn(rd);
+        new SearchPageController().service(request, response);
+        verify(rd).forward(request, response);	
+	}
+	
 
 	
 	

@@ -38,12 +38,16 @@ public class SearchPageController extends HttpServlet {
 			String action = request.getParameter("action");
 			Vector<SearchTermModel> searchHistory = new Vector<>();
 			try {
+				// Check that ID is not a negative number
+				if(id < 0) {
+					throw new Exception();
+				}
 				searchHistory = DatabaseModel.GetSearchHistory(id);
 			} catch (Exception e1) {
 			}
 			
 			// Search action
-			if(action == null || action.isEmpty() || action.equals("redirect")) {
+			if(action == null || action.isEmpty() || action.equals("redirect") || id < 0) {
 			  RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
 			  request.setAttribute("token", token);
 			  request.setAttribute("searches", searchHistory);
@@ -65,12 +69,15 @@ public class SearchPageController extends HttpServlet {
 					System.out.println(term);
 					System.out.println(decodedValue);
 					RequestDispatcher requestDispatcher = request.getRequestDispatcher("ResultsPageController?action=results&term=" +term+ "&limit=" + limit + "&radius=" + radius + "&page=" + page);
-					int limitt = Integer.parseInt(limit);
-					int radiuss = Integer.parseInt(radius);
-					int userid = RedirectionController.tokens.get(token);
 					try {
+						int limitt = Integer.parseInt(limit);
+						int radiuss = Integer.parseInt(radius);
+						int userid = RedirectionController.tokens.get(token);
 						boolean responsedb = DatabaseModel.AddSearchToHistory(userid, term, limitt, radiuss);
 					} catch (Exception e) {
+						requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
+						request.setAttribute("token", token);
+						request.setAttribute("searches", searchHistory);
 					}
 					requestDispatcher.forward(request, response);
 				}

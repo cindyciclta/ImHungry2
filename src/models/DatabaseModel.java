@@ -86,10 +86,7 @@ public class DatabaseModel {
 	}
 	private static void close(Connection conn, PreparedStatement st, ResultSet rs) throws Exception {
 		// Result sets, statements do not need to be closed, as they are ended by the connectionProxy closing
-
-		if(conn != null) {
-			conn.close();
-		}
+		conn.close();
 	}
 	
 	public static boolean AddSearchToHistory(int userid, String term, int limit, int radius) throws Exception {
@@ -104,7 +101,6 @@ public class DatabaseModel {
 		conn = getConnection();
 		String sql = "INSERT INTO searches (user_id, term, limit_search, radius) VALUES (?, ?, ?, ?)";
 		
-//			preparedStmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		preparedStmt = conn.prepareStatement(sql);
 		preparedStmt.setInt(1, userid);
 		preparedStmt.setString(2, term);
@@ -115,6 +111,7 @@ public class DatabaseModel {
 		close(conn, preparedStmt, null);
 		return true;
 	}
+	
 	public static int GetUserID(String username) throws Exception{
 		
 		Connection conn =null;
@@ -132,6 +129,7 @@ public class DatabaseModel {
 		close(conn, preparedStmt, rs);
 		return -1;
 	}
+	
 	public static Vector<SearchTermModel> GetSearchHistory(int userid) throws Exception {
 		Connection conn = getConnection();
 		Vector<SearchTermModel> results = new Vector<>();
@@ -140,9 +138,6 @@ public class DatabaseModel {
 		ResultSet rs = null;
 
 		rs = st.executeQuery("SELECT * FROM searches WHERE user_id = " + Integer.toString(userid));
-		if(rs == null) {
-			return null;
-		}
 		while (rs.next()) {
 			SearchTermModel s = new SearchTermModel();
 			s.term = rs.getString("term");

@@ -25,10 +25,14 @@ public class TestResultsPageController extends Mockito{
 
     @Mock
     RequestDispatcher rd;
+    
+    @Mock
+    HttpSession sess;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
+	
 	
 	@Before
     public void setUp() throws Exception {
@@ -106,6 +110,16 @@ public class TestResultsPageController extends Mockito{
     }
 	
 	@Test
+    public void testSearchRemoveNoIndex() throws Exception {
+        when(request.getParameter("action")).thenReturn( "" );
+        when(request.getParameter("token")).thenReturn( "fakeToken" );
+        when(request.getParameter("index")).thenReturn( null );
+        when(request.getRequestDispatcher("SearchPageView.jsp")).thenReturn(rd);
+        new ResultsPageController().service(request, response);
+        verify(rd).forward(request, response);
+    }
+	
+	@Test
     public void testSearchInvalidLimitEmpty() throws Exception {
         when(request.getParameter("action")).thenReturn( "results" );
         when(request.getParameter("term")).thenReturn( "chicken" );
@@ -121,6 +135,7 @@ public class TestResultsPageController extends Mockito{
         when(request.getParameter("action")).thenReturn( "results" );
         when(request.getParameter("term")).thenReturn( "chicken" );
         when(request.getParameter("token")).thenReturn( "fakeToken" );
+        when(request.getSession()).thenReturn(sess);
         when(request.getParameter("limit")).thenReturn( "5" );
         when(request.getParameter("radius")).thenReturn( "1000" );
         when(request.getRequestDispatcher("ResultsPageView.jsp")).thenReturn(rd);
@@ -153,4 +168,16 @@ public class TestResultsPageController extends Mockito{
         new ResultsPageController().service(request, response);
         verify(rd).forward(request, response);
     }
+	
+	@Test
+	public void nullToken() throws Exception {
+		when(request.getParameter("action")).thenReturn( "results" );
+        when(request.getParameter("term")).thenReturn( "chicken" );
+        when(request.getParameter("limit")).thenReturn( "5" );
+        when(request.getParameter("token")).thenReturn( "");
+        when(request.getParameter("radius")).thenReturn( "1000" );
+        when(request.getRequestDispatcher("SignInView.jsp")).thenReturn(rd);
+        new ResultsPageController().service(request, response);
+        verify(rd).forward(request, response);
+	}
 }

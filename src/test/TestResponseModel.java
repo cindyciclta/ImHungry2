@@ -133,6 +133,23 @@ public class TestResponseModel {
 		assertFalse(e.checkParameters(" ", 5));
 	}
 	
+	@Test
+	public void testInvalidRadius() {
+		ResponseModel e = new ResponseModel();
+		assertFalse(e.checkParameters("food", 5, -1));
+	}
+	
+	@Test
+	public void testInvalidCheckWithRadius() {
+		ResponseModel e = new ResponseModel();
+		assertFalse(e.checkParameters(" ", 5, 1));
+	}
+	
+	@Test
+	public void testValidCheckWithRadius() {
+		ResponseModel e = new ResponseModel();
+		assertTrue(e.checkParameters("food", 5, 1));
+	}
 	
 
 }

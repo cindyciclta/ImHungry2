@@ -49,10 +49,10 @@ public class ResultsPageController extends HttpServlet {
 			String radius = request.getParameter("radius"); //Maybe need to add a check to see if empty
 			String token = request.getParameter("token");
 			String page = request.getParameter("page");
-			if(token == null) {
+			if(token.isEmpty()) {
 				RequestDispatcher requestDispatcher = request.getRequestDispatcher("SignInView.jsp");
 				requestDispatcher.forward(request, response);
-			}if(term == null || limit == null || term.isEmpty() || limit.isEmpty()) {
+			}else if(term == null || limit == null || term.isEmpty() || limit.isEmpty()) {
 				RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
 				requestDispatcher.forward(request, response);	
 			}else {

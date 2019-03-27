@@ -65,25 +65,14 @@ public class ResponseModel {
 		this.limit = limit;
 		return true;
 	}
+	
 	public boolean checkParameters(String term, int limit, int radius) {
-		if(limit < 0) {
+		boolean checked = checkParameters(term, limit);
+		if(!checked || radius < 0) {
 			return false;
 		}
-		if(radius < 0) {
-			return false;
-		}
-		
-		if(term == null) {
-			return false;
-		}
-		term = term.trim();
-		if(term.isEmpty()) {
-			return false;
-		}
-		this.term = term;
-		this.limit = limit;
 		this.radius = radius;
-		return true;
+		return checked;
 	}
 	
 	public boolean getSearchResults() {

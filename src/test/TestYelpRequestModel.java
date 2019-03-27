@@ -108,12 +108,18 @@ private static MockYelpRequestModel cached;
 	public void testExistingResults() {
 		assertEquals(ResponseCodeModel.OK, cached.completeTask("coffee", 5, 1000));
 		assertNotNull(cached.yelp.getResults());
-	}	
+	}
+	
 	@Test
 	public void testBadRequest() {
 		cached.yelp.responseCode = 300;
 		assertEquals(ResponseCodeModel.OK, cached.completeTask("coffee", 5, 1000));
 		assertNotNull(cached.yelp.getResults());
+	}
+	
+	@Test
+	public void testBadRadius() {
+		assertEquals(ResponseCodeModel.INTERNAL_ERROR, cached.completeTask("cosdfsdffee", 1, 0));
 	}
 	
 	

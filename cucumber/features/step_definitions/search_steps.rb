@@ -103,7 +103,7 @@ Given(/^I searched for item "([^"]*)" with "([^"]*)" radius and was redirected t
   
   fill_in('termInput', with: arg1)
   fill_in('radiusInput', with: arg2)
-  fill_in 'limitInput', :with => 20
+  fill_in 'limitInput', :with => 10
   page.find('div#emojiButton.img-container').click
   expect(page).to have_css('h1', text: arg1, wait: 50)
 end
@@ -265,6 +265,22 @@ Then(/^I should see the name, stars, and prep time for the recipes$/) do
   expect(page).to have_content('Cook:')
 end
 
+Then(/^there should be no pagination$/) do
+  expect(page).not_to have_css('.page-link')
+end
+
+Then(/^there should be pagination$/) do
+  expect(page).to have_css('#page-alt2')
+end
+
+When(/^I navigate to the second page$/) do
+  page.find('#page-alt2').click
+end
+
+Then(/^there should be table-hover$/) do
+  expect(page).to have_css('.table-hover')
+end
+
 # Search Page
 
 Given(/^I am on the search page$/) do
@@ -310,7 +326,7 @@ When(/^I enter a negative radius$/) do
 end
 
 Then(/^the text box should not accept the value$/) do
-  expect(page).to have_current_path('/ImHungry/SearchPageController', wait: 10)
+  expect(page).to have_css('h1', text: "I'm Hungry")
 end
 
 When(/^I hover over the text box$/) do

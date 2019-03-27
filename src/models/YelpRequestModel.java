@@ -1,6 +1,7 @@
 package models;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
@@ -31,29 +32,8 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 		return results;
 	}
 	
-	
-//	public boolean checkParameters(String term, int limit) {
-//		if(limit < 0) {
-//			return false;
-//		}
-//		
-//		if(term == null) {
-//			return false;
-//		}
-//		term = term.trim();
-//		if(term.isEmpty()) {
-//			return false;
-//		}
-//		this.term = term;
-//		this.limit = limit;
-//		return true;
-//	}
-	
 	public boolean checkParameters(String term, int limit, int radius) {
 		if(limit < 0) {
-			return false;
-		}
-		if(radius < 0) {
 			return false;
 		}
 		if(term == null) {
@@ -71,7 +51,13 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 	
 	@Override
 	public ResponseCodeModel completeTask() {
+		
 		try {
+			
+			if(this.radius == 0) {
+				throw new IOException();
+			}
+			
 			String url = "https://api.yelp.com/v3/businesses/search?term="+term+"&latitude=34.02056373251961&longitude=-118.28544706106186&radius="+ radius;
 			URL obj = new URL(url);
 			HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
@@ -80,9 +66,6 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 			con.setRequestProperty ("Authorization", "Bearer " + API_KEY);
 			con.setDoOutput(true);
 			responseCode = con.getResponseCode();
-			if(responseCode  < 200 || responseCode > 299) {
-				return ResponseCodeModel.AUTH_UNAUTHORIZED;
-			}
 			BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
 			String line;
 			String response = "";
@@ -90,71 +73,57 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 				response += line;
 				System.out.println(line);
 			}
-			if(!response.isEmpty())
-			{
-				JSONObject json = new JSONObject(response);
+			
+			JSONObject json = new JSONObject(response);
+			
+			// Parse out all restaurant fields
+			JSONArray businesses = json.getJSONArray("businesses");
+			for(int i = 0 ; i < Math.min(limit, businesses.length()) ; i++) {
 				
-				// Parse out all restaurant fields
-				JSONArray businesses = json.getJSONArray("businesses");
-				for(int i = 0 ; i < Math.min(limit, businesses.length()) ; i++) {
-					
-					RestaurantModel restaurant = new RestaurantModel();
-					
-					JSONObject business = businesses.getJSONObject(i);
-					String name = business.getString("name");
-					double rating = business.getDouble("rating");
-					
-					restaurant.setName(name);
-					restaurant.setStars((int)rating);
-					
-					try {
-						String dollarSigns = business.getString("price").trim();
-						double lowEndPrice = dollarSigns.length() * 10;
-						double highEndPrice = dollarSigns.length() * 30;
-						restaurant.setPriceRange(lowEndPrice, highEndPrice);	
-					}catch(JSONException e){
-						double lowEndPrice = 1;
-						double highEndPrice = 100;
-						restaurant.setPriceRange(lowEndPrice, highEndPrice);
-					}
-					
-					JSONObject coordinates = business.getJSONObject("coordinates");
-					double lat = coordinates.getDouble("latitude");
-					double lon = coordinates.getDouble("longitude");
-					restaurant.setLatLong(lat, lon);
-					
-					String phone = business.getString("phone");
-					restaurant.setPhone(phone);
-					
-					String link = business.getString("url");
-					restaurant.setLinkToPage(link);
-					
-					JSONObject location = business.getJSONObject("location");
-					JSONArray display = location.getJSONArray("display_address");
-					
-					String address = "";
-					for(int j = 0 ; j < display.length() ; j++) {
-						address += display.getString(j) + " ";
-					}
-					address = address.trim();
-					restaurant.setAddress(address);
-					
-					results.add(restaurant);
+				RestaurantModel restaurant = new RestaurantModel();
+				
+				JSONObject business = businesses.getJSONObject(i);
+				String name = business.getString("name");
+				double rating = business.getDouble("rating");
+				
+				restaurant.setName(name);
+				restaurant.setStars((int)rating);
+				
+				String dollarSigns = business.getString("price").trim();
+				double lowEndPrice = dollarSigns.length() * 10;
+				double highEndPrice = dollarSigns.length() * 30;
+				restaurant.setPriceRange(lowEndPrice, highEndPrice);
+				
+				JSONObject coordinates = business.getJSONObject("coordinates");
+				double lat = coordinates.getDouble("latitude");
+				double lon = coordinates.getDouble("longitude");
+				restaurant.setLatLong(lat, lon);
+				
+				String phone = business.getString("phone");
+				restaurant.setPhone(phone);
+				
+				String link = business.getString("url");
+				restaurant.setLinkToPage(link);
+				
+				JSONObject location = business.getJSONObject("location");
+				JSONArray display = location.getJSONArray("display_address");
+				
+				String address = "";
+				for(int j = 0 ; j < display.length() ; j++) {
+					address += display.getString(j) + " ";
 				}
+				address = address.trim();
+				restaurant.setAddress(address);
+				
+				results.add(restaurant);
 			}
 			
 			Collections.sort(results);
 		     
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (IOException e) {
 	        return ResponseCodeModel.INTERNAL_ERROR;
 	    }  
 		return ResponseCodeModel.OK;
-	}
-	public static void main(String [] args) {
-		YelpRequestModel model = new YelpRequestModel();
-		model.checkParameters("pizza", 5, 300);
-		model.completeTask();	
 	}
 
 	@Override

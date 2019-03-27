@@ -302,7 +302,7 @@
 				<%
 						} else {
 				%>
-						<li class="page-item"><a class="page-link" href=<%="/ImHungry/SearchPageController?action=search&term=" + term + "&token=" + token + "&limit=" + lim + "&radius=" + rad + "&page=" + k %>><%= k %></a></li>
+						<li class="page-item"><a id=<%="page-alt"+k%> class="page-link" href=<%="/ImHungry/SearchPageController?action=search&term=" + term + "&token=" + token + "&limit=" + lim + "&radius=" + rad + "&page=" + k %>><%= k %></a></li>
 				<%
 						}
 				   }

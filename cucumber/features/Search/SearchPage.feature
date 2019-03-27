@@ -41,13 +41,3 @@ Scenario: Redirect to results page for Noodles (SPF5)
 
 	When I searched for "Noodles"
 	Then I should be on the "/ImHungry/SearchPageController?action=search&term=Noodles&limit=5" page
-	
-Scenario: Check default radius
-
-	And I should see a text box to enter search radius
-	And the default radius should be 1000
-
-Scenario: Check negative radius value
-
-	When I enter a negative radius
-	Then the text box should not accept the value

@@ -66,9 +66,9 @@ public class RestaurantModel extends ListItemModel implements Comparable<Restaur
 		String modifier = "";
 		if(isInDoNotShow()) {
 			modifier = "donotshow";
-		}else if(isInFavorites()) {
+		} else if(isInFavorites()) {
 			modifier = "favorites";
-		}else if(isInToExplore()) {
+		} else if(isInToExplore()) {
 			modifier = "toexplore";
 		}
 		toReturn.put("modifier", modifier);
@@ -96,7 +96,6 @@ public class RestaurantModel extends ListItemModel implements Comparable<Restaur
 		if(phone.isEmpty()) {
 			return false;
 		}
-		
 		this.phoneNumber = phone;
 		return true;
 	}
@@ -110,21 +109,17 @@ public class RestaurantModel extends ListItemModel implements Comparable<Restaur
 		if(drivingTime < 0) {
 			return false;
 		}
-		
 		this.drivingTime = drivingTime;
 		return true;
 	}
 	
 	public boolean setPriceRange(double lowEnd, double highEnd) {
-		
 		if(lowEnd < 0) {
 			return false;
 		}
-		
 		if(highEnd < lowEnd) {
 			return false;
 		}
-		
 		this.lowEndPrice = lowEnd;
 		this.highEndPrice = highEnd;
 		return true;
@@ -133,7 +128,6 @@ public class RestaurantModel extends ListItemModel implements Comparable<Restaur
 	public boolean setLatLong(double lat, double lon) {
 		this.lat = lat;
 		this.lon = lon;
-		
 		
 		GoogleMapsRequestModel gm = new GoogleMapsRequestModel();
 		gm.checkParameters(lat, lon);
@@ -150,7 +144,6 @@ public class RestaurantModel extends ListItemModel implements Comparable<Restaur
 		if(!isInFavorites() && arg0.isInFavorites()) {
 			return 1;
 		}
-		
 		
 		return this.drivingTime - arg0.drivingTime;
 	}

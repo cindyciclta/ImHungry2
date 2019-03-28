@@ -18,11 +18,9 @@ import models.CollageGenerationModel;
 import models.GoogleImageRequestModel;
 import models.ResponseModel;
 
+@WebServlet("/RedirectionController")
 public class RedirectionController extends HttpServlet {
 	
-	/**
-	 * 
-	 */
 	public static Map<Integer, ResponseModel> responses = new HashMap<>();
 	public static Map<String, Integer> tokens = new HashMap<>();
 	
@@ -36,23 +34,21 @@ public class RedirectionController extends HttpServlet {
 		String action = request.getParameter("action");
 		String index = request.getParameter("index");
 		String term = request.getParameter("term");
-		
+		RequestDispatcher dispatch = null;
 
 		request.setAttribute("term", term);
 		if(action == null || action.isEmpty() || index == null || index.isEmpty()) {
-			RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
-			requestDispatcher.forward(request, response);
-			
-		}else if(action.equals("managelist")) { //If it is redirecting to the manage list page, set the attributes accordingly
+			dispatch = request.getRequestDispatcher("SearchPageView.jsp");
+		} else if(action.equals("managelist")) { //If it is redirecting to the manage list page, set the attributes accordingly
 			System.out.println("managing list section");
 			String list = request.getParameter("list");
-			RequestDispatcher requestDispatcher = request.getRequestDispatcher("ManageListView.jsp");
+			dispatch = request.getRequestDispatcher("ManageListView.jsp");
 			request.removeAttribute("title");
 			if(list.equals("donotshow")) {
 				request.setAttribute("title", "Do Not Show");
-			}else if(list.equals("favorites")) {
+			} else if(list.equals("favorites")) {
 				request.setAttribute("title", "Favorites");
-			}else {
+			} else {
 				request.setAttribute("title", "To Explore");
 			}
 			request.setAttribute("response", responses.get(Integer.parseInt(index)));
@@ -68,29 +64,26 @@ public class RedirectionController extends HttpServlet {
 			request.setAttribute("length", urllist.size());
 			request.setAttribute("jsonarray", jsArray);
 			
-			requestDispatcher.forward(request, response);
-		}else if(action.equals("recipe")) { //If it is redirecting to the recipe page, set the attributes accordingly
-			RequestDispatcher requestDispatcher = request.getRequestDispatcher("DetailedRecipeView.jsp");
+		} else if(action.equals("recipe")) { //If it is redirecting to the recipe page, set the attributes accordingly
+			dispatch = request.getRequestDispatcher("DetailedRecipeView.jsp");
 			int indexInt = Integer.parseInt(index);
 			request.setAttribute("index", indexInt);
 			String item = request.getParameter("item");
 			int itemInt = Integer.parseInt(item);
 			request.setAttribute("item", itemInt);
 			request.setAttribute("response", responses.get(indexInt).getFormattedDetailedRecipeAt(itemInt));
-			requestDispatcher.forward(request, response);
 			
-		}else if(action.equals("restaurant")) { //If it is redirecting to the restaurant page,  set the attributes accordingly
-			RequestDispatcher requestDispatcher = request.getRequestDispatcher("DetailedRestaurantView.jsp");
+		} else if(action.equals("restaurant")) { //If it is redirecting to the restaurant page,  set the attributes accordingly
+			dispatch = request.getRequestDispatcher("DetailedRestaurantView.jsp");
 			int indexInt = Integer.parseInt(index);
 			String item = request.getParameter("item");
 			int itemInt = Integer.parseInt(item);
 			request.setAttribute("index", indexInt);
 			request.setAttribute("item", itemInt);
 			request.setAttribute("response", responses.get(indexInt).getFormattedDetailedRestaurantAt(itemInt));
-			requestDispatcher.forward(request, response);
 			
-		}else if(action.equals("results")) { //If it is redirecting to the results page,  set the attributes accordingly
-			RequestDispatcher requestDispatcher = request.getRequestDispatcher("ResultsPageView.jsp");
+		} else if(action.equals("results")) { //If it is redirecting to the results page,  set the attributes accordingly
+			dispatch = request.getRequestDispatcher("ResultsPageView.jsp");
 			ResponseModel rm = responses.get(Integer.parseInt(index));
 			rm.sort();
 			request.setAttribute("response", rm);
@@ -107,13 +100,11 @@ public class RedirectionController extends HttpServlet {
 			request.setAttribute("length", urllist.size());
 			request.setAttribute("jsonarray", jsArray);
 			
-			requestDispatcher.forward(request, response);
-			
-		}else if(action.equals("erase")) { //If the erase button is clicked, update database
+		} else if(action.equals("erase")) { //If the erase button is clicked, update database
 			int indexInt = Integer.parseInt(index);
 			RedirectionController.removeResponse(indexInt);
 			
-		}else if(action.equals("addtolist") || action.equals("movetolist")) { //If the addtolist or movetolist button is clicked, update database
+		} else if(action.equals("addtolist") || action.equals("movetolist")) { //If the addtolist or movetolist button is clicked, update database
 			
 			int indexInt = Integer.parseInt(index);
 			String item = request.getParameter("item");
@@ -123,7 +114,7 @@ public class RedirectionController extends HttpServlet {
 			String type = request.getParameter("type");
 			
 			responses.get(indexInt).addToList(itemInt, list, type, true);
-		}else if(action.equals("removefromlist")) { // If the removefromlist button is clicked, update database
+		} else if(action.equals("removefromlist")) { // If the removefromlist button is clicked, update database
 			int indexInt = Integer.parseInt(index);
 			String item = request.getParameter("item");
 			int itemInt = Integer.parseInt(item);
@@ -131,6 +122,9 @@ public class RedirectionController extends HttpServlet {
 			String list = request.getParameter("list");
 			String type = request.getParameter("type");
 			responses.get(indexInt).addToList(itemInt, list, type, false);
+		}
+		if (dispatch != null) {
+			dispatch.forward(request, response);	
 		}
 	}
 	
@@ -142,7 +136,4 @@ public class RedirectionController extends HttpServlet {
 	public static synchronized void removeResponse(int index) {
 		responses.remove(index);
 	}
-	
-	
-	
 }

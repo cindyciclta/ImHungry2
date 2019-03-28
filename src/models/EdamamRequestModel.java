@@ -1,7 +1,6 @@
 package models;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -10,11 +9,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.Set;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 /**
  * Scrapes AllRecipes for information on the recipes
@@ -49,7 +44,6 @@ public class EdamamRequestModel implements ApiCallInterface<RecipeModel> {
 		this.limit = limit;
 		return true;
 	}
-	
 	
 	public List<RecipeModel> getResults(){
 		return results;
@@ -127,7 +121,7 @@ public class EdamamRequestModel implements ApiCallInterface<RecipeModel> {
 					title = title.replace("\"", "");
 					content = content.substring(end_index);
 					added.setName(title);
-				}else {
+				} else {
 					added.setName("unknown");
 				}
 				
@@ -145,7 +139,7 @@ public class EdamamRequestModel implements ApiCallInterface<RecipeModel> {
 						content = content.substring(end_index);
 						added.setImageUrl(linkURL);
 					}
-				}else {
+				} else {
 					added.setImageUrl("unknown");
 				}
 				
@@ -165,14 +159,12 @@ public class EdamamRequestModel implements ApiCallInterface<RecipeModel> {
 					try {
 						
 						rating = Double.parseDouble(title);
-					}catch(Exception e) {
-					}
+					} catch(Exception e) {}
 					added.setStars((int)Math.round(rating));
 					content = content.substring(end_index);
-				}else {
+				} else {
 					added.setStars(3);
 				}
-				
 				
 				// Ingredients
 				tag = "<ul class=\"checklist dropdownwrapper list-ingredients-1\" ng-hide=\"reloaded\" id=\"lst_ingredients_1\">";
@@ -206,11 +198,10 @@ public class EdamamRequestModel implements ApiCallInterface<RecipeModel> {
 					int time = 30;
 					try {
 						time = Integer.parseInt(title);
-					}catch(Exception e) {
-					}
+					} catch(Exception e) {}
 					added.setPrepTime(time);
 					content = content.substring(end_index);
-				}else {
+				} else {
 					added.setPrepTime(30);
 				}
 				index = content.indexOf(tag);
@@ -221,11 +212,10 @@ public class EdamamRequestModel implements ApiCallInterface<RecipeModel> {
 					int time = 30;
 					try {
 						time = Integer.parseInt(title);
-					}catch(Exception e) {
-					}
+					} catch(Exception e) {}
 					added.setCookTime(time);
 					content = content.substring(end_index);
-				}else {
+				} else {
 					added.setCookTime(30);
 				}
 				
@@ -243,12 +233,10 @@ public class EdamamRequestModel implements ApiCallInterface<RecipeModel> {
 							String instruction = content.substring(0, end_index);
 							content = content.substring(end_index);
 							added.addInstruction(instruction.trim());
-							
 						}
 						index = content.indexOf(tag);	
 					}	
 				}
-				
 				results.add(added);
 			}
 		}catch(IOException | InterruptedException e) {
@@ -272,7 +260,6 @@ public class EdamamRequestModel implements ApiCallInterface<RecipeModel> {
 		if(i >= results.size()) {
 			return null;
 		}
-		
 		return results.get(i).getFormattedFieldsForResults();
 	}
 
@@ -284,7 +271,6 @@ public class EdamamRequestModel implements ApiCallInterface<RecipeModel> {
 		if(i >= results.size()) {
 			return null;
 		}
-		
 		return results.get(i).getFormattedFieldsForDetailsPage();
 	}
 
@@ -296,7 +282,6 @@ public class EdamamRequestModel implements ApiCallInterface<RecipeModel> {
 		if(i >= results.size()) {
 			return false;
 		}
-		
 		results.get(i).setInFavorites(value);
 		return true;
 	}
@@ -309,7 +294,6 @@ public class EdamamRequestModel implements ApiCallInterface<RecipeModel> {
 		if(i >= results.size()) {
 			return false;
 		}
-		
 		results.get(i).setInToExplore(value);
 		return true;
 	}
@@ -322,7 +306,6 @@ public class EdamamRequestModel implements ApiCallInterface<RecipeModel> {
 		if(i >= results.size()) {
 			return false;
 		}
-		
 		results.get(i).setInDoNotShow(value);
 		return true;
 	}
@@ -330,8 +313,5 @@ public class EdamamRequestModel implements ApiCallInterface<RecipeModel> {
 	@Override
 	public void sort() {
 		Collections.sort(results);
-		
 	}
-	
-
 }

@@ -1,21 +1,13 @@
 package models;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Not production code, used for mocking requests
  * To edamam
- *
  */
 public class MockRecipeRequestModel{
 
@@ -24,7 +16,6 @@ public class MockRecipeRequestModel{
 		this.edamam = new EdamamRequestModel();
 	}
 
-	
 	public final String URL_LINK = "https://www.allrecipes.com/search/results/?wt=";
 	
 	private List<RecipeModel> results;
@@ -39,7 +30,6 @@ public class MockRecipeRequestModel{
 		return null;
 	}
 	
-
 	public ResponseCodeModel completeTask(String term, int limit) {
  		ResponseCodeModel responseResult = ResponseCodeModel.OK;
 
@@ -54,6 +44,4 @@ public class MockRecipeRequestModel{
 		mockStorage.put(term, edamam.getResults());
 		return edamam.completeTask();
 	}
-
-	
 }

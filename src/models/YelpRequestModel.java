@@ -12,12 +12,10 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 
-	
 	private static final String API_KEY = "XV6c8H4T5PriBv2QO0smCcFhMU3d3axPXDY6yEWAekPe9ErQZI70EFyipPyig8g1J-1RozjFY14vs14_ZC3o9_3pAlhqDw74zA7iTg-u9OkWNlcQ7n2HmKPOKht6XHYx";
 	private String term;
 	private int limit;
@@ -53,7 +51,6 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 	public ResponseCodeModel completeTask() {
 		
 		try {
-			
 			if(this.radius == 0) {
 				throw new IOException();
 			}
@@ -89,7 +86,12 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 				restaurant.setName(name);
 				restaurant.setStars((int)rating);
 				
-				String dollarSigns = business.getString("price").trim();
+				String dollarSigns;
+				try {
+					dollarSigns = business.getString("price").trim();
+				} catch (Exception e) {
+					dollarSigns = "";
+				}
 				double lowEndPrice = dollarSigns.length() * 10;
 				double highEndPrice = dollarSigns.length() * 30;
 				restaurant.setPriceRange(lowEndPrice, highEndPrice);
@@ -117,7 +119,6 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 				
 				results.add(restaurant);
 			}
-			
 			Collections.sort(results);
 		     
 		} catch (IOException e) {
@@ -151,7 +152,6 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 		if(i >= results.size()) {
 			return null;
 		}
-		
 		return results.get(i).getFormattedFieldsForDetailsPage();
 	}
 
@@ -163,7 +163,6 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 		if(i >= results.size()) {
 			return false;
 		}
-		
 		results.get(i).setInFavorites(value);
 		return true;
 	}
@@ -176,7 +175,6 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 		if(i >= results.size()) {
 			return false;
 		}
-		
 		results.get(i).setInToExplore(value);
 		return true;
 	}
@@ -189,7 +187,6 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 		if(i >= results.size()) {
 			return false;
 		}
-		
 		results.get(i).setInDoNotShow(value);
 		return true;
 	}
@@ -197,6 +194,5 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 	@Override
 	public void sort() {
 		Collections.sort(results);
-		
 	}
 }

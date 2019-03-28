@@ -56,7 +56,4 @@ public class ListItemModel {
 			this.inToExplore = false;
 		}
 	}
-	
-	
-
 }

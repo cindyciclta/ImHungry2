@@ -45,15 +45,12 @@ public class RecipeModel extends ListItemModel implements Comparable<RecipeModel
 		String modifier = "";
 		if(isInDoNotShow()) {
 			modifier = "donotshow";
-		}else if(isInFavorites()) {
+		} else if(isInFavorites()) {
 			modifier = "favorites";
-		}else if(isInToExplore()) {
+		} else if(isInToExplore()) {
 			modifier = "toexplore";
 		}
-		
-		
 		toReturn.put("modifier", modifier);
-		
 		return toReturn;
 	}
 	
@@ -75,7 +72,6 @@ public class RecipeModel extends ListItemModel implements Comparable<RecipeModel
 			ins += instructions.get(i) + "SPLIT";
 		}
 		toReturn.put("instructions", ins);
-		
 		return toReturn;
 	}
 	
@@ -122,7 +118,6 @@ public class RecipeModel extends ListItemModel implements Comparable<RecipeModel
 		if(i == null) {
 			return false;
 		}
-		
 		ingredients.add(i);
 		return true;
 	}
@@ -153,13 +148,9 @@ public class RecipeModel extends ListItemModel implements Comparable<RecipeModel
 		
 		if(prepTime < arg0.prepTime) {
 			return -1;
-		}else if(prepTime == arg0.prepTime) {
+		} else if(prepTime == arg0.prepTime) {
 			return 0;
 		}
 		return 1;
 	}
-	
-	
-	
-
 }

@@ -1,6 +1,5 @@
 package controllers;
 import java.io.IOException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
@@ -16,17 +15,16 @@ import models.CollageGenerationModel;
 import models.GoogleImageRequestModel;
 import models.ResponseModel;
 
+@WebServlet("/ResultsPageController")
 public class ResultsPageController extends HttpServlet {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String action = request.getParameter("action");
 		String index = request.getParameter("index");
+		RequestDispatcher dispatch;
 		
 		if(action == null || action.isEmpty() || action.equals("search")) {
 			if(index != null && !index.isEmpty()) {
@@ -35,14 +33,12 @@ public class ResultsPageController extends HttpServlet {
 			
 			String token = request.getParameter("token");
 			if(token == null) {
-				RequestDispatcher requestDispatcher = request.getRequestDispatcher("SignInView.jsp");
-				requestDispatcher.forward(request, response);
-			}else {
-				RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
+				dispatch = request.getRequestDispatcher("SignInView.jsp");
+			} else {
+				dispatch = request.getRequestDispatcher("SearchPageView.jsp");
 				request.setAttribute("token", token);
-				requestDispatcher.forward(request, response);
 			}
-		}else if(action.equals("results")) {
+		} else if(action.equals("results")) {
 			
 			String term = request.getParameter("term");
 			String limit = request.getParameter("limit");
@@ -50,12 +46,10 @@ public class ResultsPageController extends HttpServlet {
 			String token = request.getParameter("token");
 			String page = request.getParameter("page");
 			if(token.isEmpty()) {
-				RequestDispatcher requestDispatcher = request.getRequestDispatcher("SignInView.jsp");
-				requestDispatcher.forward(request, response);
-			}else if(term == null || limit == null || term.isEmpty() || limit.isEmpty()) {
-				RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
-				requestDispatcher.forward(request, response);	
-			}else {
+				dispatch = request.getRequestDispatcher("SignInView.jsp");
+			} else if(term == null || limit == null || term.isEmpty() || limit.isEmpty()) {
+				dispatch = request.getRequestDispatcher("SearchPageView.jsp");
+			} else {
 				int limitInteger = Integer.parseInt(limit);
 				ResponseModel rm = new ResponseModel();
 				CollageGenerationModel collagemodel = new CollageGenerationModel();
@@ -64,13 +58,11 @@ public class ResultsPageController extends HttpServlet {
 				googleimagemodel.APIImageSearch(term);
 				
 				if(!rm.checkParameters(term, limitInteger, Integer.parseInt(radius)) || !rm.getSearchResults()) {
-					RequestDispatcher requestDispatcher = request.getRequestDispatcher("SearchPageView.jsp");
+					dispatch = request.getRequestDispatcher("SearchPageView.jsp");
 					request.setAttribute("token", token);
-					requestDispatcher.forward(request, response);
-				}else {
-					RequestDispatcher requestDispatcher = request.getRequestDispatcher("ResultsPageView.jsp");
+				} else {
+					dispatch = request.getRequestDispatcher("ResultsPageView.jsp");
 					int indexInt = RedirectionController.addResponse(rm);
-					
 					
 					ArrayList<String> urllist = (ArrayList<String>) collagemodel.getList();
 					JSONArray jsArray = new JSONArray (urllist);
@@ -84,13 +76,11 @@ public class ResultsPageController extends HttpServlet {
 					request.setAttribute("length", urllist.size());
 					request.setAttribute("jsonarray", jsArray);
 					request.setAttribute("page", page);
-					requestDispatcher.forward(request, response);
 				}
 			}
-		}else {
-			RequestDispatcher requestDispatcher = request.getRequestDispatcher("SignInView.jsp");
-			requestDispatcher.forward(request, response);
+		} else {
+			dispatch = request.getRequestDispatcher("SignInView.jsp");
 		}
+		dispatch.forward(request, response);
 	}
-
 }

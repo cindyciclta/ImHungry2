@@ -1,7 +1,5 @@
 package models;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 public class ResponseModel {
@@ -98,20 +96,19 @@ public class ResponseModel {
 		if(type.equals("restaurant")) {
 			if(list.equals("donotshow")) {
 				return restaurants.setDoNotShowResult(i, value);
-			}else if(list.equals("favorites")) {
+			} else if(list.equals("favorites")) {
 				return restaurants.setFavoriteResult(i, value);
-			}else {
+			} else {
 				return restaurants.setToExploreResult(i, value);
 			}
 		}else {
 			if(list.equals("donotshow")) {
 				return recipes.setDoNotShowResult(i, value);
-			}else if(list.equals("favorites")) {
+			} else if(list.equals("favorites")) {
 				return recipes.setFavoriteResult(i, value);
-			}else {
+			} else {
 				return recipes.setToExploreResult(i, value);
 			}
 		}
 	}
-	
 }

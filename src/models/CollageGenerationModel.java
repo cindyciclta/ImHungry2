@@ -1,12 +1,6 @@
 package models;
 
 import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Collection;
-import java.util.List;
-
-import org.json.JSONArray;
-
 
 /**
  * Stores links for a given collage
@@ -24,7 +18,6 @@ public class CollageGenerationModel {
 		list = new ArrayList<String>();
 	}
 	public int getActualSize() {
-
 		return actualsize;
 	}
 	public boolean checkParameters(String term, int limit) {
@@ -52,5 +45,4 @@ public class CollageGenerationModel {
 	public ArrayList<String> getList() {
 		return this.list;
 	}
-
 }

@@ -33,12 +33,10 @@ public class DatabaseModel {
 		close(conn, preparedStmt, rs);
 		return returnVal;
 	}
-	
-	public static Connection getConnection() throws ClassNotFoundException, SQLException{
+	public static Connection getConnection() throws ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.jdbc.Driver");
 		return DriverManager.getConnection("jdbc:mysql://localhost/ImHungry?user=root&password=" + SQL_PASSWORD + "&useSSL=false");
 	}
-	
 	public static boolean userExists(String username) throws Exception {
 		// Get from SQL
 		Connection conn = null;
@@ -57,10 +55,8 @@ public class DatabaseModel {
 	    }
 		close(conn, preparedStmt, rs);
 		return returnVal;
-
 	}
-	
-	public static boolean insertUser(String username, char[] password) throws Exception{
+	public static boolean insertUser(String username, char[] password) throws Exception {
 		// Get from SQL
 		Connection conn = null;
 		boolean returnVal = true;
@@ -70,25 +66,25 @@ public class DatabaseModel {
 		if(DatabaseModel.userExists(username)) {
 			returnVal = false;
 		}
-		
-		username = username.trim();
-		
-		// the mysql insert statement to have date of upload
-		String sql = "INSERT INTO users (user_name, user_password) VALUES (?, SHA1(?))";
-		PreparedStatement preparedStmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-		preparedStmt = conn.prepareStatement(sql);
-		preparedStmt.setString(1, username);
-		preparedStmt.setString(2, String.valueOf(password)); 
-		int affectedRows = preparedStmt.executeUpdate();
-		
-		close(conn, preparedStmt, null);
+		else {
+			username = username.trim();
+			
+			// the mysql insert statement to have date of upload
+			String sql = "INSERT INTO users (user_name, user_password) VALUES (?, SHA1(?))";
+			PreparedStatement preparedStmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			preparedStmt = conn.prepareStatement(sql);
+			preparedStmt.setString(1, username);
+			preparedStmt.setString(2, String.valueOf(password)); 
+			int affectedRows = preparedStmt.executeUpdate();
+			
+			close(conn, preparedStmt, null);	
+		}
 		return returnVal;
 	}
 	private static void close(Connection conn, PreparedStatement st, ResultSet rs) throws Exception {
 		// Result sets, statements do not need to be closed, as they are ended by the connectionProxy closing
 		conn.close();
 	}
-	
 	public static boolean AddSearchToHistory(int userid, String term, int limit, int radius) throws Exception {
 
 		if(userid < 0) {
@@ -111,8 +107,7 @@ public class DatabaseModel {
 		close(conn, preparedStmt, null);
 		return true;
 	}
-	
-	public static int GetUserID(String username) throws Exception{
+	public static int GetUserID(String username) throws Exception {
 		
 		Connection conn =null;
 		PreparedStatement preparedStmt = null;
@@ -129,7 +124,6 @@ public class DatabaseModel {
 		close(conn, preparedStmt, rs);
 		return -1;
 	}
-	
 	public static Vector<SearchTermModel> GetSearchHistory(int userid) throws Exception {
 		Connection conn = getConnection();
 		Vector<SearchTermModel> results = new Vector<>();
@@ -151,5 +145,4 @@ public class DatabaseModel {
 		st.close();
 		return results;
 	}
-
 }

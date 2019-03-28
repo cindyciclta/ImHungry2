@@ -120,6 +120,28 @@ Given(/^I sign up with username "([^"]*)" and password "([^"]*)"$/) do |arg1, ar
   page.find('#signUpSubmit').click
 end
 
+Given(/^I sign up with username "([^"]*)", password "([^"]*)", and passwordConf "([^"]*)"$/) do |arg1, arg2, arg3|
+  fill_in 'username', :with => arg1
+  fill_in 'password', :with => arg2
+  fill_in 'passwordConf', :with => arg3
+  page.find('#signUpSubmit').click
+end
+
+Given(/^I sign in with username "([^"]*)" and password "([^"]*)"$/) do |arg1, arg2|
+  visit "http://localhost:8080/ImHungry/SignInView.jsp"
+  fill_in 'username', :with => arg1
+  fill_in 'password', :with => arg2
+  page.find('#signInButton').click
+end
+
+Given(/^I click the sign out button$/) do
+  page.find('#signOutLink').click
+end
+
+Then(/^I should be on the sign in page$/) do
+  expect(page).to have_css('#signInButton')
+end
+
 Then(/^I should be on the sign up page$/) do
   expect(page).to have_css('#passwordConf')
 end
@@ -291,6 +313,11 @@ Given(/^I am on the search page$/) do
   expect(page).to have_css('h1', text: "I'm Hungry", wait: 50)
 end
 
+Given(/^I type "([^"]*)" and I press enter$/) do |arg1|
+  fill_in 'termInput', :with => arg1
+  find('#termInput').native.send_keys(:return)
+end
+
 Then(/^I should see prompt text enter food$/) do
   page.should have_field("termInput")
 end
@@ -349,7 +376,7 @@ end
 # Some more
 
 Then(/^I am on the "([^"]*)" page$/) do |arg1|
-  expect(page).to have_css('h1', text: arg1)
+  expect(page).to have_css('h1', text: arg1, wait:50)
 end
 
 Then(/^I should see "([^"]*)" on the page$/) do |arg1|

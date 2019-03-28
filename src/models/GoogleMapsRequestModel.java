@@ -5,14 +5,11 @@ import java.util.Scanner;
 import org.json.JSONObject;
 import java.net.URL;
 import java.io.IOException;
-import java.net.*;
 
 /**
  * Get calls a distance from google distance API
- *
  */
 public class GoogleMapsRequestModel {
-	
 	
 	// Deviation
 	private final static String URL = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=34.0218973,-118.2895904";
@@ -45,14 +42,11 @@ public class GoogleMapsRequestModel {
 				int seconds = json.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0).getJSONObject("duration").getInt("value");
 				drivingTime = seconds / 60;
 			}
-			
-			
 			scanner.close();
-		}catch(IOException e) {
+			
+		} catch(IOException e) {
 			e.printStackTrace();
 		}
 		return drivingTime;
 	}
-	
-
 }

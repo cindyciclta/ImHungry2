@@ -7,6 +7,7 @@
 https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
 integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
 crossorigin="anonymous">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <title>Search - I'm Hungry</title>
 <style>
 
@@ -38,7 +39,6 @@ crossorigin="anonymous">
 body, html {
 	height: 100%;
 	font-family: "Comic Sans MS", cursive, sans-serif;
-	
 }
 
 p7 {
@@ -75,11 +75,11 @@ p7 {
 			  	<br>
 			  	<br>
 
-			  	<div class="container">
+			  	<div class="container" id="inputFields">
 			  		<div class="row justify-content-center align-items-center">
 			  			<div class="form-row">
 			  				<div id="searchBar" class="form-group col-md-7">
-			  					<input class="form-control mr-sm-2" type="search" id="termInput" placeholder="Enter food" aria-label="Search">
+			  					<input class="form-control mr-sm-2" type="search" id="termInput" placeholder="Enter food" aria-label="Search" autofocus>
 			  				</div>
 			  				<div id="numResults" class="form-group col-md-2">
 			  					<input class="form-control mr-sm-2" type="number" min="1" value="5" id="limitInput" title="Number of items to show in results">
@@ -108,6 +108,14 @@ p7 {
       window.location = '/ImHungry/SearchPageController?action=search&term='+encodeURIComponent(trimmed) + "&token=" + <%=token %> + "&limit=" + limit + "&radius=" + radius + "&page=1";
 		}, 1000);
 	}
+	$(document).ready(function() {
+		var obj = document.getElementById("inputFields");
+		obj.addEventListener("keydown", function(e) {
+			if (e.keyCode == 13) {
+				redirectToResults();
+			}
+		});
+	});
 </script>
 
 <div class="container mt-5 h-100">

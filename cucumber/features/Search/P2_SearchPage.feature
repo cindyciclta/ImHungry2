@@ -15,3 +15,8 @@ Scenario: Check negative radius value
 
 	When I enter a negative radius
 	Then the text box should not accept the value
+	
+Scenario: Use enter to search
+
+	When I type "chocolate" and I press enter
+	Then I am on the "Results for chocolate" page

@@ -35,7 +35,7 @@ public class ResultsPageController extends HttpServlet {
 			if(token == null) {
 				dispatch = request.getRequestDispatcher("SignInView.jsp");
 			} else {
-				dispatch = request.getRequestDispatcher("SearchPageView.jsp");
+				dispatch = request.getRequestDispatcher("SearchPageController");
 				request.setAttribute("token", token);
 			}
 		} else if(action.equals("results")) {

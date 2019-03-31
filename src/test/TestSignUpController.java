@@ -67,6 +67,26 @@ public class TestSignUpController extends Mockito{
 	}
 	
 	@Test
+	public void testEmptyPassword() throws Exception{
+		when(request.getParameter("username")).thenReturn( username );
+        when(request.getParameter("password")).thenReturn( "" );
+        when(request.getParameter("confirm_password")).thenReturn( "" );
+        when(request.getRequestDispatcher("SignUpView.jsp")).thenReturn(rd);
+        new SignUpController().service(request, response);
+        verify(rd).forward(request, response);
+	}
+	
+	@Test
+	public void testEmptyUsername() throws Exception{
+		when(request.getParameter("username")).thenReturn( "" );
+        when(request.getParameter("password")).thenReturn( password );
+        when(request.getParameter("confirm_password")).thenReturn( password );
+        when(request.getRequestDispatcher("SignUpView.jsp")).thenReturn(rd);
+        new SignUpController().service(request, response);
+        verify(rd).forward(request, response);
+	}
+	
+	@Test
 	public void testNullConfirm() throws Exception{
 		when(request.getParameter("username")).thenReturn( username );
         when(request.getParameter("password")).thenReturn( password );

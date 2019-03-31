@@ -48,7 +48,8 @@ public class ResultsPageController extends HttpServlet {
 			if(token.isEmpty()) {
 				dispatch = request.getRequestDispatcher("SignInView.jsp");
 			} else if(term == null || limit == null || term.isEmpty() || limit.isEmpty()) {
-				dispatch = request.getRequestDispatcher("SearchPageView.jsp");
+				dispatch = request.getRequestDispatcher("SearchPageController");
+				request.setAttribute("token", token);
 			} else {
 				int limitInteger = Integer.parseInt(limit);
 				ResponseModel rm = new ResponseModel();

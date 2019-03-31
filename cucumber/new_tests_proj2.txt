@@ -1,6 +1,6 @@
 New tests for project 2 (located at the bottom of respective feature file):
 
-cucumber/features/SignUp/SignUp.feature:
+cucumber/features/SignUpInOut/SignUpInOut.feature:
 Test that the sign up link works
 Test signing up with duplicate account does nothing
 Test signing up with password != passwordConfirmation does nothing

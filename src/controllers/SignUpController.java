@@ -25,13 +25,18 @@ public class SignUpController extends HttpServlet {
 	    RequestDispatcher dispatch;
 	    
 	    // check passwords
-	    if(password == null || confirm == null || !password.equals(confirm)
-	    		|| username.trim().equals("") || password.trim().equals("")) {
+	    if(password == null || confirm == null || !password.equals(confirm) || username == null
+	    		 || password.trim().equals("")) {
 	    	dispatch = request.getRequestDispatcher("SignUpView.jsp");
 	    } else {
 	    	 // insert into database, get new id, redirect
 		    int id = -1;
 		    try {
+		    	
+		    	if(username.trim().equals("")) {
+		    		throw new Exception();
+		    	}
+		    	
 		    	boolean created = DatabaseModel.insertUser(username, password.toCharArray());
 		    	if(!created) {
 		    		dispatch = request.getRequestDispatcher("SignUpView.jsp");

@@ -17,8 +17,9 @@ public class TestResponseModel {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		rm = new ResponseModel();
-		rm.checkParameters("chicken", 5);
+		rm.checkParameters("chicken", 5, 1000);
 		assertTrue(rm.getSearchResults());
+		assertEquals(rm.getNumberOfRestaurants(), 5);
 	}
 
 	@Test

@@ -378,6 +378,10 @@ Then(/^the search history should be empty$/) do
   expect(page).not_to have_css('#searchHist1')
 end
 
+Given(/^I click the first search history link$/) do
+  page.find('#searchHist1').click
+end
+
 Then(/^there should be "([^"]*)" in the first search history$/) do |arg1|
   expect(page).to have_css('#searchHist1', text: arg1)
 end

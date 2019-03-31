@@ -46,3 +46,10 @@ Scenario: Check that search history is empty on another account
 	And I sign up with username "testSearchHist" and password "searchHistPW"
 	And I sign in with username "testSearchHist" and password "searchHistPW"
 	Then the search history should be empty
+	
+Scenario: Search for recent search by clicking on search history link
+
+	When I type "chicken" and I press enter
+	And I clicks the "Return to Search" button
+	And I click the first search history link
+	Then I am on the "Results for chicken" page

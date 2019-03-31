@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page import="java.util.Vector"%>
+<%@page import="models.SearchTermModel"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -153,21 +155,20 @@ p7 {
 							<thead>
 							</thead>
 							<tbody>
+								<%
+								Vector<SearchTermModel> searches = (Vector<SearchTermModel>)request.getAttribute("searches");
+								
+								for(SearchTermModel search : searches){
+								%>
 								<tr>
 									<td>
-										<p1>blaadfsdghh</p1>
+										<p1><a href=<%="\"/ImHungry/SearchPageController?action=search&term=" + search.term + "&token=" + token + "&limit=" + search.limit + "&radius=" + search.radius + "&page=1\""%>><%=search.term%></a></p1>
 									</td>
 								</tr>
-								<tr>
-									<td>
-										<p1>blah</p1>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<p1>blah</p1>
-									</td>
-								</tr>
+								
+								<%
+								}
+								%>
 							</tbody>
 						</table>
 					</div>

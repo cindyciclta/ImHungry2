@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collections;
 import java.util.Vector;
 
 public class DatabaseModel {
@@ -139,7 +140,7 @@ public class DatabaseModel {
 			s.radius = rs.getInt("radius");
 			results.add(s);
 		}
-
+		Collections.reverse(results);
 		conn.close();
 		rs.close();
 		st.close();

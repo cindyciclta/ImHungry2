@@ -65,6 +65,17 @@ p7 {
 			}, 1000);
 		}
 	</script>
+	<div class="col-md-auto order-1" style="float: right">
+    	<div id="sidebar-wrapper" class="navbar navbar-light">
+     		<div class="navbar-nav" >
+           		<ul class="navbar-nav">
+					<li class="nav-item">
+                    	<a id="signOutLink" class="btn btn-secondary" onclick="window.location = '/ImHungry/SignInView.jsp';">Sign Out</a>
+                    </li>
+                </ul>
+            </div>
+		</div>
+	</div>
 	<div class="container mt-5 h-100">
 		<div class="h-100 row justify-content-center align-items-center">
 			<div class="container">
@@ -146,7 +157,7 @@ p7 {
 			<div class="h-100 row justify-content-center align-items-center">
 				<div class="container">
 				  	<div class="row justify-content-center align-items-center">
-						<p7>Search History</p7>
+						<p7 id="hist">Search History</p7>
 					</div>
 				</div>
 				<div class="container">
@@ -157,16 +168,17 @@ p7 {
 							<tbody>
 								<%
 								Vector<SearchTermModel> searches = (Vector<SearchTermModel>)request.getAttribute("searches");
-								
+								int i=1;
 								for(SearchTermModel search : searches){
 								%>
 								<tr>
 									<td>
-										<p1><a href=<%="\"/ImHungry/SearchPageController?action=search&term=" + search.term + "&token=" + token + "&limit=" + search.limit + "&radius=" + search.radius + "&page=1\""%>><%=search.term%></a></p1>
+										<p1 id=<%="searchHist" + i%>><a href=<%="\"/ImHungry/SearchPageController?action=search&term=" + search.term + "&token=" + token + "&limit=" + search.limit + "&radius=" + search.radius + "&page=1\""%>><%=search.term%></a></p1>
 									</td>
 								</tr>
 								
 								<%
+								i++;
 								}
 								%>
 							</tbody>

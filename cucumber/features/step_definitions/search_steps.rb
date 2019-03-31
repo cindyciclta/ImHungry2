@@ -27,7 +27,7 @@ Given(/^I clicked the "([^"]*)" button$/) do |arg1|
 end
 
 Given(/^I clicks the "([^"]*)" button$/) do |arg1|
-  page.find('a.btn.btn-secondary', text: arg1).click
+  page.find('a.btn.btn-secondary', text: arg1, wait: 50).click
 end
 
 Then(/^I should see a title$/) do
@@ -217,8 +217,6 @@ Then(/^I should be on the restaurant's home page, "([^"]*)"$/) do |arg1|
   expect(page).to have_current_path(arg1)
 end
 
-
-
 # Results Page
 
 Then(/^I should see the title "([^"]*)"$/) do |arg1|
@@ -372,6 +370,21 @@ When(/^I click on the "([^"]*)" button$/) do |arg1|
   click_button(arg1)
 end
 
+Then(/^there should be search history$/) do
+  expect(page).to have_css('#hist')
+end
+
+Then(/^the search history should be empty$/) do
+  expect(page).not_to have_css('#searchHist1')
+end
+
+Then(/^there should be "([^"]*)" in the first search history$/) do |arg1|
+  expect(page).to have_css('#searchHist1', text: arg1)
+end
+
+Then(/^there should be "([^"]*)" in the second search history$/) do |arg1|
+  expect(page).to have_css('#searchHist2', text: arg1)
+end
 
 # Some more
 

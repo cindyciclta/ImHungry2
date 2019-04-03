@@ -172,6 +172,11 @@
 		                            } else {
 		                            	rest_upperbound = rm.getNumberOfRestaurants();
 		                            }
+                                    if (rm.getNumberOfRestaurants() == 0) {
+                                        %>
+                                        <h3>No Results</h3>
+                                        <%
+                                    }
                                 	for (int i = 5 * (rest_pgnum - 1) ; i < rest_upperbound ; i++) {
                                 		System.out.println("restaurant #" + i);
 									//for(int i = 0 ; i < rm.getNumberOfRestaurants() ; i++){
@@ -183,7 +188,7 @@
 										}
 									
 									%>
-                                
+                                	
                                     <tr onclick=<%="redirectToRestaurant(\"" + "/ImHungry/RedirectionController?action=restaurant&term="+term +"&index=" + index + "&item=" + i + "\")"%>>
                                         <td class="col">
                                             <table class="table text-white">

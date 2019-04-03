@@ -1,4 +1,4 @@
-package test;
+package test.java;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -47,7 +47,7 @@ public class TestSignUpController extends Mockito{
 	public static void deleteUser() throws Exception{
 		// Delete added user
 		Class.forName("com.mysql.jdbc.Driver");
-		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/ImHungry?user=root&password=root&useSSL=false");
+		Connection conn = DatabaseModel.getConnection();
 		
 		// the mysql insert statement to have date of upload
 		String query = "DELETE from users where user_name = (?)";
@@ -60,6 +60,26 @@ public class TestSignUpController extends Mockito{
 	public void testNullPassword() throws Exception{
 		when(request.getParameter("username")).thenReturn( username );
         when(request.getParameter("password")).thenReturn( null );
+        when(request.getParameter("confirm_password")).thenReturn( password );
+        when(request.getRequestDispatcher("SignUpView.jsp")).thenReturn(rd);
+        new SignUpController().service(request, response);
+        verify(rd).forward(request, response);
+	}
+	
+	@Test
+	public void testEmptyPassword() throws Exception{
+		when(request.getParameter("username")).thenReturn( username );
+        when(request.getParameter("password")).thenReturn( "" );
+        when(request.getParameter("confirm_password")).thenReturn( "" );
+        when(request.getRequestDispatcher("SignUpView.jsp")).thenReturn(rd);
+        new SignUpController().service(request, response);
+        verify(rd).forward(request, response);
+	}
+	
+	@Test
+	public void testEmptyUsername() throws Exception{
+		when(request.getParameter("username")).thenReturn( "" );
+        when(request.getParameter("password")).thenReturn( password );
         when(request.getParameter("confirm_password")).thenReturn( password );
         when(request.getRequestDispatcher("SignUpView.jsp")).thenReturn(rd);
         new SignUpController().service(request, response);

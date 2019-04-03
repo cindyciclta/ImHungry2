@@ -68,7 +68,6 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 			String response = "";
 			while((line = br.readLine()) != null) {
 				response += line;
-				System.out.println(line);
 			}
 			
 			JSONObject json = new JSONObject(response);

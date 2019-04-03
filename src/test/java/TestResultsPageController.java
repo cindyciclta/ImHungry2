@@ -1,4 +1,4 @@
-package test;
+package test.java;
 
 import controllers.ResultsPageController;
 import static org.junit.Assert.*;
@@ -43,7 +43,7 @@ public class TestResultsPageController extends Mockito{
     public void testInvalidAction() throws Exception {
         when(request.getParameter("action")).thenReturn( null );
         when(request.getParameter("token")).thenReturn( "fakeToken" );
-        when(request.getRequestDispatcher("SearchPageView.jsp")).thenReturn(rd);
+        when(request.getRequestDispatcher("SearchPageController")).thenReturn(rd);
         new ResultsPageController().service(request, response);
         verify(rd).forward(request, response);
     }
@@ -61,7 +61,7 @@ public class TestResultsPageController extends Mockito{
     public void testInvalidActionEmpty() throws Exception {
         when(request.getParameter("action")).thenReturn( "" );
         when(request.getParameter("token")).thenReturn( "fakeToken" );
-        when(request.getRequestDispatcher("SearchPageView.jsp")).thenReturn(rd);
+        when(request.getRequestDispatcher("SearchPageController")).thenReturn(rd);
         new ResultsPageController().service(request, response);
         verify(rd).forward(request, response);
     }
@@ -72,7 +72,7 @@ public class TestResultsPageController extends Mockito{
         when(request.getParameter("token")).thenReturn( "fakeToken" );
         when(request.getParameter("term")).thenReturn( null );
         when(request.getParameter("limit")).thenReturn( "5" );
-        when(request.getRequestDispatcher("SearchPageView.jsp")).thenReturn(rd);
+        when(request.getRequestDispatcher("SearchPageController")).thenReturn(rd);
         new ResultsPageController().service(request, response);
         verify(rd).forward(request, response);
     }
@@ -83,7 +83,7 @@ public class TestResultsPageController extends Mockito{
         when(request.getParameter("token")).thenReturn( "fakeToken" );
         when(request.getParameter("term")).thenReturn( "" );
         when(request.getParameter("limit")).thenReturn( "5" );
-        when(request.getRequestDispatcher("SearchPageView.jsp")).thenReturn(rd);
+        when(request.getRequestDispatcher("SearchPageController")).thenReturn(rd);
         new ResultsPageController().service(request, response);
         verify(rd).forward(request, response);
     }
@@ -94,7 +94,7 @@ public class TestResultsPageController extends Mockito{
         when(request.getParameter("token")).thenReturn( "fakeToken" );
         when(request.getParameter("term")).thenReturn( "chicken" );
         when(request.getParameter("limit")).thenReturn( null );
-        when(request.getRequestDispatcher("SearchPageView.jsp")).thenReturn(rd);
+        when(request.getRequestDispatcher("SearchPageController")).thenReturn(rd);
         new ResultsPageController().service(request, response);
         verify(rd).forward(request, response);
     }
@@ -104,7 +104,7 @@ public class TestResultsPageController extends Mockito{
         when(request.getParameter("action")).thenReturn( "" );
         when(request.getParameter("token")).thenReturn( "fakeToken" );
         when(request.getParameter("index")).thenReturn( "0" );
-        when(request.getRequestDispatcher("SearchPageView.jsp")).thenReturn(rd);
+        when(request.getRequestDispatcher("SearchPageController")).thenReturn(rd);
         new ResultsPageController().service(request, response);
         verify(rd).forward(request, response);
     }
@@ -114,7 +114,7 @@ public class TestResultsPageController extends Mockito{
         when(request.getParameter("action")).thenReturn( "" );
         when(request.getParameter("token")).thenReturn( "fakeToken" );
         when(request.getParameter("index")).thenReturn( null );
-        when(request.getRequestDispatcher("SearchPageView.jsp")).thenReturn(rd);
+        when(request.getRequestDispatcher("SearchPageController")).thenReturn(rd);
         new ResultsPageController().service(request, response);
         verify(rd).forward(request, response);
     }
@@ -125,7 +125,7 @@ public class TestResultsPageController extends Mockito{
         when(request.getParameter("term")).thenReturn( "chicken" );
         when(request.getParameter("token")).thenReturn( "fakeToken" );
         when(request.getParameter("limit")).thenReturn( "" );
-        when(request.getRequestDispatcher("SearchPageView.jsp")).thenReturn(rd);
+        when(request.getRequestDispatcher("SearchPageController")).thenReturn(rd);
         new ResultsPageController().service(request, response);
         verify(rd).forward(request, response);
     }

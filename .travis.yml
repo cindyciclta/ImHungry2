@@ -1,0 +1,10 @@
+language: java
+
+services:
+  - mysql
+
+before_install:
+  - mysql -u root < database.sql
+
+before_script:
+  - echo "USE mysql;\nUPDATE user SET password=PASSWORD('root') WHERE user='root';\nFLUSH PRIVILEGES;\n" | mysql -u root

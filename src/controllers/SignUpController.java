@@ -19,19 +19,25 @@ public class SignUpController extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
 		// Get username and password
+		System.out.println("Received Request");
 		String username = request.getParameter("username");
 	    String password = request.getParameter("password");
 	    String confirm = request.getParameter("confirm_password");
 	    RequestDispatcher dispatch;
 	    
 	    // check passwords
-	    if(password == null || confirm == null || !password.equals(confirm)
-	    		|| username.trim().equals("") || password.trim().equals("")) {
+	    if(password == null || confirm == null || !password.equals(confirm) || username == null
+	    		 || password.trim().equals("")) {
 	    	dispatch = request.getRequestDispatcher("SignUpView.jsp");
 	    } else {
 	    	 // insert into database, get new id, redirect
 		    int id = -1;
 		    try {
+		    	
+		    	if(username.trim().equals("")) {
+		    		throw new Exception();
+		    	}
+		    	
 		    	boolean created = DatabaseModel.insertUser(username, password.toCharArray());
 		    	if(!created) {
 		    		dispatch = request.getRequestDispatcher("SignUpView.jsp");
@@ -47,7 +53,7 @@ public class SignUpController extends HttpServlet {
 					request.setAttribute("token", token);
 		    	}
 		    } catch(Exception e) {
-		    	System.out.println(e.getMessage());
+		    	e.printStackTrace();
 		    	dispatch = request.getRequestDispatcher("SignUpView.jsp");
 		    }
 	    }

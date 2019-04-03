@@ -1,4 +1,4 @@
-package test;
+package test.java;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
@@ -60,8 +60,8 @@ public class TestSignInController extends Mockito{
 	
 	@Test
     public void testSignInError() throws Exception {
-        when(request.getParameter("username")).thenReturn( null );
-        when(request.getParameter("password")).thenReturn( null );
+        when(request.getParameter("username")).thenReturn( "" );
+        when(request.getParameter("password")).thenReturn( "" );
         when(request.getRequestDispatcher("SignInView.jsp")).thenReturn(rd);
         new SignInController().service(request, response);
         verify(rd).forward(request, response);

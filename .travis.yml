@@ -31,4 +31,6 @@ before_script:
 script:
   - cd cucumber
   - cucumber features/SignUpInOut/SignUpInOut.feature
+  - cucumber features/Search/P2_SearchPage.feature
+  - cucumber features/Result/P2_ResultsPage.feature
   

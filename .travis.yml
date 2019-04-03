@@ -12,6 +12,15 @@ services:
   - docker
 
 before_install:
+  - wget -N http://chromedriver.storage.googleapis.com/2.30/chromedriver_linux64.zip -P ~/
+  - unzip ~/chromedriver_linux64.zip -d ~/
+  - rm ~/chromedriver_linux64.zip
+  - sudo mv -f ~/chromedriver /usr/local/share/
+  - sudo chmod +x /usr/local/share/chromedriver
+  - sudo ln -s /usr/local/share/chromedriver /usr/local/bin/chromedriver
+  - cd cucumber
+  - bundle install
+  - cd ..
   - docker build -t imhungry - < Dockerfile
   - docker run -d -p "8080":"8080" imhungry
   - mysql -u root < database.sql
@@ -20,5 +29,6 @@ before_script:
   - echo "USE mysql;\nUPDATE user SET password=PASSWORD('root') WHERE user='root';\nFLUSH PRIVILEGES;\n" | mysql -u root
 
 script:
-  - mvn test -B
+  - cd cucumber
+  - cucumber features/SignUpInOut/SignUpInOut.feature
   

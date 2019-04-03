@@ -19,6 +19,7 @@ public class SignUpController extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
 		// Get username and password
+		System.out.println("Received Request");
 		String username = request.getParameter("username");
 	    String password = request.getParameter("password");
 	    String confirm = request.getParameter("confirm_password");
@@ -52,7 +53,7 @@ public class SignUpController extends HttpServlet {
 					request.setAttribute("token", token);
 		    	}
 		    } catch(Exception e) {
-		    	System.out.println(e.getMessage());
+		    	e.printStackTrace();
 		    	dispatch = request.getRequestDispatcher("SignUpView.jsp");
 		    }
 	    }

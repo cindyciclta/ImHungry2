@@ -47,7 +47,7 @@ public class TestSignUpController extends Mockito{
 	public static void deleteUser() throws Exception{
 		// Delete added user
 		Class.forName("com.mysql.jdbc.Driver");
-		Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/ImHungry?user=root&password=root&useSSL=false");
+		Connection conn = DatabaseModel.getConnection();
 		
 		// the mysql insert statement to have date of upload
 		String query = "DELETE from users where user_name = (?)";

@@ -36,7 +36,7 @@ public class DatabaseModel {
 	}
 	public static Connection getConnection() throws ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.jdbc.Driver");
-		return DriverManager.getConnection("jdbc:mysql://db:3306/ImHungry?user=root&password=" + SQL_PASSWORD + "&useSSL=false");
+		return DriverManager.getConnection("jdbc:mysql://db:3306/ImHungry?user=root&password=" + SQL_PASSWORD + "&useSSL=false&allowPublicKeyRetrieval=true");
 	}
 	public static boolean userExists(String username) throws Exception {
 		// Get from SQL

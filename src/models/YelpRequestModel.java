@@ -19,7 +19,8 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 	private static final String API_KEY = "XV6c8H4T5PriBv2QO0smCcFhMU3d3axPXDY6yEWAekPe9ErQZI70EFyipPyig8g1J-1RozjFY14vs14_ZC3o9_3pAlhqDw74zA7iTg-u9OkWNlcQ7n2HmKPOKht6XHYx";
 	private String term;
 	private int limit;
-	private int radius = 1000;
+	private double radius = 5;
+	private int radius_meter;
 	private List<RestaurantModel> results;
 	public int responseCode;
 	public YelpRequestModel() {
@@ -30,8 +31,9 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 		return results;
 	}
 	
-	public boolean checkParameters(String term, int limit, int radius) {
+	public boolean checkParameters(String term, int limit, double radius) {
 		if(limit < 0) {
+			radius_meter = convertMilesToMeters(radius);
 			return false;
 		}
 		if(term == null) {
@@ -46,6 +48,13 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 		this.radius = radius;
 		return true;
 	}
+	private int convertMilesToMeters(double miles) {
+		if (miles < 0) {
+			return 1000;
+		}
+		int meters = (int) (miles * 1609.344);
+		return meters;
+	}
 	
 	@Override
 	public ResponseCodeModel completeTask() {
@@ -55,7 +64,7 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 				throw new IOException();
 			}
 			
-			String url = "https://api.yelp.com/v3/businesses/search?term="+term+"&latitude=34.02056373251961&longitude=-118.28544706106186&radius="+ radius;
+			String url = "https://api.yelp.com/v3/businesses/search?term="+term+"&latitude=34.02056373251961&longitude=-118.28544706106186&radius="+ radius_meter;
 			URL obj = new URL(url);
 			HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 			con.setRequestMethod("GET");

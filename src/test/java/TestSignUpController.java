@@ -46,10 +46,7 @@ public class TestSignUpController extends Mockito{
 	
 	public static void deleteUser() throws Exception{
 		// Delete added user
-		Class.forName("com.mysql.jdbc.Driver");
 		Connection conn = DatabaseModel.getConnection();
-		
-		// the mysql insert statement to have date of upload
 		String query = "DELETE from users where user_name = (?)";
 		PreparedStatement preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 	    preparedStmt.setString (1, username);
@@ -109,13 +106,13 @@ public class TestSignUpController extends Mockito{
 	
 	@Test
 	public void testSignUpNewUser() throws Exception{
+		deleteUser();
 		when(request.getParameter("username")).thenReturn( username );
         when(request.getParameter("password")).thenReturn( password );
         when(request.getParameter("confirm_password")).thenReturn( password );
         when(request.getRequestDispatcher("SearchPageController")).thenReturn(rd);
         new SignUpController().service(request, response);
-        verify(rd).forward(request, response);
-		deleteUser();	
+        verify(rd).forward(request, response);	
 	}
 	
 	@Test
@@ -125,8 +122,7 @@ public class TestSignUpController extends Mockito{
         when(request.getParameter("confirm_password")).thenReturn( password );
         when(request.getRequestDispatcher("SignUpView.jsp")).thenReturn(rd);
         new SignUpController().service(request, response);
-        verify(rd).forward(request, response);
-		deleteUser();	
+        verify(rd).forward(request, response);	
 	}
 	
 	@Test

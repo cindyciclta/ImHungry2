@@ -21,6 +21,7 @@ Test that there is a search history text
 Test that most recent search appears in search history
 Test that two most recent searches appear in search history in order
 Test that search history is only saved for the target user account
+Test that clicking on search history link leads to result page for that search
 
 cucumber/features/Result/P2_ResultsPage.feature:
 Test that putting tiny radius gives no restaurant results

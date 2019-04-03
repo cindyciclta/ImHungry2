@@ -1,13 +1,13 @@
-package test;
+package test.java;
 
 import static org.junit.Assert.*;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import models.SearchTermModel;
+import models.SearchModel;
 
-public class TestSearchTermModel {
+public class TestSearchModel {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -15,7 +15,7 @@ public class TestSearchTermModel {
 
 	@Test
 	public void test() {
-		assertNotNull(new SearchTermModel());
+		assertNotNull(new SearchModel());
 	}
 
 }

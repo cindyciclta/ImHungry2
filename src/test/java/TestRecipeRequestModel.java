@@ -1,4 +1,4 @@
-package test;
+package test.java;
 
 import static org.junit.Assert.*;
 
@@ -11,7 +11,7 @@ import org.junit.Test;
 import models.MockRecipeRequestModel;
 import models.ResponseCodeModel;
 
-public class TestRecipeRequestModell{
+public class TestRecipeRequestModel{
 	private static MockRecipeRequestModel cached;
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {

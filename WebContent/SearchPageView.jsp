@@ -39,17 +39,41 @@ crossorigin="anonymous">
 body, html {
 	height: 100%;
 	font-family: "Comic Sans MS", cursive, sans-serif;
+	background: linear-gradient(183deg, #ffc1f3, #a1e7e6, #dabdf8, #bdf8c3, #f1f698, #fad591);
+	background-size: 1200% 1200%;
+	-webkit-animation: rainbow 21s ease infinite;
+	-moz-animation: rainbow 21s ease infinite;
+	animation: rainbow 21s ease infinite;
+}
+	
+@-webkit-keyframes rainbow {
+    0%{background-position:50% 0%}
+    50%{background-position:51% 100%}
+    100%{background-position:50% 0%}
+}
+@-moz-keyframes rainbow {
+    0%{background-position:50% 0%}
+    50%{background-position:51% 100%}
+    100%{background-position:50% 0%}
+}
+@keyframes rainbow { 
+    0%{background-position:50% 0%}
+    50%{background-position:51% 100%}
+    100%{background-position:50% 0%}
 }
 
 p7 {
 	font-size: 25px;
 }
+h1 {
+	font-size: 60px;
 
+}
 </style>
 </head>
 
 
-<body class="p-3 mb-2 bg-dark text-white">
+<body>
 	<script>
 		function redirectToResults(){
 			

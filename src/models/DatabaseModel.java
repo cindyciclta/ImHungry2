@@ -37,7 +37,7 @@ public class DatabaseModel {
 	public static Connection getConnection() throws ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.cj.jdbc.Driver");
 		//replace 68.183.168.73 with localhost to use local DB
-		return DriverManager.getConnection("jdbc:mysql://localhost:3306/ImHungry?user=root&password=" + SQL_PASSWORD + "&useSSL=false&allowPublicKeyRetrieval=true");
+		return DriverManager.getConnection("jdbc:mysql://68.183.168.73:3306/ImHungry?user=root&password=" + SQL_PASSWORD + "&useSSL=false&allowPublicKeyRetrieval=true");
 	}
 	public static boolean userExists(String username) throws Exception {
 		// Get from SQL

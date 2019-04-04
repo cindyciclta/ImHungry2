@@ -23,8 +23,11 @@ RUN apt-get install -y maven
 RUN git clone https://f476d581ef2845cc763b73e6f7500c133c3c5718@github.com/cindyciclta/ImHungry2.git /ImHungry2
 WORKDIR /ImHungry2
 
-RUN mvn package
+RUN mvn test jacoco:report
+RUN mvn package -DskipTests=ture
 WORKDIR /ImHungry2/target
+
+RUN cat /ImHungry2/target/jacoco-ut/jacoco.csv
 RUN cp /ImHungry2/target/ImHungry-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps/ImHungry.war
 
 WORKDIR /usr/local/tomcat

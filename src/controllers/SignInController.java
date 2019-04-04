@@ -43,6 +43,7 @@ public class SignInController extends HttpServlet {
 		    	dispatch = request.getRequestDispatcher("SignInView.jsp");
 		    }
 	    } catch(Exception e) {
+	    	System.out.println("exception signing in: " + e.getLocalizedMessage());
 	    	e.printStackTrace();
 	    	dispatch = request.getRequestDispatcher("SignInView.jsp");
 	    }

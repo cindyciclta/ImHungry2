@@ -1,6 +1,7 @@
 package controllers;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,8 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 
 import models.CollageGenerationModel;
+import models.DatabaseModel;
 import models.GoogleImageRequestModel;
 import models.ResponseModel;
+import models.SearchTermModel;
 
 @WebServlet("/ResultsPageController")
 public class ResultsPageController extends HttpServlet {
@@ -66,8 +69,22 @@ public class ResultsPageController extends HttpServlet {
 					int indexInt = RedirectionController.addResponse(rm);
 					
 					ArrayList<String> urllist = (ArrayList<String>) collagemodel.getList();
+					
 					JSONArray jsArray = new JSONArray (urllist);
-
+					
+					Integer id = RedirectionController.tokens.get(token);
+					Vector<SearchTermModel> searchHistory = new Vector<>();
+					try {
+						// Check that ID is not a negative number
+						if(id < 0) {
+							throw new Exception();
+						}
+						searchHistory = DatabaseModel.GetSearchHistory(id);
+						boolean responsedb = DatabaseModel.AddSearchToHistory(id, term, Integer.parseInt(limit), Integer.parseInt(radius), urllist);
+					} catch (Exception e1) {
+						System.out.println("Search history exception: " + e1.getLocalizedMessage());
+					}
+					request.setAttribute("searches", searchHistory);
 					request.setAttribute("token", token);
 					request.setAttribute("response", rm);
 					request.getSession().setAttribute("limit", limit);

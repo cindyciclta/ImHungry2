@@ -99,6 +99,10 @@
 		        	addImage(refactorstring, i);
 	        	}
 			}
+	        createMiniCollages();
+	    });
+		
+		function createMiniCollages() {
 	        var miniCollages = document.getElementsByClassName("miniCollage");
 	        for (var x = 0; x < miniCollages.length; x++) {
 	        	var currCollage = miniCollages[x];
@@ -119,7 +123,7 @@
 	    	    	currImg.style.transform = rotate;
 	        	}
 	        }
-	    });
+		}
 	
 	    // min = minimum rotation in degrees, max = maximum rotation in degrees
 	    function randomIntFromInterval(min,max) {

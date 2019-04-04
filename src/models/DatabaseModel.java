@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Vector;
 
@@ -24,18 +25,18 @@ public class DatabaseModel {
 		// the mysql insert statement to have date of upload
 		String query = "SELECT (user_id) from users where user_name = (?) and user_password = SHA1(?)";
 		PreparedStatement preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-	    preparedStmt.setString (1, username);
-	    preparedStmt.setString(2, String.valueOf(password));
-	    rs = preparedStmt.executeQuery();
-	    if(rs.next()) {
-	    	 returnVal = rs.getInt("user_id");
-	    }
-	    
+		preparedStmt.setString (1, username);
+		preparedStmt.setString(2, String.valueOf(password));
+		rs = preparedStmt.executeQuery();
+		if(rs.next()) {
+			returnVal = rs.getInt("user_id");
+		}
 		close(conn, preparedStmt, rs);
 		return returnVal;
 	}
 	public static Connection getConnection() throws ClassNotFoundException, SQLException {
-		Class.forName("com.mysql.jdbc.Driver");
+		Class.forName("com.mysql.cj.jdbc.Driver");
+		//replace 68.183.168.73 with localhost to use local DB
 		return DriverManager.getConnection("jdbc:mysql://68.183.168.73:3306/ImHungry?user=root&password=" + SQL_PASSWORD + "&useSSL=false&allowPublicKeyRetrieval=true");
 	}
 	public static boolean userExists(String username) throws Exception {
@@ -49,11 +50,11 @@ public class DatabaseModel {
 		// the mysql insert statement to have date of upload
 		String query = "SELECT * from users where user_name = (?)";
 		PreparedStatement preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-	    preparedStmt.setString (1, username);
-	    rs = preparedStmt.executeQuery();
-	    if(rs.next()) {
-	    	 returnVal = true;
-	    }
+	    	preparedStmt.setString (1, username);
+	   	rs = preparedStmt.executeQuery();
+	    	if(rs.next()) {
+	    		returnVal = true;
+	    	}
 		close(conn, preparedStmt, rs);
 		return returnVal;
 	}
@@ -86,7 +87,8 @@ public class DatabaseModel {
 		// Result sets, statements do not need to be closed, as they are ended by the connectionProxy closing
 		conn.close();
 	}
-	public static boolean AddSearchToHistory(int userid, String term, int limit, int radius) throws Exception {
+	public static boolean AddSearchToHistory(int userid, String term, int limit, int radius, ArrayList<String> urllist)
+			throws Exception {
 
 		if(userid < 0) {
 			return false;
@@ -94,7 +96,7 @@ public class DatabaseModel {
 		term = term.trim();
 		Connection conn =null;
 		PreparedStatement preparedStmt = null;
-
+		
 		conn = getConnection();
 		String sql = "INSERT INTO searches (user_id, term, limit_search, radius) VALUES (?, ?, ?, ?)";
 		
@@ -104,6 +106,16 @@ public class DatabaseModel {
 		preparedStmt.setInt(3, limit);
 		preparedStmt.setInt(4, radius);
 		preparedStmt.executeUpdate();
+		
+		String imgsql = "INSERT IGNORE INTO images (term, url) VALUES (?, ?)";
+		PreparedStatement ps = null;
+		for (int i = 0; i < urllist.size(); i++) {
+			ps = conn.prepareStatement(imgsql);
+			ps.setString(1, term);
+			ps.setString(2, urllist.get(i));
+			ps.executeUpdate();
+		}
+		if (ps != null ) {ps.close();}
 
 		close(conn, preparedStmt, null);
 		return true;
@@ -117,11 +129,11 @@ public class DatabaseModel {
 		conn = getConnection();
 		String query = "SELECT * from users where user_name = (?)";
 		preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-	    preparedStmt.setString (1, username);
-	    rs = preparedStmt.executeQuery();
-	    if(rs.next()) {
-	    	return rs.getInt("user_id");
-	    }
+	    	preparedStmt.setString (1, username);
+	    	rs = preparedStmt.executeQuery();
+	    	if(rs.next()) {
+	    		return rs.getInt("user_id");
+	    	}
 		close(conn, preparedStmt, rs);
 		return -1;
 	}
@@ -138,12 +150,37 @@ public class DatabaseModel {
 			s.term = rs.getString("term");
 			s.limit = rs.getInt("limit_search");
 			s.radius = rs.getInt("radius");
+			
+			s.images = new ArrayList<String>();
+			PreparedStatement ps = conn.prepareStatement("SELECT url FROM images WHERE term = ?");
+			ps.setString(1, s.term);
+			ResultSet imgrs = ps.executeQuery();
+			while (imgrs.next() && s.images.size() < 11) {
+				s.images.add(imgrs.getString("url"));
+			}
+			imgrs.close();
 			results.add(s);
 		}
+		removeAdjacentDuplicates(results);
 		Collections.reverse(results);
 		conn.close();
 		rs.close();
 		st.close();
 		return results;
+	}
+	public static void removeAdjacentDuplicates(Vector<SearchTermModel> results) {
+		if (results == null || results.size() <= 1) {
+			return;
+		}
+		Vector<SearchTermModel> dupl = new Vector<SearchTermModel>();
+		SearchTermModel prev = results.get(0);
+		for (int i = 1; i < results.size(); i++) {
+			SearchTermModel curr = results.get(i);
+			if (curr.term.equals(prev.term)) {
+				dupl.add(curr);
+			}
+			prev = curr;
+		}
+		results.removeAll(dupl);
 	}
 }

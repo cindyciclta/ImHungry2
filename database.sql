@@ -16,10 +16,17 @@ CREATE table searches(
     radius INT(11)
 );
 
+CREATE table images(
+	image_id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	term VARCHAR(100),
+    url VARCHAR(400),
+    UNIQUE KEY unq (term, url)
+);
+
 
 CREATE table list_restaurants(
 	user_id INT(11),
-	FOREIGN KEY fk1 (user_id) REFERENCES  users(user_id),
+	FOREIGN KEY fk2 (user_id) REFERENCES  users(user_id),
     is_favorite BOOLEAN not null,
     is_to_explore BOOLEAN not null,
     do_not_show BOOLEAN not null,

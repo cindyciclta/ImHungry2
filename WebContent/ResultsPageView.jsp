@@ -6,6 +6,8 @@
 <%@page import="java.util.ArrayList"%> 
 <%@page import="org.json.JSONArray"%> 
 <%@page import="java.net.URLEncoder"%>
+<%@page import="java.util.Vector"%>
+<%@page import="models.SearchTermModel"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -39,6 +41,22 @@
 		body, html {
 			height: 100%;
 			font-family: "Comic Sans MS", cursive, sans-serif;
+		}
+		
+		.miniCollage {
+			margin-right: 3vw;
+			margin-left: 3vw;
+			margin-bottom: 3vh;
+			width: 8.5vw;
+			height: 13vh;
+		}
+		
+		#hist {
+			margin-bottom: 2vh;
+		}
+		
+		#table-outer-scroll {
+			overflow-x: scroll;
 		}
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -81,6 +99,26 @@
 		        	addImage(refactorstring, i);
 	        	}
 			}
+	        var miniCollages = document.getElementsByClassName("miniCollage");
+	        for (var x = 0; x < miniCollages.length; x++) {
+	        	var currCollage = miniCollages[x];
+	        	var currCollageImages = currCollage.getElementsByClassName("miniCollageImg");
+	        	for (var y = 0; y < currCollageImages.length; y++) {
+	        		var currImg = currCollageImages[y];
+	        		currImg.style.zIndex = y;
+	        		currImg.style.maxWidth = "28%";
+	        		currImg.style.maxHeight = "28%";
+	        		
+	    	    	//Apply random rotation between -45 and 45
+	    	    	var degree = Math.floor(Math.random() * 91) - 45;
+	    	    	var rotate = 'rotate(' + degree + 'deg)';
+	    	    	currImg.style.WebkitTransform = rotate;
+	    	    	currImg.style.MozTransform = rotate;
+	    	    	currImg.style.OTransform = rotate;
+	    	    	currImg.style.msTransform = rotate;
+	    	    	currImg.style.transform = rotate;
+	        	}
+	        }
 	    });
 	
 	    // min = minimum rotation in degrees, max = maximum rotation in degrees
@@ -111,7 +149,7 @@
 	    	newImage.style.msTransform = rotate;
 	    	newImage.style.transform = rotate;
 	    	
-	        console.log(destination.appendChild(newImage));
+	        destination.appendChild(newImage)
 	    }
 	
 		function redirectToRecipe(link){
@@ -226,7 +264,6 @@
 									if(resultsFields.get("modifier").equals("donotshow")){
 										continue;
 									}
-								
 								%>
                                     <tr onclick=<%="redirectToRecipe(\"" + "/ImHungry/RedirectionController?action=recipe&term="+ecodedValue +"&index=" + index + "&item=" + i + "\")"%>>
                               
@@ -310,6 +347,53 @@
 				</ul>
 			</nav>
 		</div>
+		
+		<div class="row justify-content-center align-items-center">
+			<p7 id="hist">Search History</p7>
+		</div>
+		<div id="table-outer-scroll">
+			<table class="table-dark table-hover table-stripped">
+				<thead></thead>
+				<tbody>
+					<%
+					Vector<SearchTermModel> searches = (Vector<SearchTermModel>)request.getAttribute("searches");
+					%>
+					<tr>
+						<%
+						for (SearchTermModel search : searches) {
+						%>
+						<td>
+							<div class="miniCollage">
+								<%
+								for (String im : search.images) {
+								%>
+								<img class="miniCollageImg" src=<%=im%>>
+								<%
+								}
+								%>
+							</div>
+						</td>
+						<%
+						}
+						%>
+					</tr>
+					<tr>
+						<%
+						int i=1;
+						for (SearchTermModel search : searches) {
+						%>
+						<td class="text-center">
+							<p1 id=<%="searchHist" + i%>><a href=<%="\"/ImHungry/SearchPageController?action=search&term=" + search.term + "&token=" + token + "&limit=" + search.limit + "&radius=" + search.radius + "&page=1\""%>><%=search.term%></a></p1>
+						</td>
+						<%
+						i++;
+						}
+						%>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
     </div>
 </body>
 </html>

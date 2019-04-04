@@ -26,20 +26,19 @@ public class DatabaseModel {
 		// the mysql insert statement to have date of upload
 		String query = "SELECT (user_id) from users where user_name = (?) and user_password = SHA1(?)";
 		PreparedStatement preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-	    preparedStmt.setString (1, username);
-	    preparedStmt.setString(2, String.valueOf(password));
-	    rs = preparedStmt.executeQuery();
-	    if(rs.next()) {
-	    	 returnVal = rs.getInt("user_id");
-	    }
-	    
+		preparedStmt.setString (1, username);
+		preparedStmt.setString(2, String.valueOf(password));
+		rs = preparedStmt.executeQuery();
+		if(rs.next()) {
+			returnVal = rs.getInt("user_id");
+		}
 		close(conn, preparedStmt, rs);
 		return returnVal;
 	}
 	public static Connection getConnection() throws ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.cj.jdbc.Driver");
-		//68.183.168.73
-		return DriverManager.getConnection("jdbc:mysql://localhost:3306/ImHungry?user=root&password=" + SQL_PASSWORD + "&useSSL=false&allowPublicKeyRetrieval=true");
+		//replace 68.183.168.73 with localhost to use local DB
+		return DriverManager.getConnection("jdbc:mysql://68.183.168.73:3306/ImHungry?user=root&password=" + SQL_PASSWORD + "&useSSL=false&allowPublicKeyRetrieval=true");
 	}
 	public static boolean userExists(String username) throws Exception {
 		// Get from SQL
@@ -52,11 +51,11 @@ public class DatabaseModel {
 		// the mysql insert statement to have date of upload
 		String query = "SELECT * from users where user_name = (?)";
 		PreparedStatement preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-	    preparedStmt.setString (1, username);
-	    rs = preparedStmt.executeQuery();
-	    if(rs.next()) {
-	    	 returnVal = true;
-	    }
+	    	preparedStmt.setString (1, username);
+	   	rs = preparedStmt.executeQuery();
+	    	if(rs.next()) {
+	    		returnVal = true;
+	    	}
 		close(conn, preparedStmt, rs);
 		return returnVal;
 	}
@@ -131,11 +130,11 @@ public class DatabaseModel {
 		conn = getConnection();
 		String query = "SELECT * from users where user_name = (?)";
 		preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-	    preparedStmt.setString (1, username);
-	    rs = preparedStmt.executeQuery();
-	    if(rs.next()) {
-	    	return rs.getInt("user_id");
-	    }
+	    	preparedStmt.setString (1, username);
+	    	rs = preparedStmt.executeQuery();
+	    	if(rs.next()) {
+	    		return rs.getInt("user_id");
+	    	}
 		close(conn, preparedStmt, rs);
 		return -1;
 	}

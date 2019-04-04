@@ -61,7 +61,7 @@ p7 {
 				var query = document.getElementById("termInput").value;
 				var limit = document.getElementById("limitInput").value;
 				var trimmed = query.replace(" ", "_");
-				window.location = '/ImHungry/SearchPageController?action=search&term='+encodeURIComponent(trimmed) + "&limit=" + limit + "&page=1";
+				window.location = '/ImHungry/SearchPageController?action=search&term='+encodeURIComponent(trimmed) + "&limit=" + limit + "&rest_page=1" + "&reci_page=1";
 			}, 1000);
 		}
 	</script>
@@ -118,7 +118,7 @@ p7 {
 			var limit = document.getElementById("limitInput").value;
 			var radius = document.getElementById("radiusInput").value;
 			var trimmed = query.replace(" ", "_");
-      window.location = '/ImHungry/SearchPageController?action=search&term='+encodeURIComponent(trimmed) + "&token=" + <%=token %> + "&limit=" + limit + "&radius=" + radius + "&page=1";
+      window.location = '/ImHungry/SearchPageController?action=search&term='+encodeURIComponent(trimmed) + "&token=" + <%=token %> + "&limit=" + limit + "&radius=" + radius + "&rest_page=1" + "&reci_page=1";
 		}, 1000);
 	}
 	$(document).ready(function() {
@@ -173,7 +173,7 @@ p7 {
 								%>
 								<tr>
 									<td>
-										<p1 id=<%="searchHist" + i%>><a href=<%="\"/ImHungry/SearchPageController?action=search&term=" + search.term + "&token=" + token + "&limit=" + search.limit + "&radius=" + search.radius + "&page=1\""%>><%=search.term%></a></p1>
+										<p1 id=<%="searchHist" + i%>><a href=<%="\"/ImHungry/SearchPageController?action=search&term=" + search.term + "&token=" + token + "&limit=" + search.limit + "&radius=" + search.radius +  "&rest_page=1" + "&reci_page=1\""%>><%=search.term%></a></p1>
 									</td>
 								</tr>
 								

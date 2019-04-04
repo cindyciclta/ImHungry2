@@ -44,7 +44,8 @@ public class ResultsPageController extends HttpServlet {
 			String limit = request.getParameter("limit");
 			String radius = request.getParameter("radius"); //Maybe need to add a check to see if empty
 			String token = request.getParameter("token");
-			String page = request.getParameter("page");
+			String reci_page = request.getParameter("reci_page");
+			String rest_page = request.getParameter("rest_page");
 			if(token.isEmpty()) {
 				dispatch = request.getRequestDispatcher("SignInView.jsp");
 			} else if(term == null || limit == null || term.isEmpty() || limit.isEmpty()) {
@@ -76,7 +77,8 @@ public class ResultsPageController extends HttpServlet {
 					request.setAttribute("term", term);
 					request.setAttribute("length", urllist.size());
 					request.setAttribute("jsonarray", jsArray);
-					request.setAttribute("page", page);
+					request.setAttribute("reci_page", reci_page);
+					request.setAttribute("rest_page", rest_page);
 				}
 			}
 		} else {

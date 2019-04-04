@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.Vector;
 
 public class DatabaseModel {
-	static final String SQL_PASSWORD = "root"; // SET YOUR MYSQL PASSWORD HERE TO GET DATABASE WORKING!!!!!!!!
+	static final String SQL_PASSWORD = "password"; // SET YOUR MYSQL PASSWORD HERE TO GET DATABASE WORKING!!!!!!!!
 	
 	public static int signInUser(String username, char[] password) throws Exception {
 		

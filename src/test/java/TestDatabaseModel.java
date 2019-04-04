@@ -9,6 +9,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -125,7 +126,7 @@ public class TestDatabaseModel{
 		String password = "test";
 		DatabaseModel.insertUser(username, password.toCharArray());
 		int id = DatabaseModel.GetUserID("test");
-		assertTrue(DatabaseModel.AddSearchToHistory(id,"pizza", 5, 1000));
+		assertTrue(DatabaseModel.AddSearchToHistory(id,"pizza", 5, 1000, new ArrayList<String>()));
 		deleteUser(username);
 	}
 	@Test
@@ -134,7 +135,7 @@ public class TestDatabaseModel{
 		String password = "test";
 		DatabaseModel.insertUser(username, password.toCharArray());
 		int id = DatabaseModel.GetUserID("test");
-		assertTrue(DatabaseModel.AddSearchToHistory(id,"pizza", 5, 1000));
+		assertTrue(DatabaseModel.AddSearchToHistory(id,"pizza", 5, 1000, new ArrayList<String>()));
 		assertNotNull(DatabaseModel.GetSearchHistory(id));
 		deleteUser(username);
 	}
@@ -143,7 +144,7 @@ public class TestDatabaseModel{
 		String username = "test";
 		String password = "test";
 		DatabaseModel.insertUser(username, password.toCharArray());
-		assertFalse(DatabaseModel.AddSearchToHistory(-1,"pizza", 5, 1000));
+		assertFalse(DatabaseModel.AddSearchToHistory(-1,"pizza", 5, 1000, new ArrayList<String>()));
 		deleteUser(username);
 	}
 	

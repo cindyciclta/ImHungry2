@@ -12,11 +12,32 @@
 		body, html {
 			height: 100%;
 			font-family: "Comic Sans MS", cursive, sans-serif;
+			background: linear-gradient(183deg, #ffc1f3, #a1e7e6, #dabdf8, #bdf8c3, #f1f698, #fad591);
+			background-size: 1200% 1200%;
+
+			-webkit-animation: rainbow 21s ease infinite;
+			-moz-animation: rainbow 21s ease infinite;
+			animation: rainbow 21s ease infinite;
+		}
+		@-webkit-keyframes rainbow {
+		    0%{background-position:50% 0%}
+		    50%{background-position:51% 100%}
+		    100%{background-position:50% 0%}
+		}
+		@-moz-keyframes rainbow {
+		    0%{background-position:50% 0%}
+		    50%{background-position:51% 100%}
+		    100%{background-position:50% 0%}
+		}
+		@keyframes rainbow { 
+		    0%{background-position:50% 0%}
+		    50%{background-position:51% 100%}
+		    100%{background-position:50% 0%}
 		}
 	</style>
 </head>
 
-<body class="p-3 mb-2 bg-dark text-white">
+<body>
 
 <div class="container mt-5 h-100">
 	<div class="h-100 row justify-content-center align-items-center">
@@ -24,7 +45,7 @@
 		  <form method="post" action="/ImHungry/SignInController">
 			  <div class="container">
 			  	<div class="row justify-content-center align-items-center">
-			  		<h1>Sign In To I'm Hungry</h1>
+			  		<h1>Sign In</h1>
 			 	 </div>
 			  </div>
 		  	<br>

@@ -210,7 +210,7 @@
                             <!-- Restaurant pagination -->
 					    	<div class="container my-6 mr-5 pr-5 pb-5">
 					 			<nav aria-label="...">
-									<ul class="pagination pagination-lg">
+									<ul class="pagination pagination-lg justify-content-center">
 									<% 
 										int restMaxPages = Math.max(rm.getNumberOfRecipes() / 5, rm.getNumberOfRestaurants() / 5);
 										for (int k = 1 ; k <= restMaxPages ; k++){
@@ -284,7 +284,7 @@
                             <!-- Recipe pagination -->
 					    	<div class="container my-6 mr-5 pr-5 pb-5">
 					 			<nav aria-label="...">
-									<ul class="pagination pagination-lg">
+									<ul class="pagination pagination-lg justify-content-center">
 									<% 
 										int reciMaxPages = Math.max(rm.getNumberOfRecipes() / 5, rm.getNumberOfRestaurants() / 5);
 										for (int k = 1 ; k <= reciMaxPages ; k++){

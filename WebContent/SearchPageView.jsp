@@ -120,7 +120,7 @@ h1 {
 			  					<input class="form-control mr-sm-2" type="number" min="1" value="5" id="limitInput" title="Number of items to show in results">
 			  				</div>
 			  				<div id="searchRadius" class="form-group col-md-3">
-			  					<input class="form-control mr-sm-2" type="number" min="1" value="1000" placeholder="radius" id="radiusInput">
+			  					<input class="form-control mr-sm-2" type="number" min="1" value="5" placeholder="radius" id="radiusInput">
 			  				</div>
 			  			</div>
 			  		</div>

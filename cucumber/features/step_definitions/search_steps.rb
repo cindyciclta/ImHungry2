@@ -9,7 +9,7 @@ Given(/^I searched for "([^"]*)"$/) do |arg1|
   expect(page).to have_css('h1', text: "I'm Hungry", wait: 50)
   
   fill_in 'termInput', :with => arg1
-  fill_in 'radiusInput', :with => 3000
+  fill_in 'radiusInput', :with => 5
   page.find('div#emojiButton.img-container').click
   expect(page).to have_css('h1', text: arg1, wait: 50)
 end
@@ -89,7 +89,7 @@ Given(/^I searched for item "([^"]*)" with "([^"]*)" results and was redirected 
   
   fill_in('termInput', with: arg1)
   fill_in('limitInput', with: arg2)
-  fill_in 'radiusInput', :with => 3000
+  fill_in 'radiusInput', :with => 5
   page.find('div#emojiButton.img-container').click
   expect(page).to have_css('h1', text: arg1, wait: 50)
 end
@@ -106,6 +106,19 @@ Given(/^I searched for item "([^"]*)" with "([^"]*)" radius and was redirected t
   fill_in 'limitInput', :with => 10
   page.find('div#emojiButton.img-container').click
   expect(page).to have_css('h1', text: arg1, wait: 50)
+end
+
+Given(/^I searched for item "([^"]*)" with "([^"]*)" radius$/) do |arg1, arg2|
+  visit "http://localhost:8080/ImHungry/SignInView.jsp"
+  fill_in 'username', :with => "test"
+  fill_in 'password', :with => "test"
+  page.find('#signInButton').click
+  expect(page).to have_css('h1', text: "I'm Hungry", wait: 50)
+  
+  fill_in('termInput', with: arg1)
+  fill_in('radiusInput', with: arg2)
+  fill_in 'limitInput', :with => 10
+  page.find('div#emojiButton.img-container').click
 end
 
 Given(/^I have navigated to the sign up page$/) do
@@ -325,7 +338,7 @@ Then(/^I should see a text box to enter number of results$/) do
 end
 
 Then(/^I should see a text box to enter search radius$/) do
-  page.should have_field('radiusInput')
+  page.should have_field('radiusInput', wait: 50)
 end
 
 Then(/^the default value should be (\d+)$/) do |arg1|
@@ -374,8 +387,10 @@ Then(/^there should be search history$/) do
   expect(page).to have_css('#hist')
 end
 
-Then(/^the search history should be empty$/) do
-  expect(page).not_to have_css('#searchHist1')
+Then(/^the search history should be empty or first search history should say "([^"]*)"$/) do |arg1|
+  if has_css?('#searchHist1')
+    expect(page).to have_css('#searchHist1', text: arg1)
+  end
 end
 
 Given(/^I click the first search history link$/) do
@@ -383,11 +398,11 @@ Given(/^I click the first search history link$/) do
 end
 
 Then(/^there should be "([^"]*)" in the first search history$/) do |arg1|
-  expect(page).to have_css('#searchHist1', text: arg1)
+  expect(page).to have_css('#searchHist1', text: arg1, wait:50)
 end
 
 Then(/^there should be "([^"]*)" in the second search history$/) do |arg1|
-  expect(page).to have_css('#searchHist2', text: arg1)
+  expect(page).to have_css('#searchHist2', text: arg1, wait:50)
 end
 
 # Some more

@@ -11,21 +11,23 @@ Test signing in with empty username does nothing
 Test signing in with empty password does nothing
 Test that signing out from results page leads to sign in page
 Test that signing out from search page leads to sign in page
+TODO? - Test that navigating directly to search page requires user to be signed in
 
 cucumber/features/Search/P2_SearchPage.feature:
 Test that there is a radius text box
-Test default 1000 radius
+Test default 5 radius
 Test negative radius
+Test tiny radius remains on search page
 Test using enter to search
-Test that there is a search history text
-Test that most recent search appears in search history
-Test that two most recent searches appear in search history in order
-Test that search history is only saved for the target user account
-Test that clicking on search history link leads to result page for that search
 
 cucumber/features/Result/P2_ResultsPage.feature:
-Test that putting tiny radius gives no restaurant results
 Test that searching for 3 items does not cause pagination
 Test that searching for 15 items causes pagination
 Test when there's pagination, clicking on second page leads to results
 Test that there is table-hover on results (UI)
+Test that there is a search history text
+Test that the most recent search appears in search history
+Test that two most recent searches appear in search history in order
+Test that consecutive duplicate searches only show up once in search history
+Test that clicking on search history link leads to result page for that search
+Test that search history is only saved for the target user account

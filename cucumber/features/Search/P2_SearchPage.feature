@@ -9,14 +9,19 @@ Background:
 Scenario: Check default radius
 
 	And I should see a text box to enter search radius
-	And the default radius should be 1000
+	And the default radius should be 5
 
 Scenario: Check negative radius value
 
 	When I enter a negative radius
 	Then the text box should not accept the value
 	
+Scenario: Remain on search page if radius is too small
+	
+	When I searched for item "Indian" with "0.05" radius
+	Then I should see a text box to enter search radius
+	
 Scenario: Use enter to search
 
-	When I type "chocolate" and I press enter
-	Then I am on the "Results for chocolate" page
+	When I type "pizza" and I press enter
+	Then I am on the "Results for pizza" page

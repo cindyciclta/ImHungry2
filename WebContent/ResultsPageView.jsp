@@ -432,51 +432,6 @@
 			</table>
 		</div>
 		
-		<div class="row justify-content-center align-items-center">
-			<p7 id="hist">Search History</p7>
-		</div>
-		<div id="table-outer-scroll">
-			<table class="table-dark table-hover table-stripped">
-				<thead></thead>
-				<tbody>
-					<%
-					Vector<SearchTermModel> searches = (Vector<SearchTermModel>)request.getAttribute("searches");
-					%>
-					<tr>
-						<%
-						for (SearchTermModel search : searches) {
-						%>
-						<td>
-							<div class="miniCollage">
-								<%
-								for (String im : search.images) {
-								%>
-								<img class="miniCollageImg" src=<%=im%>>
-								<%
-								}
-								%>
-							</div>
-						</td>
-						<%
-						}
-						%>
-					</tr>
-					<tr>
-						<%
-						int i=1;
-						for (SearchTermModel search : searches) {
-						%>
-						<td class="text-center">
-							<p1 id=<%="searchHist" + i%>><a href=<%="\"/ImHungry/SearchPageController?action=search&term=" + search.term + "&token=" + token + "&limit=" + search.limit + "&radius=" + search.radius + "&page=1\""%>><%=search.term%></a></p1>
-						</td>
-						<%
-						i++;
-						}
-						%>
-					</tr>
-				</tbody>
-			</table>
-		</div>
 
     </div>
 </body>

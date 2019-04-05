@@ -1,4 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page import="models.ResponseModel"%>   
+<%@page import="models.CollageGenerationModel"%>   
+<%@page import="models.GoogleImageRequestModel"%> 
+<%@page import="java.util.Map"%>  
+<%@page import="java.util.ArrayList"%> 
+<%@page import="org.json.JSONArray"%> 
+<%@page import="java.net.URLEncoder"%>
+<%@page import="java.util.Vector"%>
+<%@page import="models.SearchTermModel"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -173,40 +182,6 @@ h1 {
 			  </div>
 			  </form>
 			  </div>
-			</div>
-		</div>
-		<div class="container mt-5 h-100">
-			<div class="h-100 row justify-content-center align-items-center">
-				<div class="container">
-				  	<div class="row justify-content-center align-items-center">
-						<p7 id="hist">Search History</p7>
-					</div>
-				</div>
-				<div class="container">
-					<div class="row justify-content-center align-items-center">
-						<table class="table-dark table-hover table-stripped table-borderless">
-							<thead>
-							</thead>
-							<tbody>
-								<%
-								Vector<SearchTermModel> searches = (Vector<SearchTermModel>)request.getAttribute("searches");
-								int i=1;
-								for(SearchTermModel search : searches){
-								%>
-								<tr>
-									<td>
-										<p1 id=<%="searchHist" + i%>><a href=<%="\"/ImHungry/SearchPageController?action=search&term=" + search.term + "&token=" + token + "&limit=" + search.limit + "&radius=" + search.radius +  "&rest_page=1" + "&reci_page=1\""%>><%=search.term%></a></p1>
-									</td>
-								</tr>
-								
-								<%
-								i++;
-								}
-								%>
-							</tbody>
-						</table>
-					</div>
-				</div>
 			</div>
 		</div>
 

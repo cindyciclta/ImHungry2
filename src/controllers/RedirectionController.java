@@ -89,7 +89,7 @@ public class RedirectionController extends HttpServlet {
 			request.setAttribute("response", rm);
 			int indexInt = Integer.parseInt(index);
 			request.setAttribute("index", indexInt);
-			
+
 			//Call the request to pull data to go back to the results page
 			CollageGenerationModel collagemodel = new CollageGenerationModel();
 			GoogleImageRequestModel googleimagemodel = new GoogleImageRequestModel(collagemodel);

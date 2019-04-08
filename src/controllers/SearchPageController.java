@@ -51,7 +51,8 @@ public class SearchPageController extends HttpServlet {
 				String term = request.getParameter("term");
 				String limit = request.getParameter("limit");
 				String radius = request.getParameter("radius");
-				String page = request.getParameter("page");
+				String reci_page = request.getParameter("reci_page");
+				String rest_page = request.getParameter("rest_page");
 				if(term == null || limit == null || term.isEmpty() || limit.isEmpty()) {
 					dispatch = request.getRequestDispatcher("SearchPageView.jsp");
 					request.setAttribute("token", token);
@@ -59,8 +60,8 @@ public class SearchPageController extends HttpServlet {
 					String decodedValue = URLDecoder.decode(term, "UTF-8");
 					term.trim();
 					System.out.println(term);
-					System.out.println(decodedValue);
-					dispatch = request.getRequestDispatcher("ResultsPageController?action=results&term=" +term+ "&limit=" + limit + "&radius=" + radius + "&page=" + page);
+					System.out.println("_____________________"+ reci_page + " "+ rest_page);
+					dispatch = request.getRequestDispatcher("ResultsPageController?action=results&term=" +term+ "&limit=" + limit + "&radius=" + radius + "&rest_page=" + rest_page + "&reci_page=" + reci_page);
 					try {
 						int limitt = Integer.parseInt(limit);
 						int radiuss = Integer.parseInt(radius);

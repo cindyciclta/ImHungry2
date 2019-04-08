@@ -1,4 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page import="models.ResponseModel"%>   
+<%@page import="models.CollageGenerationModel"%>   
+<%@page import="models.GoogleImageRequestModel"%> 
+<%@page import="java.util.Map"%>  
+<%@page import="java.util.ArrayList"%> 
+<%@page import="org.json.JSONArray"%> 
+<%@page import="java.net.URLEncoder"%>
+<%@page import="java.util.Vector"%>
+<%@page import="models.SearchTermModel"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -83,7 +92,7 @@ h1 {
 				var query = document.getElementById("termInput").value;
 				var limit = document.getElementById("limitInput").value;
 				var trimmed = query.replace(" ", "_");
-				window.location = '/ImHungry/SearchPageController?action=search&term='+encodeURIComponent(trimmed) + "&limit=" + limit + "&page=1";
+				window.location = '/ImHungry/SearchPageController?action=search&term='+encodeURIComponent(trimmed) + "&limit=" + limit + "&rest_page=1" + "&reci_page=1";
 			}, 1000);
 		}
 	</script>
@@ -140,7 +149,7 @@ h1 {
 			var limit = document.getElementById("limitInput").value;
 			var radius = document.getElementById("radiusInput").value;
 			var trimmed = query.replace(" ", "_");
-      window.location = '/ImHungry/SearchPageController?action=search&term='+encodeURIComponent(trimmed) + "&token=" + <%=token %> + "&limit=" + limit + "&radius=" + radius + "&page=1";
+      window.location = '/ImHungry/SearchPageController?action=search&term='+encodeURIComponent(trimmed) + "&token=" + <%=token %> + "&limit=" + limit + "&radius=" + radius + "&rest_page=1" + "&reci_page=1";
 		}, 1000);
 	}
 	$(document).ready(function() {

@@ -388,8 +388,8 @@ Then(/^there should be search history$/) do
 end
 
 Then(/^the search history should be empty or first search history should say "([^"]*)"$/) do |arg1|
-  if has_css?('#searchHist1')
-    expect(page).to have_css('#searchHist1', text: arg1)
+  if has_css?('#searchHist1', wait:50)
+    expect(page).to have_css('#searchHist1', text: arg1, wait:50)
   end
 end
 

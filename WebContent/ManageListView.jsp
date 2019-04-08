@@ -400,7 +400,7 @@
 			setTimeout("animate()",10);
 		}
 	
-		animate();
+		//animate();
 	
 		window.onload=function() { if (document.getElementById) {
 			var i, rats, rlef, rdow;
@@ -499,7 +499,7 @@
 			else tiny[i].style.visibility="hidden";
 		}
 	
-		document.onmousemove=mouse;
+		//document.onmousemove=mouse;
 		function mouse(e) {
 			if (e) {
 				y=e.pageY;

@@ -49,7 +49,7 @@ Scenario: Sign in with empty password
 	
 Scenario: Sign out from results page
 
-	When I searched for item "chocolate" with "5" results and was redirected to the Results page
+	When I searched for item "chinese" with "5" results and was redirected to the Results page
 	And I click the sign out button
 	Then I should be on the sign in page
 	

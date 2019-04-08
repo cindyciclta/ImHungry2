@@ -479,7 +479,7 @@
 			x = (ns||n6)?evnt.pageX+1:event.x+1;
 		}
 	
-		(ns)?window.onMouseMove=Mouse:document.onmousemove=Mouse;
+		//(ns)?window.onMouseMove=Mouse:document.onmousemove=Mouse;
 	
 		function animate(){
 	
@@ -512,7 +512,7 @@
 			setTimeout("animate()",10);
 		}
 	
-		animate();
+		//animate();
 	
 		window.onload=function() { if (document.getElementById) {
 			var i, rats, rlef, rdow;
@@ -611,7 +611,7 @@
 			else tiny[i].style.visibility="hidden";
 		}
 	
-		document.onmousemove=mouse;
+		//document.onmousemove=mouse;
 		function mouse(e) {
 			if (e) {
 				y=e.pageY;

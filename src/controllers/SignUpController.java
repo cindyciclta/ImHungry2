@@ -53,7 +53,6 @@ public class SignUpController extends HttpServlet {
 					request.setAttribute("token", token);
 		    	}
 		    } catch(Exception e) {
-		    	e.printStackTrace();
 		    	dispatch = request.getRequestDispatcher("SignUpView.jsp");
 		    }
 	    }

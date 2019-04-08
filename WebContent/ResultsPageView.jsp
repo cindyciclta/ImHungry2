@@ -66,8 +66,9 @@
 			margin-right: 3vw;
 			margin-left: 3vw;
 			margin-bottom: 3vh;
+			padding-top: 2vh;
 			width: 8.5vw;
-			height: 13vh;
+			height: 15vh;
 		}
 		
 		#hist {
@@ -184,6 +185,16 @@
 		}
 		
 		function redirectToRestaurant(link){
+			window.location = link;
+		}
+		
+		function searchHistRedirect(term, token, limit, radius) {
+			var link = "/ImHungry/SearchPageController?action=search&term=";
+			link += term;
+			link += "&token=" + token;
+			link += "&limit=" + limit;
+			link += "&radius=" + radius;
+			link += "&page=1";
 			window.location = link;
 		}
 		
@@ -409,7 +420,7 @@
 			<p7 id="hist">Search History</p7>
 		</div>
 		<div id="table-outer-scroll">
-			<table class="table-dark table-hover table-stripped">
+			<table class="table-dark">
 				<thead></thead>
 				<tbody>
 					<%
@@ -420,7 +431,7 @@
 						for (SearchTermModel search : searches) {
 						%>
 						<td>
-							<div class="miniCollage">
+							<div class="miniCollage" onclick="searchHistRedirect('<%=search.term%>','<%=token%>','<%=search.limit%>','<%=search.radius%>');">
 								<%
 								for (String im : search.images) {
 								%>

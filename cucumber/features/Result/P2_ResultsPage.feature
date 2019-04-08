@@ -55,13 +55,13 @@ Scenario: Test that consecutive duplicate searches only show up once in search h
 	Then there should be "burger" in the first search history
 	And there should be "french" in the second search history
 	
-Scenario: Search for recent search by clicking on search history link
+#Scenario: Search for recent search by clicking on search history link
 
-	When I searched for item "chicken" with "5" results and was redirected to the Results page
-	And I clicks the "Return to Search" button
-	And I type "cake" and I press enter
-	And I click the first search history link
-	Then I am on the "Results for chicken" page
+#	When I searched for item "chicken" with "5" results and was redirected to the Results page
+#	And I clicks the "Return to Search" button
+#	And I type "cake" and I press enter
+#	And I click the first search history link
+#	Then I am on the "Results for chicken" page
 
 Scenario: Check that search history is separate for each account
 

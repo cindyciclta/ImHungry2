@@ -261,7 +261,8 @@
 									
 									%>
                                 	
-                                    <tr onclick=<%="redirectToRestaurant(\"" + "/ImHungry/RedirectionController?action=restaurant&term="+term +"&index=" + index + "&item=" + i + "\")"%>>
+                                    <tr onclick=<%="redirectToRestaurant(\"" + "/ImHungry/RedirectionController?action=restaurant&term="+term +"&index=" + 
+                                    index + "&item=" + i + "&token=" +token + "\")"%>>
                                         <td class="col">
                                             <table class="table text-white">
                                                 <tbody>
@@ -334,7 +335,8 @@
 										continue;
 									}
 								%>
-                                    <tr onclick=<%="redirectToRecipe(\"" + "/ImHungry/RedirectionController?action=recipe&term="+ecodedValue +"&index=" + index + "&item=" + i + "\")"%>>
+                                    <tr onclick=<%="redirectToRecipe(\"" + "/ImHungry/RedirectionController?action=recipe&term="+ecodedValue +
+                                    "&index=" + index + "&item=" + i + "&token=" +token + "\")"%>>
                               
                                         <td class="col">
                                             <table class="table text-white">

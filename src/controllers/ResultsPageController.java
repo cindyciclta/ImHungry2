@@ -56,10 +56,10 @@ public class ResultsPageController extends HttpServlet {
 				request.setAttribute("token", token);
 			} else {
 				int limitInteger = Integer.parseInt(limit);
-				ResponseModel rm = new ResponseModel();
+				Integer id = RedirectionController.tokens.get(token);
+				ResponseModel rm = new ResponseModel(id);
 				CollageGenerationModel collagemodel = new CollageGenerationModel();
 				GoogleImageRequestModel googleimagemodel = new GoogleImageRequestModel(collagemodel);
-	
 				googleimagemodel.APIImageSearch(term);
 				
 				if(!rm.checkParameters(term, limitInteger, Integer.parseInt(radius)) || !rm.getSearchResults()) {
@@ -73,7 +73,6 @@ public class ResultsPageController extends HttpServlet {
 					
 					JSONArray jsArray = new JSONArray (urllist);
 					
-					Integer id = RedirectionController.tokens.get(token);
 					Vector<SearchTermModel> searchHistory = new Vector<>();
 					try {
 						// Check that ID is not a negative number
@@ -81,10 +80,11 @@ public class ResultsPageController extends HttpServlet {
 							throw new Exception();
 						}
 						searchHistory = DatabaseModel.GetSearchHistory(id);
-						boolean responsedb = DatabaseModel.AddSearchToHistory(id, term, Integer.parseInt(limit), Integer.parseInt(radius), urllist);
+						boolean responsedb = DatabaseModel.AddSearchToHistory(rm.getSearchId(), term, Integer.parseInt(limit), Integer.parseInt(radius), urllist);
 					} catch (Exception e1) {
 						System.out.println("Search history exception: " + e1.getLocalizedMessage());
 					}
+					
 					request.setAttribute("searches", searchHistory);
 					request.setAttribute("token", token);
 					request.setAttribute("response", rm);

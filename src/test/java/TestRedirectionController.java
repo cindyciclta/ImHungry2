@@ -1,6 +1,7 @@
 package test.java;
 
 import controllers.RedirectionController;
+import models.DatabaseModel;
 import models.ResponseModel;
 
 import static org.junit.Assert.*;
@@ -13,6 +14,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -29,13 +31,26 @@ public class TestRedirectionController extends Mockito{
     RequestDispatcher rd;
     
     private static ResponseModel rm;
+    
+    private static final String username = "testRedirectionController";
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		rm = new ResponseModel();
+		
+		String password = "test";
+		
+		assertTrue(DatabaseModel.insertUser(username, password.toCharArray()));
+		int id = DatabaseModel.GetUserID(username);
+		
+		rm = new ResponseModel(id);
 		rm.checkParameters("chicken", 2);
 		assertTrue(rm.getSearchResults());
 		RedirectionController.addResponse(rm);
+	}
+	
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception{
+		TestDatabaseModel.deleteUser(username);
 	}
 	
 	@Before
@@ -149,7 +164,7 @@ public class TestRedirectionController extends Mockito{
         when(request.getParameter("length")).thenReturn( "10" );
         when(request.getParameter("jsonarray")).thenReturn( "jsarray" );
         RedirectionController r = new RedirectionController();
-        RedirectionController.responses.put(0, new ResponseModel());
+        RedirectionController.responses.put(0,rm);
         r.service(request, response);
         verify(rd).forward(request, response);
     }

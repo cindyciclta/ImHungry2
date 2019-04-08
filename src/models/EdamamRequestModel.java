@@ -18,11 +18,11 @@ public class EdamamRequestModel implements ApiCallInterface<RecipeModel> {
 	
 	public final String URL_LINK = "https://www.allrecipes.com/search/results/?wt=";
 	
-	private List<RecipeModel> results;
+	protected List<RecipeModel> results;
 	
-	private String term;
+	protected String term;
 	
-	private int limit;
+	protected int limit;
 	
 	public EdamamRequestModel() {
 		results = new ArrayList<>();

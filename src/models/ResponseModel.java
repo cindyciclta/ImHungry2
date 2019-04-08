@@ -3,19 +3,35 @@ package models;
 import java.util.Map;
 
 public class ResponseModel {
+	
+	private int searchId; 
+	private int userId;
+	
 	private int limit;
 	private int radius;
 	
 	private String term;
 	private ApiCallInterface<RestaurantModel> restaurants  = new YelpRequestModel();
 	private ApiCallInterface<RecipeModel> recipes = new EdamamRequestModel();
-	private MockRecipeRequestModel mock;
-	public ResponseModel() {
-		mock = new MockRecipeRequestModel();
+	
+	public ResponseModel(int userId) {
+		this.userId = userId;
+	}
+	
+	public int getSearchId() {
+		return searchId;
 	}
 	
 	public String getSearchTerm() {
 		return term;
+	}
+	
+	public int getRadius() {
+		return radius;
+	}
+	
+	public int getLimit() {
+		return limit;
 	}
 	
 	public void sort() {
@@ -76,19 +92,30 @@ public class ResponseModel {
 	public boolean getSearchResults() {
 		boolean response = true;
 		
-		EdamamRequestModel edamam = new EdamamRequestModel();
-		response = edamam.checkParameters(term, limit);
-		ResponseCodeModel responseCode = edamam.completeTask();
-		this.recipes = edamam;
-		
-		// TODO: add the yelp API here
-		YelpRequestModel yelp = new YelpRequestModel();
-		response = yelp.checkParameters(term, limit,radius);
-		responseCode = yelp.completeTask();
-		this.restaurants = yelp;
+		try {
+			if(userId < 0) {
+				throw new Exception();
+			}
+			searchId = DatabaseModel.getSearchIdUser(userId, term, limit, radius);
+			if(searchId == -1) {
+				searchId = DatabaseModel.AddSearchTermToHistory(userId, term, limit, radius);
+			}
+			
+			MockRecipeRequestModel edamam = new MockRecipeRequestModel(searchId);
+			response = edamam.checkParameters(term, limit);
+			ResponseCodeModel responseCode = edamam.completeTask();
+			this.recipes = edamam;
+			
+			MockYelpRequestModel yelp = new MockYelpRequestModel(searchId);
+			response = yelp.checkParameters(term, limit,radius);
+			responseCode = yelp.completeTask();
+			this.restaurants = yelp;
+			
+		}catch(Exception e) {
+			
+		}
 		
 		// TODO: add the google images API here
-		
 		return response;
 	}
 	

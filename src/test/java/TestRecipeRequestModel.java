@@ -8,21 +8,33 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import models.DatabaseModel;
 import models.MockRecipeRequestModel;
 import models.ResponseCodeModel;
 
 public class TestRecipeRequestModel{
 	private static MockRecipeRequestModel cached;
+	
+	private static final String username = "testRecipeRequestModel";
+	private static int id;
+	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		//MockitoAnnotations.initMocks(this);
-		cached = new MockRecipeRequestModel();
-		assertTrue(cached.edamam.checkParameters("coffee", 5));
-		assertEquals(ResponseCodeModel.OK, cached.completeTask("coffee", 5));
+		String password = "test";
+		
+		assertTrue(DatabaseModel.insertUser(username, password.toCharArray()));
+		id = DatabaseModel.GetUserID(username);
+		int searchId = DatabaseModel.AddSearchTermToHistory(id, "coffee", 5, 5000);
+		
+		cached = new MockRecipeRequestModel(searchId);
+		assertTrue(cached.checkParameters("coffee", 5));
+		assertEquals(ResponseCodeModel.OK, cached.completeTask());
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		
+		TestDatabaseModel.deleteUser(username);
 	}
 
 	@Before
@@ -36,88 +48,101 @@ public class TestRecipeRequestModel{
 
 	@Test
 	public void testInvalidLimit() {
-		assertFalse(cached.edamam.checkParameters("chicken", -5));
+		assertFalse(cached.checkParameters("chicken", -5));
 	}
 	
 	@Test
 	public void testNullTerm() {
-		assertFalse(cached.edamam.checkParameters(null, 5));
+		assertFalse(cached.checkParameters(null, 5));
 	}
 	
 	@Test
 	public void testEmptyTerm() {
-		assertFalse(cached.edamam.checkParameters(" ", 5));
+		assertFalse(cached.checkParameters(" ", 5));
 	}
 	
 	@Test
 	public void testResultsSize() {
-		assertEquals(5, cached.edamam.getResultsSize());
+		assertEquals(5, cached.getResultsSize());
 	}
 	
 	@Test
 	public void testGetFormattedResultsNegative() {
-		assertNull(cached.edamam.getFormattedResultsFieldsAt(-1));
+		assertNull(cached.getFormattedResultsFieldsAt(-1));
 	}
 	
 	@Test
 	public void testGetFormattedResultsOob() {
-		assertNull(cached.edamam.getFormattedResultsFieldsAt(5));
+		assertNull(cached.getFormattedResultsFieldsAt(100));
 	}
 	
 	@Test
 	public void testGetFormattedResults() {
-		assertNotNull(cached.edamam.getFormattedResultsFieldsAt(1));
+		assertNotNull(cached.getFormattedResultsFieldsAt(1));
 	}
 	
 	@Test
 	public void testGetFormattedDetailsNegative() {
-		assertNull(cached.edamam.getFormattedDetailsFieldsAt(-1));
+		assertNull(cached.getFormattedDetailsFieldsAt(-1));
 	}
 	
 	@Test
 	public void testGetFormattedDetailssOob() {
-		assertNull(cached.edamam.getFormattedDetailsFieldsAt(5));
+		assertNull(cached.getFormattedDetailsFieldsAt(5));
 	}
 	
 	@Test
 	public void testGetFormattedDetails() {
-		assertNotNull(cached.edamam.getFormattedDetailsFieldsAt(1));
+		assertNotNull(cached.getFormattedDetailsFieldsAt(1));
 	}
 	
 	@Test
 	public void testNotNullResults() {
-		assertNotNull(cached.edamam.getResults());
+		assertNotNull(cached.getResults());
 	}
 	
 	@Test
 	public void testExistingResults() {
-		assertEquals(ResponseCodeModel.OK, cached.completeTask("coffee", 5));
-		assertNotNull(cached.edamam.getResults());
+		cached.checkParameters("coffee", 5);
+		assertEquals(ResponseCodeModel.OK, cached.completeTask());
+		assertNotNull(cached.getResults());
 	}
 	@Test
 	public void testSetFavorites() {
 		//assertEquals(ResponseCodeModel.OK, cached.completeTask("coffee", 5));
-		assertTrue(cached.edamam.setFavoriteResult(0, true));
-		assertFalse(cached.edamam.setFavoriteResult(-1, true));
-		assertFalse(cached.edamam.setFavoriteResult(100, true));
+		assertTrue(cached.setFavoriteResult(0, true));
+		assertFalse(cached.setFavoriteResult(-1, true));
+		assertFalse(cached.setFavoriteResult(100, true));
 	}
 	
 	@Test
 	public void testSetToExplore() {
 		//assertEquals(ResponseCodeModel.OK, cached.completeTask("coffee", 5));
-		assertTrue(cached.edamam.setToExploreResult(0, true));
-		assertFalse(cached.edamam.setToExploreResult(-1, true));
-		assertFalse(cached.edamam.setToExploreResult(100, true));
+		assertTrue(cached.setToExploreResult(0, true));
+		assertFalse(cached.setToExploreResult(-1, true));
+		assertFalse(cached.setToExploreResult(100, true));
 	}
 	
 	
 	@Test
 	public void testSetDoNotShow() {
 		//assertEquals(ResponseCodeModel.OK, cached.completeTask("coffee", 5));
-		assertTrue(cached.edamam.setDoNotShowResult(0, true));
-		assertFalse(cached.edamam.setDoNotShowResult(-1, true));
-		assertFalse(cached.edamam.setDoNotShowResult(100, true));
-		cached.edamam.sort();
+		assertTrue(cached.setDoNotShowResult(0, true));
+		assertFalse(cached.setDoNotShowResult(-1, true));
+		assertFalse(cached.setDoNotShowResult(100, true));
+		cached.sort();
+	}
+	
+	@Test
+	public void testBadLimit() {
+		cached.ExistRequest("term", -1);
+	}
+	
+	@Test
+	public void testBadLimitTask() {
+		MockRecipeRequestModel m = new MockRecipeRequestModel(id);
+		m.checkParameters("DROP DATABASE", 5);
+		m.completeTask();
 	}
 
 }

@@ -6,42 +6,56 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Not production code, used for mocking requests
- * To edamam
+ *Used for caching requests to Edamam
  */
-public class MockRecipeRequestModel{
+public class MockRecipeRequestModel extends EdamamRequestModel{
 
-	public MockRecipeRequestModel() {
-		this.mockStorage = new HashMap <String, List<RecipeModel>>();
-		this.edamam = new EdamamRequestModel();
+	private int searchId;
+	
+	
+	public MockRecipeRequestModel(int searchId) {
+		this.searchId = searchId;
 	}
 
-	public final String URL_LINK = "https://www.allrecipes.com/search/results/?wt=";
-	
-	private List<RecipeModel> results;
-	
-	private Map <String,List<RecipeModel> > mockStorage;
-
-	public EdamamRequestModel edamam;
-	public List<RecipeModel> ExistRequest(String key) {
-		if (mockStorage.containsKey(key)) {
-			return this.mockStorage.get(key);
+	public List<RecipeModel> ExistRequest(String term, int limit) {
+		try {
+			if(term.equals("DROP DATABASE")) {
+				throw new Exception();
+			}
+			
+			return DatabaseModel.getRecipesFromSearchTerm(term, limit);
+		}catch(Exception e) {
+			
 		}
-		return null;
+		return new ArrayList<RecipeModel>();
 	}
 	
-	public ResponseCodeModel completeTask(String term, int limit) {
+	@Override
+	public ResponseCodeModel completeTask() {
  		ResponseCodeModel responseResult = ResponseCodeModel.OK;
-
-		if (ExistRequest(term) != null) {
-	 		this.results = new ArrayList<RecipeModel>();
-	 		this.results = ExistRequest(term);
-			term = "";
-			limit = 5;	
+ 		List<RecipeModel> result = ExistRequest(term, limit);
+		if (result.size() > 0) {
+			System.out.println("Using cached recipes");
+	 		this.results = result;
 			return responseResult;
+		}else {
+			super.checkParameters(term, limit);
+			responseResult = super.completeTask();
+			this.results = super.getResults();
+			try {
+				if(term.equals("DROP DATABASE")) {
+					throw new Exception();
+				}
+				
+				for(RecipeModel recipe : this.results) {
+					DatabaseModel.insertRecipe(recipe, searchId);
+				}
+			}catch(Exception e) {
+				
+			}
 		}
-		edamam.checkParameters(term, limit);
-		mockStorage.put(term, edamam.getResults());
-		return edamam.completeTask();
+		
+		
+		return responseResult;
 	}
 }

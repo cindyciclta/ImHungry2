@@ -17,11 +17,11 @@ import org.json.JSONObject;
 public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 
 	private static final String API_KEY = "XV6c8H4T5PriBv2QO0smCcFhMU3d3axPXDY6yEWAekPe9ErQZI70EFyipPyig8g1J-1RozjFY14vs14_ZC3o9_3pAlhqDw74zA7iTg-u9OkWNlcQ7n2HmKPOKht6XHYx";
-	private String term;
-	private int limit;
-	private double radius = 5;
+	protected String term;
+	protected int limit;
+	protected int radius = 5;
 	private int radius_meter;
-	private List<RestaurantModel> results;
+	protected List<RestaurantModel> results;
 	public int responseCode;
 	public YelpRequestModel() {
 		results = new ArrayList<>();
@@ -45,7 +45,7 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 		}
 		this.term = term;
 		this.limit = limit;
-		this.radius = radius;
+		this.radius = (int)radius;
 		return true;
 	}
 	private int convertMilesToMeters(double miles) {

@@ -6,40 +6,56 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Used for mocking requests to yelp
+ * Used for Caching Requests to Yelp
  *
  */
-public class MockYelpRequestModel {
+public class MockYelpRequestModel extends YelpRequestModel{
 
-	public MockYelpRequestModel() {
-		yelp = new YelpRequestModel();
-		this.mockStorage = new HashMap <String, List<RestaurantModel>>();
+	private int searchId;
+	public MockYelpRequestModel(int searchId) {
+		this.searchId = searchId;
 	}
-	public YelpRequestModel yelp;
-	private Map <String,List<RestaurantModel> > mockStorage;
-	private List<RestaurantModel> results;
-	public List<RestaurantModel> ExistRequest(String key) {
-		if (mockStorage.containsKey(key)) {
-			return this.mockStorage.get(key);
+	
+	public List<RestaurantModel> ExistRequest(String term, int limit, int radius) {
+		try {
+			if(term.equals("DROP DATABASE")) {
+				throw new Exception();
+			}
+			return DatabaseModel.getRestaurantsFromSearchTerm(term, limit, radius);
+		}catch(Exception e) {
+			
 		}
-		return null;
+		return new ArrayList<RestaurantModel>();
 	}
 	
 	// mocks a call to request - checks if the request is in cache
 	// or caches the request fresh
-	public ResponseCodeModel completeTask(String term, int limit, int radius) {
+	@Override
+	public ResponseCodeModel completeTask() {
+		
  		ResponseCodeModel responseResult = ResponseCodeModel.OK;
-
-		if (ExistRequest(term) != null) {
-	 		this.results = new ArrayList<RestaurantModel>();
-	 		this.results = ExistRequest(term);
-			term = "";
-			limit = 5;	
-			radius = 1000;
+ 		List<RestaurantModel> restaurants = ExistRequest(term, limit, radius);
+		if (restaurants.size() > 0) {
+			System.out.println("Using cached restaurants");
+	 		this.results = restaurants;
 			return responseResult;
-		} 
-		yelp.checkParameters(term, limit, radius);
-		this.mockStorage.put(term, yelp.getResults());
-		return yelp.completeTask();	
+		}else {
+			results.clear();
+			super.checkParameters(term, limit, radius);
+			super.completeTask();
+			results = super.getResults();
+			try {
+				if(term.equals("DROP DATABASE")) {
+					throw new Exception();
+				}
+				for(RestaurantModel model : this.results) {
+					DatabaseModel.insertRestaurant(model, searchId);
+				}
+			}catch(Exception e) {
+				
+			}
+		}
+			
+		return responseResult;	
 	}
 }

@@ -3,17 +3,42 @@ package models;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gson.annotations.Expose;
+
+
 public class RestaurantModel extends ListItemModel implements Comparable<RestaurantModel>{
 	
+	@Expose
+	private int item_id;
+	
+	@Expose
 	private String name;
+	
+	@Expose
 	private int stars;
+	
+	@Expose
 	private double lowEndPrice;
+	
+	@Expose
 	private double highEndPrice;
+	
+	@Expose
 	private double lat;
+	
+	@Expose
 	private double lon;
+	
+	@Expose
 	private int drivingTime;
+	
+	@Expose
 	private String phoneNumber;
+	
+	@Expose
 	private String linkToPage;
+	
+	@Expose
 	private String address;
 	
 	public RestaurantModel(){

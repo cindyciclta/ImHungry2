@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,8 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 
 import models.CollageGenerationModel;
+import models.DatabaseModel;
 import models.GoogleImageRequestModel;
 import models.ResponseModel;
+import models.SearchTermModel;
 
 @WebServlet("/RedirectionController")
 public class RedirectionController extends HttpServlet {
@@ -34,7 +37,9 @@ public class RedirectionController extends HttpServlet {
 		String action = request.getParameter("action");
 		String index = request.getParameter("index");
 		String term = request.getParameter("term");
+		String token = request.getParameter("token");
 		RequestDispatcher dispatch = null;
+		
 
 		request.setAttribute("term", term);
 		if(action == null || action.isEmpty() || index == null || index.isEmpty()) {
@@ -63,6 +68,7 @@ public class RedirectionController extends HttpServlet {
 			System.out.println("usjdof "+ urllist.size() );
 			request.setAttribute("length", urllist.size());
 			request.setAttribute("jsonarray", jsArray);
+			request.setAttribute("token", token);
 			
 		} else if(action.equals("recipe")) { //If it is redirecting to the recipe page, set the attributes accordingly
 			dispatch = request.getRequestDispatcher("DetailedRecipeView.jsp");
@@ -71,6 +77,7 @@ public class RedirectionController extends HttpServlet {
 			String item = request.getParameter("item");
 			int itemInt = Integer.parseInt(item);
 			request.setAttribute("item", itemInt);
+			request.setAttribute("token", token);
 			request.setAttribute("response", responses.get(indexInt).getFormattedDetailedRecipeAt(itemInt));
 			
 		} else if(action.equals("restaurant")) { //If it is redirecting to the restaurant page,  set the attributes accordingly
@@ -80,6 +87,7 @@ public class RedirectionController extends HttpServlet {
 			int itemInt = Integer.parseInt(item);
 			request.setAttribute("index", indexInt);
 			request.setAttribute("item", itemInt);
+			request.setAttribute("token", token);
 			request.setAttribute("response", responses.get(indexInt).getFormattedDetailedRestaurantAt(itemInt));
 			
 		} else if(action.equals("results")) { //If it is redirecting to the results page,  set the attributes accordingly
@@ -89,16 +97,36 @@ public class RedirectionController extends HttpServlet {
 			request.setAttribute("response", rm);
 			int indexInt = Integer.parseInt(index);
 			request.setAttribute("index", indexInt);
+			Integer id = RedirectionController.tokens.get(token);
 			
-			//Call the request to pull data to go back to the results page
 			CollageGenerationModel collagemodel = new CollageGenerationModel();
 			GoogleImageRequestModel googleimagemodel = new GoogleImageRequestModel(collagemodel);
 			googleimagemodel.APIImageSearch(term);
 			ArrayList<String> urllist = (ArrayList<String>) collagemodel.getList();
+			
 			JSONArray jsArray = new JSONArray (urllist);
-
+			
+			Vector<SearchTermModel> searchHistory = new Vector<>();
+			try {
+				// Check that ID is not a negative number
+				if(id < 0) {
+					throw new Exception();
+				}
+				searchHistory = DatabaseModel.GetSearchHistory(id);
+			} catch (Exception e1) {
+				System.out.println("Search history exception: " + e1.getLocalizedMessage());
+			}
+			
+			request.setAttribute("searches", searchHistory);
+			request.setAttribute("token", token);
+			request.setAttribute("response", rm);
+			request.getSession().setAttribute("limit", Integer.toString(rm.getLimit()));
+			request.getSession().setAttribute("radius", Integer.toString(rm.getRadius()));
+			request.setAttribute("index", indexInt);
+			request.setAttribute("term", term);
 			request.setAttribute("length", urllist.size());
 			request.setAttribute("jsonarray", jsArray);
+			request.setAttribute("page", "1");
 			
 		} else if(action.equals("erase")) { //If the erase button is clicked, update database
 			int indexInt = Integer.parseInt(index);

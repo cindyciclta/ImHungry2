@@ -57,7 +57,9 @@
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-	<% String term = (String) request.getAttribute("term"); %>
+	<% String term = (String) request.getAttribute("term"); 
+	   String token = (String)request.getAttribute("token");
+	%>
 	<script>
 		function printPage(){
 			window.print();
@@ -77,8 +79,9 @@
 			if(list != ""){
 				var xhr = new XMLHttpRequest();
 				var searchterm = "<%= term%>";
+				var token = "<%= token%>";
 				var trimmed = searchterm.replace(" ", "_");
-				xhr.open("GET", "/ImHungry/RedirectionController?action=addtolist&term="+trimmed +"&index=" + index + "&list=" + list + "&item=" + item + "&type=" + type, true);
+				xhr.open("GET", "/ImHungry/RedirectionController?action=addtolist&term="+trimmed +"&index=" + index + "&list=" + list + "&item=" + item + "&type=" + type +"&token=" + token, true);
 				xhr.send();
 			}
 		}	
@@ -161,7 +164,7 @@
 		                       <input class="btn btn-secondary" onclick=<%="addToList("+ index + "," + item + "," + "\"restaurant\"" + ")"%> type="button" value="Add to List">
 		                   </li>
 		                   <li class="nav-item my-3">
-		                       <a class="btn btn-secondary" onclick=<%="backToResults(\"" + "/ImHungry/RedirectionController?action=results&term="+term +"&index=" + index + "\")"%>>Back to Results</a>
+		                       <a class="btn btn-secondary" onclick=<%="backToResults(\"" + "/ImHungry/RedirectionController?action=results&term="+term +"&index=" + index + "&token=" + token + "\")"%>>Back to Results</a>
 		                   </li>
 		                   <li class="nav-item">
                                 <a class="btn btn-secondary" onclick="printPage()">Printable Version</a>
@@ -261,7 +264,7 @@
 			setTimeout("animate()",10);
 		}
 	
-		animate();
+		//animate();
 	
 		window.onload=function() { if (document.getElementById) {
 			var i, rats, rlef, rdow;
@@ -360,7 +363,7 @@
 			else tiny[i].style.visibility="hidden";
 		}
 	
-		document.onmousemove=mouse;
+		//document.onmousemove=mouse;
 		function mouse(e) {
 			if (e) {
 				y=e.pageY;

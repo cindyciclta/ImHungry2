@@ -8,7 +8,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Vector;
+
+import com.google.gson.Gson;
 
 public class DatabaseModel {
 	static final String SQL_PASSWORD = "root"; // SET YOUR MYSQL PASSWORD HERE TO GET DATABASE WORKING!!!!!!!!
@@ -83,16 +86,20 @@ public class DatabaseModel {
 		}
 		return returnVal;
 	}
+	
 	private static void close(Connection conn, PreparedStatement st, ResultSet rs) throws Exception {
 		// Result sets, statements do not need to be closed, as they are ended by the connectionProxy closing
 		conn.close();
 	}
-	public static boolean AddSearchToHistory(int userid, String term, int limit, int radius, ArrayList<String> urllist)
-			throws Exception {
+	
+	
+	public static int AddSearchTermToHistory(int user_id, String term, int limit, int radius) throws Exception{
+		int added_id = -1;
 
-		if(userid < 0) {
-			return false;
+		if(user_id < 0) {
+			return added_id;
 		}
+		
 		term = term.trim();
 		Connection conn =null;
 		PreparedStatement preparedStmt = null;
@@ -100,15 +107,95 @@ public class DatabaseModel {
 		conn = getConnection();
 		String sql = "INSERT INTO searches (user_id, term, limit_search, radius) VALUES (?, ?, ?, ?)";
 		
-		preparedStmt = conn.prepareStatement(sql);
-		preparedStmt.setInt(1, userid);
+		String generatedColumns[] = { "search_id" };
+		preparedStmt = conn.prepareStatement(sql, generatedColumns);
+		ResultSet rs;
+		preparedStmt.setInt(1, user_id);
 		preparedStmt.setString(2, term);
 		preparedStmt.setInt(3, limit);
 		preparedStmt.setInt(4, radius);
 		preparedStmt.executeUpdate();
+		rs = preparedStmt.getGeneratedKeys();
+		
+		rs.next();
+		added_id = rs.getInt(1);
+		conn.close();
+		return added_id;
+	}
+	
+	// Gets in user-insensitive manner
+	public static int getSearchId(String term, int limit, int radius) throws Exception{
+		int id = -1;
+		Connection conn = getConnection();
+		PreparedStatement ps = conn.prepareStatement("SELECT * FROM searches WHERE term=(?) and limit_search=(?) and radius=(?)");
+
+		ps.setString(1, term);
+		ps.setInt(2, limit);
+		ps.setInt(3, radius);
+		
+		ResultSet rs = null;
+
+		rs = ps.executeQuery();
+		
+		if(rs.next()) {
+			id = rs.getInt("search_id");
+		}
+		conn.close();
+		return id;
+	}
+	
+	// Gets in user-insensitive manner
+	public static int getSearchId(String term, int limit) throws Exception{
+		int id = -1;
+		Connection conn = getConnection();
+		PreparedStatement ps = conn.prepareStatement("SELECT * FROM searches WHERE term=(?) and limit_search=(?)");
+
+		ps.setString(1, term);
+		ps.setInt(2, limit);
+		
+		ResultSet rs = null;
+
+		rs = ps.executeQuery();
+		
+		if(rs.next()) {
+			id = rs.getInt("search_id");
+		}
+		conn.close();
+		return id;
+	}
+	
+	
+	
+	// Gets in user-sensitive manner
+	public static int getSearchIdUser(int userId, String term, int limit, int radius) throws Exception{
+		int id = -1;
+		Connection conn = getConnection();
+		PreparedStatement ps = conn.prepareStatement("SELECT * FROM searches WHERE term=(?) and limit_search=(?) and radius=(?)");
+
+		ps.setString(1, term);
+		ps.setInt(2, limit);
+		ps.setInt(3, radius);
+		
+		ResultSet rs = null;
+
+		rs = ps.executeQuery();
+		
+		while(rs.next()) {
+			if(rs.getInt("user_id") == userId) {
+				id = rs.getInt("search_id");
+			}
+		}
+		conn.close();
+		return id;
+	}
+	
+	
+	public static boolean AddSearchToHistory(int added_id, String term, int limit, int radius, ArrayList<String> urllist)
+			throws Exception {
 		
 		String imgsql = "INSERT IGNORE INTO images (term, url) VALUES (?, ?)";
 		PreparedStatement ps = null;
+		Connection conn = getConnection();
 		for (int i = 0; i < urllist.size(); i++) {
 			ps = conn.prepareStatement(imgsql);
 			ps.setString(1, term);
@@ -116,8 +203,8 @@ public class DatabaseModel {
 			ps.executeUpdate();
 		}
 		if (ps != null ) {ps.close();}
-
-		close(conn, preparedStmt, null);
+		conn.close();
+		
 		return true;
 	}
 	public static int GetUserID(String username) throws Exception {
@@ -150,6 +237,7 @@ public class DatabaseModel {
 			s.term = rs.getString("term");
 			s.limit = rs.getInt("limit_search");
 			s.radius = rs.getInt("radius");
+			s.search_id = rs.getInt("search_id");
 			
 			s.images = new ArrayList<String>();
 			PreparedStatement ps = conn.prepareStatement("SELECT url FROM images WHERE term = ?");
@@ -183,4 +271,80 @@ public class DatabaseModel {
 		}
 		results.removeAll(dupl);
 	}
+	
+	public static boolean insertRestaurant(RestaurantModel restaurant, int searchId) throws Exception{
+		Gson gson = new Gson();
+		String json = gson.toJson(restaurant);
+		String sql = "INSERT INTO restaurants (search_id, json_string) VALUES (?, ?)";
+		Connection conn = getConnection();
+		PreparedStatement ps = conn.prepareStatement(sql);
+		
+		ps.setInt(1, searchId);
+		ps.setString(2, json);
+		
+		ps.executeUpdate();
+		
+		conn.close();
+		return true;
+	}
+	
+	public static boolean insertRecipe(RecipeModel recipe, int searchId) throws Exception{
+		Gson gson = new Gson();
+		String json = gson.toJson(recipe);
+		String sql = "INSERT INTO recipes (search_id, json_string) VALUES (?, ?)";
+		Connection conn = getConnection();
+		PreparedStatement ps = conn.prepareStatement(sql);
+		
+		ps.setInt(1, searchId);
+		ps.setString(2, json);
+		
+		ps.executeUpdate();
+		
+		conn.close();
+		return true;
+	}
+	
+	public static List<RestaurantModel> getRestaurantsFromSearchTerm(String term, int limit, int radius) throws Exception{
+		List<RestaurantModel> restaurants = new ArrayList<>();
+		
+		int id = getSearchId(term, limit, radius);
+		Connection conn = getConnection();
+		
+		if(id != -1) {
+			System.out.println("using cached restaurants");
+			PreparedStatement ps = conn.prepareStatement("SELECT * from restaurants where search_id=(?)");
+			ps.setInt(1, id);
+			ResultSet rsRestaurant = ps.executeQuery();
+			
+			while(rsRestaurant.next()) {
+				String json = rsRestaurant.getString("json_string");
+				Gson gson = new Gson();
+				RestaurantModel restaurant = gson.fromJson(json, RestaurantModel.class);
+				restaurants.add(restaurant);
+			}
+		}
+		return restaurants;
+	}
+	
+	public static List<RecipeModel> getRecipesFromSearchTerm(String term, int limit) throws Exception{
+		List<RecipeModel> recipes = new ArrayList<>();
+		
+		int id = getSearchId(term, limit);
+		Connection conn = getConnection();
+		
+		if(id != -1) {
+			PreparedStatement ps = conn.prepareStatement("SELECT * from recipes where search_id=(?)");
+			ps.setInt(1, id);
+			ResultSet rsRestaurant = ps.executeQuery();
+			
+			while(rsRestaurant.next()) {
+				String json = rsRestaurant.getString("json_string");
+				Gson gson = new Gson();
+				RecipeModel recipe = gson.fromJson(json, RecipeModel.class);
+				recipes.add(recipe);
+			}
+		}
+		return recipes;
+	}
+	
 }

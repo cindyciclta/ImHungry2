@@ -9,6 +9,7 @@ CREATE table users(
 );
 
 CREATE table searches(
+	search_id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT, 
 	user_id INT(11),
 	FOREIGN KEY fk1 (user_id) REFERENCES  users(user_id),
     term VARCHAR(500),
@@ -23,11 +24,40 @@ CREATE table images(
     UNIQUE KEY unq (term, url)
 );
 
+CREATE table recipes(
+	item_id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	search_id INT(11),
+	FOREIGN KEY fk6 (search_id) REFERENCES  searches(search_id),
+    json_string longtext
+);
+
+CREATE table restaurants(
+	item_id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	search_id INT(11),
+	FOREIGN KEY fk7 (search_id) REFERENCES  searches(search_id),
+    json_string longtext
+);
+
+
 CREATE table list_restaurants(
+	list_item_id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
 	user_id INT(11),
 	FOREIGN KEY fk2 (user_id) REFERENCES  users(user_id),
-    is_favorite BOOLEAN not null,
-    is_to_explore BOOLEAN not null,
-    do_not_show BOOLEAN not null,
-    name_item VARCHAR(500) not null
+    item_id INT(11),
+    FOREIGN KEY fk3 (item_id) REFERENCES  restaurants(item_id),
+    name VARCHAR(100),
+    place INT(11)
 );
+
+CREATE table list_recipes(
+	list_item_id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	user_id INT(11),
+	FOREIGN KEY fk4 (user_id) REFERENCES  users(user_id),
+    item_id INT(11),
+    FOREIGN KEY fk5 (item_id) REFERENCES  recipes(item_id),
+    name VARCHAR(100),
+    place INT(11)
+);
+
+
+

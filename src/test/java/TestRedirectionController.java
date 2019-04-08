@@ -30,6 +30,9 @@ public class TestRedirectionController extends Mockito{
     @Mock
     RequestDispatcher rd;
     
+    @Mock
+    HttpSession sess;
+    
     private static ResponseModel rm;
     
     private static final String username = "testRedirectionController";
@@ -162,6 +165,7 @@ public class TestRedirectionController extends Mockito{
         when(request.getRequestDispatcher("ResultsPageView.jsp")).thenReturn(rd);
         when(request.getParameter("term")).thenReturn( "chicken" );
         when(request.getParameter("length")).thenReturn( "10" );
+        when(request.getSession()).thenReturn(sess);
         when(request.getParameter("jsonarray")).thenReturn( "jsarray" );
         RedirectionController r = new RedirectionController();
         RedirectionController.responses.put(0,rm);

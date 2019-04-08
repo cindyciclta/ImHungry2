@@ -59,9 +59,9 @@ public class SearchPageController extends HttpServlet {
 				} else {
 					String decodedValue = URLDecoder.decode(term, "UTF-8");
 					term.trim();
-					System.out.println(term);
-					System.out.println("_____________________"+ reci_page + " "+ rest_page);
-					dispatch = request.getRequestDispatcher("ResultsPageController?action=results&term=" +term+ "&limit=" + limit + "&radius=" + radius + "&rest_page=" + rest_page + "&reci_page=" + reci_page);
+					String url = "ResultsPageController?action=results&term=" +term+ "&limit=" + limit + "&radius=" + radius + "&rest_page=" + rest_page + "&reci_page=" + reci_page;
+					System.out.println(url);
+					dispatch = request.getRequestDispatcher(url);
 					try {
 						int limitt = Integer.parseInt(limit);
 						int radiuss = Integer.parseInt(radius);

@@ -158,8 +158,9 @@ public class TestSearchPageController extends Mockito{
         when(request.getParameter("term")).thenReturn( "chicken" );
         when(request.getParameter("limit")).thenReturn( "5" );
         when(request.getParameter("radius")).thenReturn( "1000" );
-        when(request.getParameter("page")).thenReturn( "1" );
-        when(request.getRequestDispatcher("ResultsPageController?action=results&term=chicken&limit=5&radius=1000&page=1")).thenReturn(rd);
+        when(request.getParameter("reci_page")).thenReturn( "1" );
+        when(request.getParameter("rest_page")).thenReturn( "1" );
+        when(request.getRequestDispatcher("ResultsPageController?action=results&term=chicken&limit=5&radius=1000&rest_page=1&reci_page=1")).thenReturn(rd);
         new SearchPageController().service(request, response);
         verify(rd).forward(request, response);
     }

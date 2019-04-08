@@ -1,6 +1,9 @@
 package test.java;
 
+import controllers.RedirectionController;
 import controllers.ResultsPageController;
+import models.DatabaseModel;
+
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import java.io.*;
@@ -11,6 +14,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -29,14 +33,28 @@ public class TestResultsPageController extends Mockito{
     @Mock
     HttpSession sess;
 
+    private static final String username = "testresult";
+    private static int id;
+    
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		String password = "test";
+		
+		assertTrue(DatabaseModel.insertUser(username, password.toCharArray()));
+		id = DatabaseModel.GetUserID(username);
+		RedirectionController.tokens.put("fakeToken", id);
+	
 	}
 	
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception{
+		TestDatabaseModel.deleteUser(username);
+	}
 	
 	@Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+        
     }
 
 	@Test
@@ -163,7 +181,6 @@ public class TestResultsPageController extends Mockito{
         when(request.getParameter("limit")).thenReturn( "-5" );
         when(request.getParameter("token")).thenReturn( "fakeToken" );
         when(request.getParameter("radius")).thenReturn( "1000" );
-        when(request.getRequestDispatcher("ResultsPageView.jsp")).thenReturn(rd);
         when(request.getRequestDispatcher("SearchPageView.jsp")).thenReturn(rd);
         new ResultsPageController().service(request, response);
         verify(rd).forward(request, response);

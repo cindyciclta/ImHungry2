@@ -30,7 +30,7 @@ before_script:
 
 script:
   - mvn test jacoco:report
-  - column -s, -t < target/jacoco-ut/jacoco.csv | less -#2 -N -S
+  - cat target/jacoco-ut/jacoco.csv
   - cd cucumber
   - cucumber features/SignUpInOut/SignUpInOut.feature
   - cucumber features/Search/P2_SearchPage.feature

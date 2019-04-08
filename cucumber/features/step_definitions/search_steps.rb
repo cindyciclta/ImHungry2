@@ -303,11 +303,11 @@ Then(/^there should be no pagination$/) do
 end
 
 Then(/^there should be pagination$/) do
-  expect(page).to have_css('#page-alt2')
+  expect(page).to have_css('#rest-page-alt2')
 end
 
 When(/^I navigate to the second page$/) do
-  page.find('#page-alt2').click
+  page.find('#rest-page-alt2').click
 end
 
 Then(/^there should be table-hover$/) do

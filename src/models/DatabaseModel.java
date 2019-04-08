@@ -105,7 +105,7 @@ public class DatabaseModel {
 		PreparedStatement preparedStmt = null;
 		
 		conn = getConnection();
-		String sql = "INSERT INTO searches (user_id, term, limit_search, radius) VALUES (?, ?, ?, ?)";
+		String sql = "INSERT INTO searches (user_id, term, limit_search, radius, insert_time) VALUES (?, ?, ?, ?, ?)";
 		
 		String generatedColumns[] = { "search_id" };
 		preparedStmt = conn.prepareStatement(sql, generatedColumns);
@@ -114,6 +114,7 @@ public class DatabaseModel {
 		preparedStmt.setString(2, term);
 		preparedStmt.setInt(3, limit);
 		preparedStmt.setInt(4, radius);
+		preparedStmt.setLong(5, System.currentTimeMillis());
 		preparedStmt.executeUpdate();
 		rs = preparedStmt.getGeneratedKeys();
 		
@@ -238,6 +239,7 @@ public class DatabaseModel {
 			s.limit = rs.getInt("limit_search");
 			s.radius = rs.getInt("radius");
 			s.search_id = rs.getInt("search_id");
+			s.time = rs.getLong("insert_time");
 			
 			s.images = new ArrayList<String>();
 			PreparedStatement ps = conn.prepareStatement("SELECT url FROM images WHERE term = ?");

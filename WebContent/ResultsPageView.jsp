@@ -374,7 +374,7 @@
 									<%
 											} else {
 									%>
-											<li class="page-item"><a id=<%="rest-page-alt"+k%> class="page-link" href=<%="/ImHungry/SearchPageController?action=search&term=" + term + "&token=" + token + "&limit=" + lim + "&radius=" + rad + "&rest_page=" + rest_pgnum + "&reci_page=" + k %>><%= k %></a></li>
+											<li class="page-item"><a id=<%="reci-page-alt"+k%> class="page-link" href=<%="/ImHungry/SearchPageController?action=search&term=" + term + "&token=" + token + "&limit=" + lim + "&radius=" + rad + "&rest_page=" + rest_pgnum + "&reci_page=" + k %>><%= k %></a></li>
 									<%
 											}
 									   }
@@ -430,7 +430,13 @@
 					%>
 					<tr>
 						<%
+						int k = 0;
 						for (SearchTermModel search : searches) {
+							if(k == 0){
+								k++;
+								continue;
+							}
+						
 						%>
 						<td>
 							<div class="miniCollage" onclick="searchHistRedirect('<%=search.term%>','<%=token%>','<%=search.limit%>','<%=search.radius%>');">
@@ -449,8 +455,13 @@
 					</tr>
 					<tr>
 						<%
-						int i=1;
+						int i=0;
 						for (SearchTermModel search : searches) {
+							if(i == 0){
+								i++;
+								continue;
+							}
+							
 						%>
 						<td class="text-center">
 							<p1 id=<%="searchHist" + i%>><a href=<%="\"/ImHungry/SearchPageController?action=search&term=" + search.term + "&token=" + token + "&limit=" + search.limit + "&radius=" + search.radius + "&page=1\""%>><%=search.term%></a></p1>

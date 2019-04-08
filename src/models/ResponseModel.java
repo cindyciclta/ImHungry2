@@ -99,6 +99,8 @@ public class ResponseModel {
 			searchId = DatabaseModel.getSearchIdUser(userId, term, limit, radius);
 			if(searchId == -1) {
 				searchId = DatabaseModel.AddSearchTermToHistory(userId, term, limit, radius);
+			}else {
+				int idTemp = DatabaseModel.AddSearchTermToHistory(userId, term, limit, radius);
 			}
 			
 			MockRecipeRequestModel edamam = new MockRecipeRequestModel(searchId);

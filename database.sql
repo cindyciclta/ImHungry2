@@ -12,9 +12,10 @@ CREATE table searches(
 	search_id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT, 
 	user_id INT(11),
 	FOREIGN KEY fk1 (user_id) REFERENCES  users(user_id),
-    term VARCHAR(500),
-    limit_search INT(11),
-    radius INT(11)
+    term VARCHAR(500) not null,
+    limit_search INT(11) not null,
+    radius INT(11) not null,
+    insert_time LONG not null
 );
 
 CREATE table images(

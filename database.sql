@@ -23,7 +23,6 @@ CREATE table images(
     UNIQUE KEY unq (term, url)
 );
 
-
 CREATE table list_restaurants(
 	user_id INT(11),
 	FOREIGN KEY fk2 (user_id) REFERENCES  users(user_id),

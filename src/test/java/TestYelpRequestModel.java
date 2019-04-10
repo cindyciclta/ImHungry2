@@ -95,10 +95,18 @@ public class TestYelpRequestModel {
 	
 	@Test
 	public void testSetFavorites() {
-		//assertEquals(ResponseCodeModel.OK, cached.completeTask("coffee", 5));
 		assertTrue(cached.setFavoriteResult(0, true));
 		assertFalse(cached.setFavoriteResult(-1, true));
 		assertFalse(cached.setFavoriteResult(100, true));
+	}
+	
+	@Test
+	public void testSetFavoritesWithOldFavorite() throws Exception{
+		assertTrue(cached.setFavoriteResult(0, true));
+		int searchId = DatabaseModel.AddSearchTermToHistory(id, "coffee", 5, 1000);
+		MockYelpRequestModel m = new MockYelpRequestModel(searchId);
+		assertTrue(m.checkParameters("coffee", 5, 1000));
+		assertEquals(ResponseCodeModel.OK, m.completeTask());
 	}
 	
 	@Test

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Vector;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class DatabaseModel {
 	static final String SQL_PASSWORD = "NewPassword"; // SET YOUR MYSQL PASSWORD HERE TO GET DATABASE WORKING!!!!!!!!
@@ -217,11 +218,11 @@ public class DatabaseModel {
 		conn = getConnection();
 		String query = "SELECT * from users where user_name = (?)";
 		preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-	    	preparedStmt.setString (1, username);
-	    	rs = preparedStmt.executeQuery();
-	    	if(rs.next()) {
-	    		return rs.getInt("user_id");
-	    	}
+    	preparedStmt.setString (1, username);
+    	rs = preparedStmt.executeQuery();
+    	if(rs.next()) {
+    		return rs.getInt("user_id");
+    	}
 		close(conn, preparedStmt, rs);
 		return -1;
 	}
@@ -275,7 +276,7 @@ public class DatabaseModel {
 	}
 	
 	public static boolean insertRestaurant(RestaurantModel restaurant, int searchId) throws Exception{
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		String json = gson.toJson(restaurant);
 		String sql = "INSERT INTO restaurants (search_id, json_string) VALUES (?, ?)";
 		Connection conn = getConnection();
@@ -291,7 +292,7 @@ public class DatabaseModel {
 	}
 	
 	public static boolean insertRecipe(RecipeModel recipe, int searchId) throws Exception{
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		String json = gson.toJson(recipe);
 		String sql = "INSERT INTO recipes (search_id, json_string) VALUES (?, ?)";
 		Connection conn = getConnection();
@@ -322,6 +323,7 @@ public class DatabaseModel {
 				String json = rsRestaurant.getString("json_string");
 				Gson gson = new Gson();
 				RestaurantModel restaurant = gson.fromJson(json, RestaurantModel.class);
+				
 				restaurants.add(restaurant);
 			}
 		}
@@ -348,5 +350,106 @@ public class DatabaseModel {
 		}
 		return recipes;
 	}
+	
+	/**
+	 * All searches have a user. This gets the user id associated with a given search.
+	 * @param searchId
+	 * @return
+	 */
+	private static int getUserIdFromSearchId(int searchId) throws Exception{
+		int userId = -1;
+		Connection conn = getConnection();
+		String query = "SELECT user_id from searches where search_id = (?)";
+		PreparedStatement preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+    	preparedStmt.setInt (1, searchId);
+    	ResultSet rs = preparedStmt.executeQuery();
+		rs.next();
+		userId = rs.getInt("user_id");
+		conn.close();
+		return userId;
+	}
+	
+	public static List<RestaurantModel> getRestaurantsInList(int searchId) throws Exception{
+		int userId = DatabaseModel.getUserIdFromSearchId(searchId);
+		List<RestaurantModel> restaurants = new ArrayList<>();
+		Connection conn = getConnection();
+		String query = "SELECT * from list_restaurants where user_id = (?)";
+		PreparedStatement preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+    	preparedStmt.setInt (1, userId);
+    	ResultSet rs = preparedStmt.executeQuery();
+		while(rs.next()) {
+			String restaurantQuery = "SELECT * from restaurants where item_id=(?)";
+			PreparedStatement prep = conn.prepareStatement(restaurantQuery, Statement.RETURN_GENERATED_KEYS);
+	    	prep.setInt (1, rs.getInt("item_id"));
+	    	ResultSet restaurant = prep.executeQuery();
+	    	restaurant.next();
+	    	Gson g = new Gson();
+	    	RestaurantModel rm = g.fromJson(restaurant.getString("json_string"), RestaurantModel.class);
+	    	if(rs.getString("name").equals("donotshow")) {
+	    		rm.setInDoNotShow(true);
+	    	}else if(rs.getString("name").equals("toexplore")) {
+	    		rm.setInToExplore(true);
+	    	}else {
+	    		rm.setInFavorites(true);
+	    	}
+	    	restaurants.add(rm);
+		}
+		return restaurants;
+	}
+	
+	public static boolean insertRestaurantIntoList(int searchId, RestaurantModel rm) throws Exception{
+		boolean ret = true;
+		
+		// Get the user id
+		int userId = getUserIdFromSearchId(searchId);
+		
+		// Get Item ID
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();;
+		String json = gson.toJson(rm);
+		Connection conn = getConnection();
+		String query = "SELECT item_id from restaurants where json_string = (?)";
+		PreparedStatement preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+    	preparedStmt.setString (1, json);
+    	ResultSet rs = preparedStmt.executeQuery();
+    	rs.next();
+    	int item_id = rs.getInt("item_id");
+    	conn.close();
+    	
+    	// Get Number of Items in list
+    	String name = "toexplore";
+    	if(rm.isInFavorites()) {
+    		name = "favorites";
+    	}else if(rm.isInDoNotShow()) {
+    		name = "donotshow";
+    	}
+    	
+    	int count = countItemsInRestaurant(name, userId);
+    	conn = getConnection();
+    	query = "INSERT INTO list_restaurants (item_id, user_id, name, place) values (?, ?, ?, ?)";
+    	preparedStmt = conn.prepareStatement(query);
+    	preparedStmt.setInt(1, item_id);
+    	preparedStmt.setInt(2, userId);
+    	preparedStmt.setString(3, name);
+    	preparedStmt.setInt(4, count+1);
+    	preparedStmt.executeUpdate();
+    	conn.close();
+		return ret;
+	}
+	
+	private static int countItemsInRestaurant(String name, int userId) throws Exception{
+		String query = "SELECT count(*) from list_restaurants where user_id=(?) and name=(?)";
+		Connection conn = getConnection();
+		PreparedStatement preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+    	preparedStmt.setInt(1, userId);
+    	preparedStmt.setString(2, name);
+    	ResultSet rs = preparedStmt.executeQuery();
+    	rs.next();
+    	int rowCount = rs.getInt(1);
+    	conn.close();
+		return rowCount;
+	}
+	
+	
+	
 	
 }

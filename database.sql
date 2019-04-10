@@ -46,7 +46,7 @@ CREATE table list_restaurants(
 	FOREIGN KEY fk2 (user_id) REFERENCES  users(user_id),
     item_id INT(11),
     FOREIGN KEY fk3 (item_id) REFERENCES  restaurants(item_id),
-    name VARCHAR(100),
+    name VARCHAR(100) not null,
     place INT(11)
 );
 

@@ -204,4 +204,16 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 	public void sort() {
 		Collections.sort(results);
 	}
+
+	@Override
+	public boolean setGroceryListResult(int i, boolean value) {
+		//NOT USED
+		return false;
+	}
+
+	@Override
+	public List<IngredientModel> getIngredients(int i) {
+		// NOT USED
+		return null;
+	}
 }

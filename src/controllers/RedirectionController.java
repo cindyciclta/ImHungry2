@@ -132,7 +132,13 @@ public class RedirectionController extends HttpServlet {
 			int indexInt = Integer.parseInt(index);
 			RedirectionController.removeResponse(indexInt);
 			
-		} else if(action.equals("addtolist") || action.equals("movetolist")) { //If the addtolist or movetolist button is clicked, update database
+		} else if (action.equals("addtogrocery")) {
+
+			int userid = tokens.get(token);
+			
+
+		}
+		else if(action.equals("addtolist") || action.equals("movetolist")) { //If the addtolist or movetolist button is clicked, update database
 			
 			int indexInt = Integer.parseInt(index);
 			String item = request.getParameter("item");
@@ -142,6 +148,7 @@ public class RedirectionController extends HttpServlet {
 			String type = request.getParameter("type");
 			
 			responses.get(indexInt).addToList(itemInt, list, type, true);
+
 		} else if(action.equals("removefromlist")) { // If the removefromlist button is clicked, update database
 			int indexInt = Integer.parseInt(index);
 			String item = request.getParameter("item");
@@ -150,6 +157,7 @@ public class RedirectionController extends HttpServlet {
 			String list = request.getParameter("list");
 			String type = request.getParameter("type");
 			responses.get(indexInt).addToList(itemInt, list, type, false);
+
 		}
 		if (dispatch != null) {
 			dispatch.forward(request, response);	

@@ -20,6 +20,9 @@ public class RecipeModel extends ListItemModel implements Comparable<RecipeModel
 		instructions = new ArrayList<>();
 	}
 	
+	public List<IngredientModel> getIngredients () {
+		return ingredients;
+	}
 	public boolean setName(String name) {
 		if(name == null) {
 			return false;
@@ -153,4 +156,5 @@ public class RecipeModel extends ListItemModel implements Comparable<RecipeModel
 		}
 		return 1;
 	}
+	
 }

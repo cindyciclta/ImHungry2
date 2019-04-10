@@ -109,6 +109,10 @@
 				xhr.send();
 			}
 		}
+		
+		function addToGroceryList() {
+			alert("ej");
+		}
 	</script>
 	
 	<%
@@ -165,6 +169,7 @@
 			        							<li>
 			        								<h><%=count+1%>. <%=ing %><h> 
 			        							</li>
+												<button type="button" onclick="addToGroceryList()">Click Me!</button>
         									</td>
 										
 										<%

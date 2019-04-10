@@ -23,6 +23,7 @@ import org.mockito.MockitoAnnotations;
 import java.sql.Connection;
 
 import models.DatabaseModel;
+import models.GroceryListModel;
 import models.RecipeModel;
 import models.RestaurantModel;
 import models.SearchTermModel;
@@ -329,5 +330,14 @@ public class TestDatabaseModel{
 		deleteUser(username);
 	}
 	
-	
+	@Test
+	public void InsertGroceryListValid() throws Exception{
+		String username = "test";
+		String password = "test";
+		DatabaseModel.insertUser(username, password.toCharArray());
+		DatabaseModel.InsertIntoGroceryList(username, "apple");
+		GroceryListModel gl = DatabaseModel.getGroceryListFromUser(username);
+		assertEquals("apple", gl.getItem(0));
+		deleteUser(username);
+	}
 }

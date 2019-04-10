@@ -1,5 +1,6 @@
 package models;
 
+import java.util.List;
 import java.util.Map;
 
 public class ResponseModel {
@@ -135,9 +136,23 @@ public class ResponseModel {
 				return recipes.setDoNotShowResult(i, value);
 			} else if(list.equals("favorites")) {
 				return recipes.setFavoriteResult(i, value);
-			} else {
+			} else if(list.equals("toexplore")){
 				return recipes.setToExploreResult(i, value);
 			}
 		}
+		return true;
+	}
+	public boolean addToGroceryList(int i, int userid, String item) {
+		List<IngredientModel> list = recipes.getIngredients(i);
+		//TODO understood it wrong. Get list and add to database 
+//		list.forEach(l->{
+//			try {
+//				DatabaseModel.InsertIntoGroceryList(userid, l.getIngredientName());
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		});
+		return true;
 	}
 }

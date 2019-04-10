@@ -232,6 +232,56 @@ public class TestRestaurantModel {
 		assertEquals(-1, rm.compareTo(rmFavorite));
 	}
 	
+	@Test
+	public void testEqualsNull() {
+		RestaurantModel rm = new RestaurantModel();
+		assertFalse(rm.equals(null));
+	}
+	
+	@Test
+	public void testEqualsWrongClass() {
+		RestaurantModel rm = new RestaurantModel();
+		assertFalse(rm.equals("restaurant"));
+	}
+	
+	@Test
+	public void testEqualsNullName() {
+		RestaurantModel rm = new RestaurantModel();
+		rm.setName("sdfs");
+		assertFalse(rm.equals(new RestaurantModel()));
+	}
+	
+	@Test
+	public void testEqualsNullNameOther() {
+		RestaurantModel rm = new RestaurantModel();
+		RestaurantModel rm2 = new RestaurantModel();
+		rm2.setName("sdfs");
+		assertFalse(rm.equals(rm2));
+	}
+	
+	@Test
+	public void testEqualValid() {
+		RestaurantModel rm = new RestaurantModel();
+		rm.setName("sdfs");
+		rm.hashCode();
+		RestaurantModel rm2 = new RestaurantModel();
+		rm2.setName("sdfs");
+		assertTrue(rm.equals(rm2));
+	}
+	
+
+	@Test
+	public void testEqualWrongName() {
+		RestaurantModel rm = new RestaurantModel();
+		rm.setName("sdfs");
+		rm.hashCode();
+		RestaurantModel rm2 = new RestaurantModel();
+		rm2.setName("sdfsdfs");
+		assertFalse(rm.equals(rm2));
+	}
+	
+	
+	
 	
 	
 	

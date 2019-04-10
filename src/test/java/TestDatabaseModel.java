@@ -36,10 +36,24 @@ public class TestDatabaseModel{
 		// clean the searches database as well
 		int id = DatabaseModel.GetUserID(username);
 		
+		//  clean favorites
+		String query = "DELETE from list_restaurants where user_id = (?)";
+		PreparedStatement preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+	    preparedStmt.setInt (1, id);
+	    preparedStmt.executeUpdate();
+	    preparedStmt.close();
+	    
+	    query = "DELETE from list_recipes where user_id = (?)";
+		preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+	    preparedStmt.setInt (1, id);
+	    preparedStmt.executeUpdate();
+	    preparedStmt.close();
+		
+		
 		Vector<SearchTermModel> searches = DatabaseModel.GetSearchHistory(id);
 		for(SearchTermModel search : searches) {
-			String query = "DELETE from recipes where search_id = (?)";
-			PreparedStatement preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			query = "DELETE from recipes where search_id = (?)";
+			preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		    preparedStmt.setInt (1, search.search_id);
 		    preparedStmt.executeUpdate();
 		    preparedStmt.close();
@@ -51,8 +65,8 @@ public class TestDatabaseModel{
 		    preparedStmt.close();
 		}
 		
-		String query = "DELETE from searches where user_id = (?)";
-		PreparedStatement preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+		query = "DELETE from searches where user_id = (?)";
+		preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 	    preparedStmt.setInt (1, id);
 	    preparedStmt.executeUpdate();
 	    preparedStmt.close();
@@ -326,6 +340,69 @@ public class TestDatabaseModel{
 		DatabaseModel.insertRecipe(r, searchId);
 		
 		assertNotEquals(0, DatabaseModel.getRecipesFromSearchTerm("pizza", 10).size());
+		deleteUser(username);
+	}
+	
+	@Test
+	public void addRestaurantToListExplore() throws Exception{
+		String username = "test";
+		String password = "test";
+		DatabaseModel.insertUser(username, password.toCharArray());
+		int id = DatabaseModel.GetUserID(username);
+		RestaurantModel rm = new RestaurantModel();
+		
+		rm.setName("blah");
+		rm.setInToExplore(true);
+		
+		DatabaseModel.AddSearchTermToHistory(id, "pizza", 10, 10);
+		int searchId = DatabaseModel.getSearchId("pizza", 10, 10);
+		DatabaseModel.insertRestaurant(rm, searchId);
+		DatabaseModel.insertRestaurantIntoList(searchId, rm);
+		
+		List<RestaurantModel> restaurants = DatabaseModel.getRestaurantsInList(searchId);
+		assertEquals(1, restaurants.size());
+		deleteUser(username);
+	}
+	
+	@Test
+	public void addRestaurantToListFavorites() throws Exception{
+		String username = "test";
+		String password = "test";
+		DatabaseModel.insertUser(username, password.toCharArray());
+		int id = DatabaseModel.GetUserID(username);
+		RestaurantModel rm = new RestaurantModel();
+		
+		rm.setName("blah");
+		rm.setInFavorites(true);
+		
+		DatabaseModel.AddSearchTermToHistory(id, "pizza", 10, 10);
+		int searchId = DatabaseModel.getSearchId("pizza", 10, 10);
+		DatabaseModel.insertRestaurant(rm, searchId);
+		DatabaseModel.insertRestaurantIntoList(searchId, rm);
+		
+		List<RestaurantModel> restaurants = DatabaseModel.getRestaurantsInList(searchId);
+		assertEquals(1, restaurants.size());
+		deleteUser(username);
+	}
+	
+	@Test
+	public void addRestaurantToDoNotShow() throws Exception{
+		String username = "test";
+		String password = "test";
+		DatabaseModel.insertUser(username, password.toCharArray());
+		int id = DatabaseModel.GetUserID(username);
+		RestaurantModel rm = new RestaurantModel();
+		
+		rm.setName("blah");
+		rm.setInDoNotShow(true);
+		
+		DatabaseModel.AddSearchTermToHistory(id, "pizza", 10, 10);
+		int searchId = DatabaseModel.getSearchId("pizza", 10, 10);
+		DatabaseModel.insertRestaurant(rm, searchId);
+		DatabaseModel.insertRestaurantIntoList(searchId, rm);
+		
+		List<RestaurantModel> restaurants = DatabaseModel.getRestaurantsInList(searchId);
+		assertEquals(1, restaurants.size());
 		deleteUser(username);
 	}
 	

@@ -11,8 +11,8 @@ public class ResponseModel {
 	private int radius;
 	
 	private String term;
-	private ApiCallInterface<RestaurantModel> restaurants  = new YelpRequestModel();
-	private ApiCallInterface<RecipeModel> recipes = new EdamamRequestModel();
+	private ApiCallInterface<RestaurantModel> restaurants  = new MockYelpRequestModel(-1);
+	private ApiCallInterface<RecipeModel> recipes = new MockRecipeRequestModel(-1);
 	
 	public ResponseModel(int userId) {
 		this.userId = userId;
@@ -55,12 +55,28 @@ public class ResponseModel {
 		return restaurants.getFormattedResultsFieldsAt(i);
 	}
 	
+	public Map<String, String> getFormattedRecipeResultsListAt(int i) {
+		return recipes.getFormattedResultsFieldsListAt(i);
+	}
+	
+	public Map<String, String> getFormattedRestaurantResultsListAt(int i) {
+		return restaurants.getFormattedResultsFieldsListAt(i);
+	}
+	
 	public int getNumberOfRecipes() {
 		return recipes.getResultsSize();
 	}
 	
+	public int getNumberOfListRecipes() {
+		return recipes.getListSize();
+	}
+	
 	public int getNumberOfRestaurants() {
 		return restaurants.getResultsSize();
+	}
+	
+	public int getNumberOfListRestaurants() {
+		return restaurants.getListSize();
 	}
 	
 	public boolean checkParameters(String term, int limit) {

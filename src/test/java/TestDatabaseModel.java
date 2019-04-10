@@ -406,5 +406,69 @@ public class TestDatabaseModel{
 		deleteUser(username);
 	}
 	
+	@Test
+	public void addRecipeToListExplore() throws Exception{
+		String username = "test";
+		String password = "test";
+		DatabaseModel.insertUser(username, password.toCharArray());
+		int id = DatabaseModel.GetUserID(username);
+		RecipeModel rm = new RecipeModel();
+		
+		rm.setName("blah");
+		rm.setInToExplore(true);
+		
+		DatabaseModel.AddSearchTermToHistory(id, "pizza", 10, 10);
+		int searchId = DatabaseModel.getSearchId("pizza", 10, 10);
+		DatabaseModel.insertRecipe(rm, searchId);
+		DatabaseModel.insertRecipeIntoList(searchId, rm);
+		
+		List<RecipeModel> recipes = DatabaseModel.getRecipesInList(searchId);
+		assertEquals(1, recipes.size());
+		deleteUser(username);
+	}
+	
+	@Test
+	public void addRecipeToListFavorites() throws Exception{
+		String username = "test";
+		String password = "test";
+		DatabaseModel.insertUser(username, password.toCharArray());
+		int id = DatabaseModel.GetUserID(username);
+		RecipeModel rm = new RecipeModel();
+		
+		rm.setName("blah");
+		rm.setInFavorites(true);
+		
+		DatabaseModel.AddSearchTermToHistory(id, "pizza", 10, 10);
+		int searchId = DatabaseModel.getSearchId("pizza", 10, 10);
+		DatabaseModel.insertRecipe(rm, searchId);
+		DatabaseModel.insertRecipeIntoList(searchId, rm);
+		
+		List<RecipeModel> recipes = DatabaseModel.getRecipesInList(searchId);
+		assertEquals(1, recipes.size());
+		deleteUser(username);
+	}
+	
+	@Test
+	public void addRecipeToDoNotShow() throws Exception{
+		String username = "test";
+		String password = "test";
+		DatabaseModel.insertUser(username, password.toCharArray());
+		int id = DatabaseModel.GetUserID(username);
+		RecipeModel rm = new RecipeModel();
+		
+		rm.setName("blah");
+		rm.setInDoNotShow(true);
+		
+		DatabaseModel.AddSearchTermToHistory(id, "pizza", 10, 10);
+		int searchId = DatabaseModel.getSearchId("pizza", 10, 10);
+		DatabaseModel.insertRecipe(rm, searchId);
+		DatabaseModel.insertRecipeIntoList(searchId, rm);
+		
+		List<RecipeModel> recipes = DatabaseModel.getRecipesInList(searchId);
+		assertEquals(1, recipes.size());
+		deleteUser(username);
+	}
+	
+	
 	
 }

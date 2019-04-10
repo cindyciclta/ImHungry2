@@ -14,7 +14,8 @@ import javax.net.ssl.HttpsURLConnection;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
+// Moved to abstract due to lack of support for adding list items from db
+public abstract class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 
 	private static final String API_KEY = "XV6c8H4T5PriBv2QO0smCcFhMU3d3axPXDY6yEWAekPe9ErQZI70EFyipPyig8g1J-1RozjFY14vs14_ZC3o9_3pAlhqDw74zA7iTg-u9OkWNlcQ7n2HmKPOKht6XHYx";
 	protected String term;
@@ -23,6 +24,8 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 	private int radius_meter;
 	protected List<RestaurantModel> results;
 	public int responseCode;
+	protected List<RestaurantModel> listItems = new ArrayList<>();
+	
 	public YelpRequestModel() {
 		results = new ArrayList<>();
 	}
@@ -172,7 +175,9 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 		if(i >= results.size()) {
 			return false;
 		}
+		boolean removed = !value && results.get(i).isInFavorites();
 		results.get(i).setInFavorites(value);
+		addOrRemoveValue(results.get(i), value, removed);
 		return true;
 	}
 
@@ -184,7 +189,9 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 		if(i >= results.size()) {
 			return false;
 		}
+		boolean removed = !value && results.get(i).isInToExplore();
 		results.get(i).setInToExplore(value);
+		addOrRemoveValue(results.get(i), value, removed);
 		return true;
 	}
 
@@ -196,12 +203,40 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 		if(i >= results.size()) {
 			return false;
 		}
+		boolean removed = !value && results.get(i).isInDoNotShow();
 		results.get(i).setInDoNotShow(value);
+		
+		addOrRemoveValue(results.get(i), value, removed);
 		return true;
+	}
+	
+	private void addOrRemoveValue(RestaurantModel restauarant, boolean value, boolean removed) {
+		if(!listItems.contains(restauarant) && value) {
+			listItems.add(restauarant);
+		}else if(listItems.contains(restauarant) && !removed) {
+			listItems.remove(restauarant);
+		}
 	}
 	
 	@Override
 	public void sort() {
 		Collections.sort(results);
+	}
+
+	@Override
+	public int getListSize() {
+		return listItems.size();
+	}
+
+	@Override
+	public Map<String, String> getFormattedResultsFieldsListAt(int i) {
+		if(i < 0) {
+			return null;
+		}
+		if(i >= listItems.size()) {
+			return null;
+		}
+		
+		return listItems.get(i).getFormattedFieldsForResultsPage();
 	}
 }

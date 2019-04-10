@@ -9,8 +9,7 @@ import java.util.Map;
  * ApiCallInterface
  */
 public interface ApiCallInterface<T> {
-	
-	// Deviation no results
+
 	public ResponseCodeModel completeTask();
 	
 	public int getResultsSize();
@@ -22,6 +21,9 @@ public interface ApiCallInterface<T> {
 	public boolean setFavoriteResult(int i, boolean value);
 	public boolean setToExploreResult(int i , boolean value);
 	public boolean setDoNotShowResult(int i, boolean value);
+	
+	public int getListSize();
+	public Map<String, String> getFormattedResultsFieldsListAt(int i);
 	
 	public void sort();
 }

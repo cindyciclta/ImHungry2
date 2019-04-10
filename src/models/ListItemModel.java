@@ -15,6 +15,8 @@ public class ListItemModel {
 	
 	private boolean inDoNotShow;
 	
+	private int order;
+	
 	public ListItemModel() {
 		inFavorites = false;
 		inToExplore = false;

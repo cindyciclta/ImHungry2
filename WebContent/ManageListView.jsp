@@ -125,9 +125,9 @@
                                <tbody>
                                    <%
 									int count = 0;
-									for(int i = 0 ; i < rm.getNumberOfRecipes() ; i++){
+									for(int i = 0 ; i < rm.getNumberOfListRecipes() ; i++){
 										count += 1;
-										Map<String, String> resultsFields = rm.getFormattedRecipeResultsAt(i);
+										Map<String, String> resultsFields = rm.getFormattedRecipeResultsListAt(i);
 										
 										// Skip do not show results
 										if(title.equals("Do Not Show") && !resultsFields.get("modifier").equals("donotshow")){
@@ -200,9 +200,9 @@
 									
 									<%
 									
-									for(int i = 0 ; i < rm.getNumberOfRestaurants() ; i++){
+									for(int i = 0 ; i < rm.getNumberOfListRestaurants() ; i++){
 										count += 1; 
-										Map<String, String> resultsFields = rm.getFormattedRestaurantResultsAt(i);
+										Map<String, String> resultsFields = rm.getFormattedRestaurantResultsListAt(i);
 					
 										// Skip do not show results
 										if(title.equals("Do Not Show") && !resultsFields.get("modifier").equals("donotshow")){

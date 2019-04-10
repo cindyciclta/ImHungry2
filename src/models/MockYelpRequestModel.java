@@ -12,6 +12,7 @@ import java.util.Map;
 public class MockYelpRequestModel extends YelpRequestModel{
 
 	private int searchId;
+	
 	public MockYelpRequestModel(int searchId) {
 		this.searchId = searchId;
 	}
@@ -54,21 +55,26 @@ public class MockYelpRequestModel extends YelpRequestModel{
  			}
  			List<RestaurantModel> listItems = DatabaseModel.getRestaurantsInList(searchId);
  			
+ 			// add to listItems
+ 			for(RestaurantModel item : listItems) {
+ 				this.listItems.add(item);
+ 			}
+ 			
  		    // Recorrelate against the list
- 			for(int i = 0 ; i < results.size() ; i++) {
- 				for(RestaurantModel item : listItems) {
+ 			for(RestaurantModel item : listItems) {
+ 				for(int i = 0 ; i < results.size() ; i++) {
  					if(item.equals(results.get(i))) {
  						results.get(i).setInFavorites(item.isInFavorites());
  						results.get(i).setInDoNotShow(item.isInDoNotShow());
  						results.get(i).setInToExplore(item.isInToExplore());
  					}
  				}
+ 				
  			}
  		}catch(Exception e) {
  			
  		}
 		
-			
 		return responseResult;	
 	}
 	
@@ -111,8 +117,6 @@ public class MockYelpRequestModel extends YelpRequestModel{
 		}catch(Exception e) {
 			
 		}
-			
-		
 		return ret;
 	}
 }

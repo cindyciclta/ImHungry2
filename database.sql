@@ -46,8 +46,7 @@ CREATE table list_restaurants(
 	FOREIGN KEY fk2 (user_id) REFERENCES  users(user_id),
     item_id INT(11),
     FOREIGN KEY fk3 (item_id) REFERENCES  restaurants(item_id),
-    name VARCHAR(100) not null,
-    place INT(11)
+    name VARCHAR(100) not null
 );
 
 CREATE table list_recipes(
@@ -56,9 +55,18 @@ CREATE table list_recipes(
 	FOREIGN KEY fk4 (user_id) REFERENCES  users(user_id),
     item_id INT(11),
     FOREIGN KEY fk5 (item_id) REFERENCES  recipes(item_id),
-    name VARCHAR(100),
-    place INT(11)
+    name VARCHAR(100)
 );
+
+CREATE table places(
+	place_id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	user_id INT(11),
+	FOREIGN KEY fk7 (user_id) REFERENCES  users(user_id),
+	item_id INT(11),
+	name VARCHAR(100) not null,
+	place INT(11) not null,
+	restaurant_or_recipe VARCHAR(100) not null
+)
 
 
 

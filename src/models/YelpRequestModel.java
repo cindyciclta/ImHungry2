@@ -64,7 +64,7 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 				throw new IOException();
 			}
 			
-			String url = "https://api.yelp.com/v3/businesses/search?term="+term+"&latitude=34.02056373251961&longitude=-118.28544706106186&radius="+ radius_meter;
+			String url = "https://api.yelp.com/v3/businesses/search?term="+term+"&latitude=34.02056373251961&longitude=-118.28544706106186&radius="+ radius_meter+"&offset="+limit + "&limit="+limit;
 			URL obj = new URL(url);
 			HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
 			con.setRequestMethod("GET");
@@ -83,6 +83,7 @@ public class YelpRequestModel implements ApiCallInterface<RestaurantModel>{
 			
 			// Parse out all restaurant fields
 			JSONArray businesses = json.getJSONArray("businesses");
+			System.out.println("__________________"+ businesses.length() + " ___ "+ limit);
 			for(int i = 0 ; i < Math.min(limit, businesses.length()) ; i++) {
 				
 				RestaurantModel restaurant = new RestaurantModel();

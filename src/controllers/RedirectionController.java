@@ -50,7 +50,12 @@ public class RedirectionController extends HttpServlet {
 			int userid = tokens.get(token);
 			int indexInt = Integer.parseInt(index);
 			System.out.println("woots_______" + ingredientindex);
-			responses.get(indexInt).addToGroceryList(indexInt, userid, ingredientindex);
+			try {
+				responses.get(indexInt).addToGroceryList(indexInt, userid, ingredientindex);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		} else if(action.equals("managelist")) { //If it is redirecting to the manage list page, set the attributes accordingly
 			System.out.println("managing list section");

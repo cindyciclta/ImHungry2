@@ -350,6 +350,75 @@ public class DatabaseModel {
 		}
 		return recipes;
 	}
+	public static boolean InsertIntoGroceryList(String username, String groceryitem) throws Exception {
+		int userid = GetUserID(username);
+		String sql = "INSERT INTO grocery_list (selected_item, user_id, ordering) VALUES (?, ?, ?)";
+		if (userid != -1) {
+			Connection conn = getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql);
+			
+			ps.setString(1, groceryitem);
+			ps.setInt(2, userid);
+			ps.setInt(3, 1); //ordering fix later
+			
+			ps.executeUpdate();
+			
+			conn.close();
+		}
+		return true;
+	}
+	public static boolean InsertIntoGroceryList(int userid,  String groceryitem) throws Exception {
+
+		String sql = "INSERT INTO grocery_list (selected_item, user_id, ordering) VALUES (?, ?, ?)";
+		if (userid != -1) {
+			Connection conn = getConnection();
+			PreparedStatement ps = conn.prepareStatement(sql);
+			
+			ps.setString(1, groceryitem);
+			ps.setInt(2, userid);
+			ps.setInt(3, 1); //ordering fix later
+			
+			ps.executeUpdate();
+			
+			conn.close();
+		}
+		return true;
+	}
+	
+	public static GroceryListModel getGroceryListFromUser(String username) throws Exception{
+		GroceryListModel gl = new GroceryListModel();
+		
+		int userid = GetUserID(username);
+		Connection conn = getConnection();
+		
+		if(userid != -1) {
+			PreparedStatement ps = conn.prepareStatement("SELECT * from grocery_list where user_id=(?)");
+			ps.setInt(1, userid);
+			ResultSet rsGroceryList = ps.executeQuery();
+			
+			while(rsGroceryList.next()) {
+				gl.additem(rsGroceryList.getString("selected_item"));
+			}
+		}
+		return gl;
+	}
+	public static GroceryListModel getGroceryListFromUser(int userid) throws Exception{
+		GroceryListModel gl = new GroceryListModel();
+		
+		Connection conn = getConnection();
+		
+		if(userid != -1) {
+			PreparedStatement ps = conn.prepareStatement("SELECT * from grocery_list where user_id=(?)");
+			ps.setInt(1, userid);
+			ResultSet rsGroceryList = ps.executeQuery();
+			
+			while(rsGroceryList.next()) {
+				gl.additem(rsGroceryList.getString("selected_item"));
+			}
+		}
+		return gl;
+	}
+	
 	
 	/**
 	 * All searches have a user. This gets the user id associated with a given search.

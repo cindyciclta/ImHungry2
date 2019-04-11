@@ -25,4 +25,7 @@ public class IngredientModel {
 	public String formatIngredients() {
 		return (this.name).trim();
 	}
+	public String getIngredientName(){
+		return name;
+	}
 }

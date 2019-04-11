@@ -314,4 +314,19 @@ public class EdamamRequestModel implements ApiCallInterface<RecipeModel> {
 	public void sort() {
 		Collections.sort(results);
 	}
+	
+	public boolean setGroceryListResult(int i , boolean value) {
+		if(i < 0) {
+			return false;
+		}
+		if(i >= results.size()) {
+			return false;
+		}
+		results.get(i).setGroceryList(value);
+		return true;
+	}
+	
+	public List<IngredientModel> getIngredients(int index){
+		return results.get(index).getIngredients();
+	}
 }

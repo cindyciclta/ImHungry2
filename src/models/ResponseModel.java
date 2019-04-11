@@ -142,17 +142,15 @@ public class ResponseModel {
 		}
 		return true;
 	}
-	public boolean addToGroceryList(int i, int userid, String item) {
+	public boolean addToGroceryList(int i, int userid, String ingredientindex) {
 		List<IngredientModel> list = recipes.getIngredients(i);
-		//TODO understood it wrong. Get list and add to database 
-//		list.forEach(l->{
-//			try {
-//				DatabaseModel.InsertIntoGroceryList(userid, l.getIngredientName());
-//			} catch (Exception e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		});
+		int k = Integer.parseInt(ingredientindex);
+		IngredientModel ingredient = list.get(k);
+		System.out.println(ingredient.getIngredientName());
+		//TODO Get list and add to database 
+
+//		DatabaseModel.InsertIntoGroceryList(userid, l.getIngredientName());
+
 		return true;
 	}
 }

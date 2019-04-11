@@ -35,27 +35,84 @@ public class MockYelpRequestModel extends YelpRequestModel{
 		
  		ResponseCodeModel responseResult = ResponseCodeModel.OK;
  		List<RestaurantModel> restaurants = ExistRequest(term, limit, radius);
-		if (restaurants.size() > 0) {
-			System.out.println("Using cached restaurants");
-	 		this.results = restaurants;
-			return responseResult;
-		}else {
-			results.clear();
-			super.checkParameters(term, limit, radius);
-			super.completeTask();
-			results = super.getResults();
-			try {
-				if(term.equals("DROP DATABASE")) {
-					throw new Exception();
-				}
-				for(RestaurantModel model : this.results) {
-					DatabaseModel.insertRestaurant(model, searchId);
-				}
-			}catch(Exception e) {
-				
-			}
-		}
+ 		try {
+ 			if (restaurants.size() > 0) {
+ 				System.out.println("Using cached restaurants");
+ 		 		this.results = restaurants;
+ 			}else {
+ 				results.clear();
+ 				super.checkParameters(term, limit, radius);
+ 				super.completeTask();
+ 				results = super.getResults();
+ 				if(term.equals("DROP DATABASE")) {
+ 					throw new Exception();
+ 				}
+ 				for(RestaurantModel model : this.results) {
+ 					DatabaseModel.insertRestaurant(model, searchId);
+ 				}
+ 				
+ 			}
+ 			List<RestaurantModel> listItems = DatabaseModel.getRestaurantsInList(searchId);
+ 			
+ 		    // Recorrelate against the list
+ 			for(int i = 0 ; i < results.size() ; i++) {
+ 				for(RestaurantModel item : listItems) {
+ 					if(item.equals(results.get(i))) {
+ 						results.get(i).setInFavorites(item.isInFavorites());
+ 						results.get(i).setInDoNotShow(item.isInDoNotShow());
+ 						results.get(i).setInToExplore(item.isInToExplore());
+ 					}
+ 				}
+ 			}
+ 		}catch(Exception e) {
+ 			
+ 		}
+		
 			
 		return responseResult;	
+	}
+	
+	@Override
+	public boolean setFavoriteResult(int i, boolean value) {
+		boolean ret = super.setFavoriteResult(i,  value);
+		try {
+			if(!ret) {
+				throw new Exception();
+			}
+			ret = DatabaseModel.insertRestaurantIntoList(searchId, results.get(i));
+		}catch(Exception e) {
+		}
+		return ret;
+	}
+	
+	@Override
+	public boolean setToExploreResult(int i, boolean value) {
+		boolean ret = super.setToExploreResult(i,  value);
+		try {
+			if(!ret) {
+				throw new Exception();
+			}
+			ret = DatabaseModel.insertRestaurantIntoList(searchId, results.get(i));
+		}catch(Exception e) {
+			
+		}
+		return ret;
+	}
+	
+	@Override
+	public boolean setDoNotShowResult(int i, boolean value) {
+		boolean ret = super.setDoNotShowResult(i,  value);
+
+		try {
+			if(!ret) {
+				throw new Exception();
+			}
+			ret = DatabaseModel.insertRestaurantIntoList(searchId, results.get(i));
+		}catch(Exception e) {
+			
+		}
+			
+		
+		return ret;
 	}
 }

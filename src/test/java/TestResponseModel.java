@@ -182,5 +182,19 @@ public class TestResponseModel {
 		assertTrue(e.getSearchResults());
 	}
 	
+	@Test
+	public void testRadius() {
+		ResponseModel e = new ResponseModel(-1);
+		e.checkParameters("test", 10, 10);
+		assertEquals(10, e.getRadius());
+	}
+	
+	@Test
+	public void testLimit() {
+		ResponseModel e = new ResponseModel(-1);
+		e.checkParameters("test", 100, 10);
+		assertEquals(100, e.getLimit());
+	}
+	
 
 }

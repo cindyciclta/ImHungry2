@@ -172,4 +172,31 @@ public class RestaurantModel extends ListItemModel implements Comparable<Restaur
 		
 		return this.drivingTime - arg0.drivingTime;
 	}
+	
+	@Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        if (!RestaurantModel.class.isAssignableFrom(obj.getClass())) {
+            return false;
+        }
+
+        final RestaurantModel other = (RestaurantModel) obj;
+        if(this.name == null || other.name == null) {
+        	return false;
+        }
+        if(!this.name.equalsIgnoreCase(other.name)) {
+        	return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = (int)(53 * this.drivingTime + 10000 * this.lat + 13412312 * this.lon);
+        return hash;
+    }
 }

@@ -42,8 +42,16 @@ public class RedirectionController extends HttpServlet {
 		
 
 		request.setAttribute("term", term);
+		System.out.println("whehehehreh "+ action);
 		if(action == null || action.isEmpty() || index == null || index.isEmpty()) {
 			dispatch = request.getRequestDispatcher("SearchPageView.jsp");
+		} else if (action.equals("addtogrocery")) {
+			String ingredientindex = request.getParameter("ingredientindex");
+			int userid = tokens.get(token);
+			int indexInt = Integer.parseInt(index);
+			System.out.println("woots_______" + ingredientindex);
+			responses.get(indexInt).addToGroceryList(indexInt, userid, ingredientindex);
+
 		} else if(action.equals("managelist")) { //If it is redirecting to the manage list page, set the attributes accordingly
 			System.out.println("managing list section");
 			String list = request.getParameter("list");
@@ -132,13 +140,7 @@ public class RedirectionController extends HttpServlet {
 			int indexInt = Integer.parseInt(index);
 			RedirectionController.removeResponse(indexInt);
 			
-		} else if (action.equals("addtogrocery")) {
-
-			int userid = tokens.get(token);
-			
-
-		}
-		else if(action.equals("addtolist") || action.equals("movetolist")) { //If the addtolist or movetolist button is clicked, update database
+		} else if(action.equals("addtolist") || action.equals("movetolist")) { //If the addtolist or movetolist button is clicked, update database
 			
 			int indexInt = Integer.parseInt(index);
 			String item = request.getParameter("item");
@@ -158,7 +160,7 @@ public class RedirectionController extends HttpServlet {
 			String type = request.getParameter("type");
 			responses.get(indexInt).addToList(itemInt, list, type, false);
 
-		}
+		} 
 		if (dispatch != null) {
 			dispatch.forward(request, response);	
 		}

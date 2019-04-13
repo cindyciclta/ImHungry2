@@ -64,9 +64,10 @@ CREATE table grocery_list(
 	object_id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
     selected_item VARCHAR(100) NOT NULL,
     user_id INT(11),
-    FOREIGN KEY fk1 (user_id) REFERENCES  users(user_id),
+    FOREIGN KEY fk8 (user_id) REFERENCES  users(user_id),
     ordering INT(11)
 );
+
 
 
 

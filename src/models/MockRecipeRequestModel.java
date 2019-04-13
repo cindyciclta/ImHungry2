@@ -51,11 +51,10 @@ public class MockRecipeRequestModel extends EdamamRequestModel{
 				for(RecipeModel recipe : this.results) {
 					DatabaseModel.insertRecipe(recipe, searchId);
 				}
-			}catch(Exception e) {
+			} catch(Exception e) {
 				
 			}
-
-		}
+    }
 		
 		return responseResult;
 	}

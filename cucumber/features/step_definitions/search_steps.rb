@@ -306,8 +306,12 @@ Then(/^there should be pagination$/) do
   expect(page).to have_css('#rest-page-alt2')
 end
 
-When(/^I navigate to the second page$/) do
+When(/^I navigate to the second restaurant page$/) do
   page.find('#rest-page-alt2').click
+end
+
+When(/^I navigate to the second recipe page$/) do
+  page.find('#reci-page-alt2').click
 end
 
 Then(/^there should be table-hover$/) do

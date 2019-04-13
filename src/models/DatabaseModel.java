@@ -520,8 +520,7 @@ public class DatabaseModel {
     	conn.close();
 		return rowCount;
 	}
-	
-	
+
 	
 	
 }

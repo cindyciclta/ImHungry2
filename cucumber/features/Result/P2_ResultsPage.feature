@@ -12,12 +12,19 @@ Scenario: Pagination single page
 	When I searched for item "cake" with "3" results and was redirected to the Results page
 	Then there should be no pagination
 	
-Scenario: Pagination multi-page and visit second page
+Scenario: Pagination multi-page and visit second restaurant page
 
 	When I searched for item "pizza" with "15" results and was redirected to the Results page
 	Then there should be pagination
-	When I navigate to the second page
+	When I navigate to the second restaurant page
 	Then I am on the "Results for pizza" page
+
+Scenario: Pagination multi-page and visit second recipe page
+
+	When I searched for item "burger" with "15" results and was redirected to the Results page
+	Then there should be pagination
+	When I navigate to the second recipe page
+	Then I am on the "Results for burger" page
 
 Scenario: Test table hover on clickable results
 

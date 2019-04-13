@@ -8,6 +8,7 @@ import com.google.gson.annotations.Expose;
  * Stores recipe information
  */
 public class RecipeModel extends ListItemModel implements Comparable<RecipeModel>{
+	
 	@Expose
 	private String name; // Deviation from plan
 	@Expose

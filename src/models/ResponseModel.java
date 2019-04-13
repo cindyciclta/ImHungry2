@@ -55,29 +55,35 @@ public class ResponseModel {
 	public Map<String, String> getFormattedRestaurantResultsAt(int i) {
 		return restaurants.getFormattedResultsFieldsAt(i);
 	}
-	
-	public Map<String, String> getFormattedRecipeResultsListAt(int i) {
-		return recipes.getFormattedResultsFieldsListAt(i);
-	}
-	
-	public Map<String, String> getFormattedRestaurantResultsListAt(int i) {
-		return restaurants.getFormattedResultsFieldsListAt(i);
-	}
+
 	
 	public int getNumberOfRecipes() {
 		return recipes.getResultsSize();
 	}
-	
-	public int getNumberOfListRecipes() {
-		return recipes.getListSize();
-	}
-	
 	public int getNumberOfRestaurants() {
 		return restaurants.getResultsSize();
 	}
 	
-	public int getNumberOfListRestaurants() {
-		return restaurants.getListSize();
+	public int getNumberOfListItems() {
+		return recipes.getListSize() + restaurants.getListSize();
+	}
+	
+	public Map<String, String> getFormattedResultListAt(int i){
+		for(int k = 0 ; k < restaurants.getListSize() ; k++) {
+			if(restaurants.getFormattedResultsFieldsListAt(k).get("place").equals(
+					Integer.toString(i+1))) {
+				return restaurants.getFormattedResultsFieldsListAt(k);
+			}
+		}
+		
+		for(int k = 0 ; k < recipes.getListSize() ; k++) {
+			if(recipes.getFormattedResultsFieldsListAt(k).get("place").equals(
+					Integer.toString(i+1))) {
+				return recipes.getFormattedResultsFieldsListAt(k);
+			}
+		}
+		
+		return null;
 	}
 	
 	public boolean checkParameters(String term, int limit) {

@@ -37,9 +37,23 @@ public class TestDatabaseModel{
 		// clean the searches database as well
 		int id = DatabaseModel.GetUserID(username);
 		
-		//  clean favorites
-		String query = "DELETE from list_restaurants where user_id = (?)";
+		// clean grocery list
+		String query = "DELETE from grocery_list where user_id = (?)";
 		PreparedStatement preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+	    preparedStmt.setInt (1, id);
+	    preparedStmt.executeUpdate();
+	    preparedStmt.close();
+		
+		// clean places
+	    query = "DELETE from places where user_id = (?)";
+		preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+	    preparedStmt.setInt (1, id);
+	    preparedStmt.executeUpdate();
+	    preparedStmt.close();
+	    
+		//  clean favorites
+		query = "DELETE from list_restaurants where user_id = (?)";
+		preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 	    preparedStmt.setInt (1, id);
 	    preparedStmt.executeUpdate();
 	    preparedStmt.close();

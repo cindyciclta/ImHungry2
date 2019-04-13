@@ -27,16 +27,16 @@ CREATE table images(
 
 CREATE table recipes(
 	item_id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-	search_id INT(11),
+	search_id INT(11) not null,
 	FOREIGN KEY fk6 (search_id) REFERENCES  searches(search_id),
-    json_string longtext
+    json_string longtext not null
 );
 
 CREATE table restaurants(
 	item_id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-	search_id INT(11),
+	search_id INT(11) not null,
 	FOREIGN KEY fk7 (search_id) REFERENCES  searches(search_id),
-    json_string longtext
+    json_string longtext not null
 );
 
 
@@ -60,13 +60,15 @@ CREATE table list_recipes(
 
 CREATE table places(
 	place_id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-	user_id INT(11),
-	FOREIGN KEY fk7 (user_id) REFERENCES  users(user_id),
-	item_id INT(11),
+	user_id INT(11) not null,
+	FOREIGN KEY fk111 (user_id) REFERENCES  users(user_id),
+	item_id INT(11) not null,
 	name VARCHAR(100) not null,
 	place INT(11) not null,
 	restaurant_or_recipe VARCHAR(100) not null
-)
+);
+
+
 CREATE table grocery_list(
 	object_id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
     selected_item VARCHAR(100) NOT NULL,

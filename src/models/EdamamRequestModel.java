@@ -30,6 +30,11 @@ public abstract class EdamamRequestModel implements ApiCallInterface<RecipeModel
 		results = new ArrayList<>();
 	}
 	
+	@Override
+	public List<RecipeModel> getListItems(){
+		return listItems;
+	}
+	
 	public boolean checkParameters(String term, int limit) {
 		if(limit < 0) {
 			return false;
@@ -346,7 +351,10 @@ public abstract class EdamamRequestModel implements ApiCallInterface<RecipeModel
 		if(i >= listItems.size()) {
 			return null;
 		}
-		return listItems.get(i).getFormattedFieldsForResults();
+		Map<String, String> list= listItems.get(i).getFormattedFieldsForResults();
+		list.put("place", Integer.toString(listItems.get(i).getOrder()));
+		list.put("restaurant_or_recipe", "recipe");
+		return list;
 	}
 	
 	public boolean setGroceryListResult(int i , boolean value) {

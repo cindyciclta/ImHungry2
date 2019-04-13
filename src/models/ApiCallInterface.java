@@ -30,5 +30,7 @@ public interface ApiCallInterface<T> {
 	public void sort();
 
 	public List<IngredientModel> getIngredients(int i);
+	
+	public List<T> getListItems();
 
 }

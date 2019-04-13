@@ -34,6 +34,11 @@ public abstract class YelpRequestModel implements ApiCallInterface<RestaurantMod
 		return results;
 	}
 	
+	@Override
+	public List<RestaurantModel> getListItems(){
+		return listItems;
+	}
+	
 	public boolean checkParameters(String term, int limit, double radius) {
 		if(limit < 0) {
 			radius_meter = convertMilesToMeters(radius);
@@ -237,7 +242,10 @@ public abstract class YelpRequestModel implements ApiCallInterface<RestaurantMod
 			return null;
 		}
 		
-		return listItems.get(i).getFormattedFieldsForResultsPage();
+		Map<String, String> list = listItems.get(i).getFormattedFieldsForResultsPage();
+		list.put("place", Integer.toString(listItems.get(i).getOrder()));
+		list.put("restaurant_or_recipe", "restaurant");
+		return list;
 	}
 
 	public boolean setGroceryListResult(int i, boolean value) {

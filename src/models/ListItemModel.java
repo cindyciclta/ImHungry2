@@ -39,6 +39,12 @@ public class ListItemModel {
 	public boolean isInToExplore() {
 		return inToExplore;
 	}
+	
+	public void setOrder(int order) {
+		this.order = order;
+	}
+	
+	public int getOrder() {return order;}
 
 	public void setInToExplore(boolean inToExplore) {
 		this.inToExplore = inToExplore;

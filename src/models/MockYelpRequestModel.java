@@ -81,37 +81,30 @@ public class MockYelpRequestModel extends YelpRequestModel{
 	@Override
 	public boolean setFavoriteResult(int i, boolean value) {
 		boolean ret = super.setFavoriteResult(i,  value);
-		try {
-			if(!ret) {
-				throw new Exception();
-			}
-			ret = DatabaseModel.insertRestaurantIntoList(searchId, results.get(i));
-		}catch(Exception e) {
-		}
-		return ret;
+		return updateList(i) && ret;
 	}
 	
 	@Override
 	public boolean setToExploreResult(int i, boolean value) {
 		boolean ret = super.setToExploreResult(i,  value);
-		try {
-			if(!ret) {
-				throw new Exception();
-			}
-			ret = DatabaseModel.insertRestaurantIntoList(searchId, results.get(i));
-		}catch(Exception e) {
-			
-		}
-		return ret;
+		return updateList(i) && ret;
 	}
 	
 	@Override
 	public boolean setDoNotShowResult(int i, boolean value) {
 		boolean ret = super.setDoNotShowResult(i,  value);
-
+		return updateList(i) && ret; 
+	}
+	
+	private boolean updateList(int i) {
+		boolean ret = true;
 		try {
 			if(!ret) {
 				throw new Exception();
+			}
+			if(!results.get(i).isInToExplore() && !results.get(i).isInFavorites() 
+					&& !results.get(i).isInDoNotShow()) {
+				ret = DatabaseModel.deleteRestaurant(results.get(i), searchId);
 			}
 			ret = DatabaseModel.insertRestaurantIntoList(searchId, results.get(i));
 		}catch(Exception e) {

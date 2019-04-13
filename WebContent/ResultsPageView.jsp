@@ -241,7 +241,7 @@
                                 	<%
                     				System.out.println("restaurant page number=" + rest_pgnum);
 		                    		int rest_upperbound = 0;
-                    				System.out.println("number of restaurants" + rm.getNumberOfRestaurants());
+                    				System.out.println("number of restaurants " + rm.getNumberOfRestaurants());
 		                            if ((5 * (rest_pgnum - 1) + 5) < rm.getNumberOfRestaurants()) {
 		                            	rest_upperbound = (5 * (rest_pgnum - 1) + 5);
 		                            } else {
@@ -295,7 +295,7 @@
 					 			<nav aria-label="Restaurant pagination">
 									<ul class="pagination pagination-lg justify-content-center">
 									<% 
-										int restMaxPages = Math.max(rm.getNumberOfRecipes() / 5, rm.getNumberOfRestaurants() / 5);
+										int restMaxPages = rm.getNumberOfRestaurants() / 5;
 										for (int k = 1 ; k <= restMaxPages ; k++){
 											if (rest_pgnum == k) {
 									%>
@@ -327,6 +327,7 @@
                                 String ecodedValue = URLEncoder.encode(term, "UTF-8");
                                 int reci_upperbound = 0;
                             	System.out.println("recipe page number=" + reci_pgnum);
+                            	System.out.println("number of recipes " + rm.getNumberOfRecipes());
                                 if ((5 * (reci_pgnum - 1) + 5) < rm.getNumberOfRecipes()) {
                                 	reci_upperbound = (5 * (reci_pgnum - 1) + 5);
                                 } else {
@@ -370,7 +371,7 @@
 					 			<nav aria-label="Recipe pagination">
 									<ul class="pagination pagination-lg justify-content-center">
 									<% 
-										int reciMaxPages = Math.max(rm.getNumberOfRecipes() / 5, rm.getNumberOfRestaurants() / 5);
+										int reciMaxPages = rm.getNumberOfRecipes() / 5;
 										for (int k = 1 ; k <= reciMaxPages ; k++){
 											if (reci_pgnum == k) {
 									%>

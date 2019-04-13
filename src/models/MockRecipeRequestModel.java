@@ -34,7 +34,7 @@ public class MockRecipeRequestModel extends EdamamRequestModel{
 	public ResponseCodeModel completeTask() {
  		ResponseCodeModel responseResult = ResponseCodeModel.OK;
  		List<RecipeModel> result = ExistRequest(term, limit);
-// 		System.out.println("FOUND BUG: CACHED RECIPES NOT WORKING - (CINDY). WILL FIX LATER");
+
 		if (result.size() > 0) {
 			System.out.println("Using cached recipes");
 	 		this.results = result;
@@ -51,11 +51,10 @@ public class MockRecipeRequestModel extends EdamamRequestModel{
 				for(RecipeModel recipe : this.results) {
 					DatabaseModel.insertRecipe(recipe, searchId);
 				}
-			}catch(Exception e) {
+			} catch(Exception e) {
 				
 			}
-		}
-		
+    }
 		
 		return responseResult;
 	}

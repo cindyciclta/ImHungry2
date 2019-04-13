@@ -296,7 +296,12 @@
 									<ul class="pagination pagination-lg justify-content-center">
 									<% 
 										int restMaxPages = rm.getNumberOfRestaurants() / 5;
-										for (int k = 1 ; k <= restMaxPages ; k++){
+										for (int k = 1 ; k <= restMaxPages ; k++) {
+											if ((k == 1) && (rest_pgnum != 1) ) { // make sure current page isn't first page (otherwise we don't show Prev. button)
+									%>
+											<li class="page-item"><a  id=<%="rest-page-alt-prev"%> class="page-link" href=<%="/ImHungry/SearchPageController?action=search&term=" + term + "&token=" + token + "&limit=" + lim + "&radius=" + rad + "&rest_page=" + (rest_pgnum - 1) + "&reci_page=" + reci_pgnum %>>Previous</a></li>
+									<%
+											}
 											if (rest_pgnum == k) {
 									%>
 											<li class="page-item active" aria-current="page">
@@ -306,6 +311,11 @@
 											} else {
 									%>
 											<li class="page-item"><a id=<%="rest-page-alt"+k%> class="page-link" href=<%="/ImHungry/SearchPageController?action=search&term=" + term + "&token=" + token + "&limit=" + lim + "&radius=" + rad + "&rest_page=" + k + "&reci_page=" + reci_pgnum %>><%= k %></a></li>
+									<%
+											}
+											if ((k == restMaxPages) && (rest_pgnum != restMaxPages)) { // make sure current page isn't last page (otherwise we don't show Next button)
+									%>
+											<li class="page-item"><a  id=<%="rest-page-alt-next"%> class="page-link" href=<%="/ImHungry/SearchPageController?action=search&term=" + term + "&token=" + token + "&limit=" + lim + "&radius=" + rad + "&rest_page=" + (rest_pgnum + 1) + "&reci_page=" + reci_pgnum %>>Next</a></li>
 									<%
 											}
 									   }
@@ -373,6 +383,11 @@
 									<% 
 										int reciMaxPages = rm.getNumberOfRecipes() / 5;
 										for (int k = 1 ; k <= reciMaxPages ; k++){
+											if ((k == 1) && (reci_pgnum != 1) ) { // make sure current page isn't first page (otherwise we don't show Prev. button)
+									%>
+											<li class="page-item"><a id=<%="reci-page-alt-prev"%> class="page-link" href=<%="/ImHungry/SearchPageController?action=search&term=" + term + "&token=" + token + "&limit=" + lim + "&radius=" + rad + "&rest_page=" + rest_pgnum + "&reci_page=" + (reci_pgnum - 1) %>>Previous</a></li>
+									<%
+											}
 											if (reci_pgnum == k) {
 									%>
 											<li class="page-item active" aria-current="page">
@@ -382,6 +397,11 @@
 											} else {
 									%>
 											<li class="page-item"><a id=<%="reci-page-alt"+k%> class="page-link" href=<%="/ImHungry/SearchPageController?action=search&term=" + term + "&token=" + token + "&limit=" + lim + "&radius=" + rad + "&rest_page=" + rest_pgnum + "&reci_page=" + k %>><%= k %></a></li>
+									<%
+											}
+											if ((k == reciMaxPages) && (reci_pgnum != reciMaxPages)) { // make sure current page isn't last page (otherwise we don't show Next button)
+									%>
+											<li class="page-item"><a id=<%="reci-page-alt-next"%> class="page-link" href=<%="/ImHungry/SearchPageController?action=search&term=" + term + "&token=" + token + "&limit=" + lim + "&radius=" + rad + "&rest_page=" + rest_pgnum + "&reci_page=" + (reci_pgnum + 1) %>>Next</a></li>
 									<%
 											}
 									   }

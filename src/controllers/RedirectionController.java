@@ -53,9 +53,6 @@ public class RedirectionController extends HttpServlet {
 			int itemint = Integer.parseInt(item);
 			int indexint = Integer.parseInt(index);
 			try {
-				System.out.println("ingredident index " + ingredientindex);
-				System.out.println("item index"+ item);
-				System.out.println("userid " + userid);
 				responses.get(indexint).addToGroceryList(itemint, userid, ingredientindex);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

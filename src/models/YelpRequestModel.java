@@ -239,4 +239,15 @@ public abstract class YelpRequestModel implements ApiCallInterface<RestaurantMod
 		
 		return listItems.get(i).getFormattedFieldsForResultsPage();
 	}
+
+	public boolean setGroceryListResult(int i, boolean value) {
+		//NOT USED
+		return false;
+	}
+
+	@Override
+	public List<IngredientModel> getIngredients(int i) {
+		// NOT USED
+		return null;
+	}
 }

@@ -16,6 +16,7 @@ public class ListItemModel {
 	private boolean inDoNotShow;
 	
 	private int order;
+	private boolean inGrocerylist;
 	
 	public ListItemModel() {
 		inFavorites = false;
@@ -57,5 +58,11 @@ public class ListItemModel {
 			this.inFavorites = false;
 			this.inToExplore = false;
 		}
+	}
+	public boolean isinGrocerylist() {
+		return inGrocerylist;
+	}
+	public void setGroceryList(boolean inGrocerylist) {
+		this.inGrocerylist = inGrocerylist;
 	}
 }

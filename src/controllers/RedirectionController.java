@@ -42,8 +42,23 @@ public class RedirectionController extends HttpServlet {
 		
 
 		request.setAttribute("term", term);
+		System.out.println("whehehehreh "+ action);
 		if(action == null || action.isEmpty() || index == null || index.isEmpty()) {
 			dispatch = request.getRequestDispatcher("SearchPageView.jsp");
+		} else if (action.equals("addtogrocery")) {
+			String ingredientindex = request.getParameter("ingredientindex");
+			int userid = tokens.get(token);
+			String item = request.getParameter("item");
+			System.out.println("item "+item);
+			int itemint = Integer.parseInt(item);
+			int indexint = Integer.parseInt(index);
+			try {
+				responses.get(indexint).addToGroceryList(itemint, userid, ingredientindex);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		} else if(action.equals("managelist")) { //If it is redirecting to the manage list page, set the attributes accordingly
 			System.out.println("managing list section");
 			String list = request.getParameter("list");
@@ -78,6 +93,8 @@ public class RedirectionController extends HttpServlet {
 			int itemInt = Integer.parseInt(item);
 			request.setAttribute("item", itemInt);
 			request.setAttribute("token", token);
+			String reci_page = request.getParameter("reci_page");
+			request.setAttribute("reci_page", reci_page);
 			request.setAttribute("response", responses.get(indexInt).getFormattedDetailedRecipeAt(itemInt));
 			
 		} else if(action.equals("restaurant")) { //If it is redirecting to the restaurant page,  set the attributes accordingly
@@ -142,6 +159,7 @@ public class RedirectionController extends HttpServlet {
 			String type = request.getParameter("type");
 			
 			responses.get(indexInt).addToList(itemInt, list, type, true);
+
 		} else if(action.equals("removefromlist")) { // If the removefromlist button is clicked, update database
 			int indexInt = Integer.parseInt(index);
 			String item = request.getParameter("item");
@@ -150,7 +168,8 @@ public class RedirectionController extends HttpServlet {
 			String list = request.getParameter("list");
 			String type = request.getParameter("type");
 			responses.get(indexInt).addToList(itemInt, list, type, false);
-		}
+
+		} 
 		if (dispatch != null) {
 			dispatch.forward(request, response);	
 		}

@@ -1,5 +1,6 @@
 package models;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,9 +22,13 @@ public interface ApiCallInterface<T> {
 	public boolean setFavoriteResult(int i, boolean value);
 	public boolean setToExploreResult(int i , boolean value);
 	public boolean setDoNotShowResult(int i, boolean value);
+	public boolean setGroceryListResult(int i, boolean value);
 	
 	public int getListSize();
 	public Map<String, String> getFormattedResultsFieldsListAt(int i);
 	
 	public void sort();
+
+	public List<IngredientModel> getIngredients(int i);
+
 }

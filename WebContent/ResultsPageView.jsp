@@ -78,6 +78,9 @@
 		#table-outer-scroll {
 			overflow-x: scroll;
 		}
+		.result_cell {
+			height: 26vh;
+		}
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<title>Results Page - I'm Hungry</title>
@@ -238,7 +241,7 @@
                                 	<%
                     				System.out.println("restaurant page number=" + rest_pgnum);
 		                    		int rest_upperbound = 0;
-                    				System.out.println("number of restaurants" + rm.getNumberOfRestaurants());
+                    				System.out.println("number of restaurants " + rm.getNumberOfRestaurants());
 		                            if ((5 * (rest_pgnum - 1) + 5) < rm.getNumberOfRestaurants()) {
 		                            	rest_upperbound = (5 * (rest_pgnum - 1) + 5);
 		                            } else {
@@ -264,20 +267,22 @@
                                     <tr onclick=<%="redirectToRestaurant(\"" + "/ImHungry/RedirectionController?action=restaurant&term="+term +"&index=" + 
                                     index + "&item=" + i + "&token=" +token + "\")"%>>
                                         <td class="col">
+                                        	<div class="result_cell">
                                             <table class="table text-white">
                                                 <tbody>
                                                     <tr style="background-color: inherit;">
-                                                        <td><%=resultsFields.get("name")%></td>
-                                                        <td><%=resultsFields.get("stars")%></td>
+                                                        <td style="width: 10vw; max-height: 3vh; min-height: 2vh"><%=resultsFields.get("name")%></td>
+                                                        <td style="max-height: 3vh"><%=resultsFields.get("stars")%></td>
                                                     </tr>
                                                     <tr style="background-color: inherit;">
-                                                        <td><%=resultsFields.get("drivingTime")%></td>
-                                                        <td><%=resultsFields.get("address")%></td>
+                                                        <td style="min-width: 7vw"><%=resultsFields.get("drivingTime")%></td>
+                                                        <td style="min-width: 12vw; max-height: 3vh"><%=resultsFields.get("address")%></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
+                                            </div>
                                         </td>
-                                        <td class="col"><%=resultsFields.get("priceRange")%></td>
+                                        <td class="col"><div class="result_cell"><%=resultsFields.get("priceRange")%></div></td>
                                     </tr>
                                     
                                     <%
@@ -290,8 +295,13 @@
 					 			<nav aria-label="Restaurant pagination">
 									<ul class="pagination pagination-lg justify-content-center">
 									<% 
-										int restMaxPages = Math.max(rm.getNumberOfRecipes() / 5, rm.getNumberOfRestaurants() / 5);
-										for (int k = 1 ; k <= restMaxPages ; k++){
+										int restMaxPages = rm.getNumberOfRestaurants() / 5;
+										for (int k = 1 ; k <= restMaxPages ; k++) {
+											if ((k == 1) && (rest_pgnum != 1) ) { // make sure current page isn't first page (otherwise we don't show Prev. button)
+									%>
+											<li class="page-item"><a  id=<%="rest-page-alt-prev"%> class="page-link" href=<%="/ImHungry/SearchPageController?action=search&term=" + term + "&token=" + token + "&limit=" + lim + "&radius=" + rad + "&rest_page=" + (rest_pgnum - 1) + "&reci_page=" + reci_pgnum %>>Previous</a></li>
+									<%
+											}
 											if (rest_pgnum == k) {
 									%>
 											<li class="page-item active" aria-current="page">
@@ -301,6 +311,11 @@
 											} else {
 									%>
 											<li class="page-item"><a id=<%="rest-page-alt"+k%> class="page-link" href=<%="/ImHungry/SearchPageController?action=search&term=" + term + "&token=" + token + "&limit=" + lim + "&radius=" + rad + "&rest_page=" + k + "&reci_page=" + reci_pgnum %>><%= k %></a></li>
+									<%
+											}
+											if ((k == restMaxPages) && (rest_pgnum != restMaxPages)) { // make sure current page isn't last page (otherwise we don't show Next button)
+									%>
+											<li class="page-item"><a  id=<%="rest-page-alt-next"%> class="page-link" href=<%="/ImHungry/SearchPageController?action=search&term=" + term + "&token=" + token + "&limit=" + lim + "&radius=" + rad + "&rest_page=" + (rest_pgnum + 1) + "&reci_page=" + reci_pgnum %>>Next</a></li>
 									<%
 											}
 									   }
@@ -322,6 +337,7 @@
                                 String ecodedValue = URLEncoder.encode(term, "UTF-8");
                                 int reci_upperbound = 0;
                             	System.out.println("recipe page number=" + reci_pgnum);
+                            	System.out.println("number of recipes " + rm.getNumberOfRecipes());
                                 if ((5 * (reci_pgnum - 1) + 5) < rm.getNumberOfRecipes()) {
                                 	reci_upperbound = (5 * (reci_pgnum - 1) + 5);
                                 } else {
@@ -335,22 +351,23 @@
 										continue;
 									}
 								%>
-                                    <tr onclick=<%="redirectToRecipe(\"" + "/ImHungry/RedirectionController?action=recipe&term="+ecodedValue +
+                                    <tr onclick=<%="redirectToRecipe(\"" + "/ImHungry/RedirectionController?action=recipe&term="+ecodedValue + "&reci_page="+ reci_pgnum+
                                     "&index=" + index + "&item=" + i + "&token=" +token + "\")"%>>
-                              
                                         <td class="col">
+                                        	<div class="result_cell">
                                             <table class="table text-white">
                                                 <tbody>
                                                     <tr style="background-color: inherit;">
-                                                        <td><%=resultsFields.get("name")%></td>
+                                                        <td style="width: 12vw; max-height: 3vh"><%=resultsFields.get("name")%></td>
                                                         <td><%=resultsFields.get("stars")%></td>
                                                     </tr>
                                                     <tr style="background-color: inherit;">
-                                                        <td>Prep: <%=resultsFields.get("prepTime") + " minutes"%></td>
+                                                        <td style="min-width: 8vw; max-height: 4vh">Prep: <%=resultsFields.get("prepTime") + " minutes"%></td>
                                                         <td>Cook: <%=resultsFields.get("cookTime") + " minutes"%></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
+                                            </div>
                                         </td>
                                     </tr>
                                     
@@ -364,8 +381,13 @@
 					 			<nav aria-label="Recipe pagination">
 									<ul class="pagination pagination-lg justify-content-center">
 									<% 
-										int reciMaxPages = Math.max(rm.getNumberOfRecipes() / 5, rm.getNumberOfRestaurants() / 5);
+										int reciMaxPages = rm.getNumberOfRecipes() / 5;
 										for (int k = 1 ; k <= reciMaxPages ; k++){
+											if ((k == 1) && (reci_pgnum != 1) ) { // make sure current page isn't first page (otherwise we don't show Prev. button)
+									%>
+											<li class="page-item"><a id=<%="reci-page-alt-prev"%> class="page-link" href=<%="/ImHungry/SearchPageController?action=search&term=" + term + "&token=" + token + "&limit=" + lim + "&radius=" + rad + "&rest_page=" + rest_pgnum + "&reci_page=" + (reci_pgnum - 1) %>>Previous</a></li>
+									<%
+											}
 											if (reci_pgnum == k) {
 									%>
 											<li class="page-item active" aria-current="page">
@@ -375,6 +397,11 @@
 											} else {
 									%>
 											<li class="page-item"><a id=<%="reci-page-alt"+k%> class="page-link" href=<%="/ImHungry/SearchPageController?action=search&term=" + term + "&token=" + token + "&limit=" + lim + "&radius=" + rad + "&rest_page=" + rest_pgnum + "&reci_page=" + k %>><%= k %></a></li>
+									<%
+											}
+											if ((k == reciMaxPages) && (reci_pgnum != reciMaxPages)) { // make sure current page isn't last page (otherwise we don't show Next button)
+									%>
+											<li class="page-item"><a id=<%="reci-page-alt-next"%> class="page-link" href=<%="/ImHungry/SearchPageController?action=search&term=" + term + "&token=" + token + "&limit=" + lim + "&radius=" + rad + "&rest_page=" + rest_pgnum + "&reci_page=" + (reci_pgnum + 1) %>>Next</a></li>
 									<%
 											}
 									   }
@@ -407,7 +434,7 @@
 		                       <input class="btn btn-secondary" onclick=<%="redirectManageList("+ index +")"%> type="button" value="Manage Lists"/>
 		                   </li>
                             <li class="nav-item mb-3">
-                                <a class="btn btn-secondary" onclick=<%="redirectToRecipe(\"" + "/ImHungry/ResultsPageController?action=search&term="+ term +"&index=" + index +  "&token=" + token + "\")"%>>Return to Search</a>
+                                <a class="btn btn-secondary" onclick=<%="redirectToRecipe(\"" + "/ImHungry/ResultsPageController?action=search&term="+ term +"&reci_page="+ reci_pgnum+ "&index=" + index +  "&token=" + token + "\")"%>>Return to Search</a>
                             </li>
                             <li class="nav-item">
                                 <a id="signOutLink" class="btn btn-secondary" onclick=<%="redirectToRecipe(\"" + "/ImHungry/SignInView.jsp\")"%>>Sign Out</a>

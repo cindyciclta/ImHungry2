@@ -2,17 +2,25 @@ package models;
 
 import java.util.*;
 
+import com.google.gson.annotations.Expose;
+
 /**
  * Stores recipe information
  */
 public class RecipeModel extends ListItemModel implements Comparable<RecipeModel>{
-	
+	@Expose
 	private String name; // Deviation from plan
+	@Expose
 	private String imageURL;
+	@Expose
 	private List<IngredientModel> ingredients;
+	@Expose
 	private java.util.List<String> instructions;
+	@Expose
 	private int cookTime;
+	@Expose
 	private int prepTime;
+	@Expose
 	private int stars; // Deviation
 	
 	public RecipeModel(){
@@ -20,6 +28,9 @@ public class RecipeModel extends ListItemModel implements Comparable<RecipeModel
 		instructions = new ArrayList<>();
 	}
 	
+	public List<IngredientModel> getIngredients () {
+		return ingredients;
+	}
 	public boolean setName(String name) {
 		if(name == null) {
 			return false;
@@ -153,4 +164,5 @@ public class RecipeModel extends ListItemModel implements Comparable<RecipeModel
 		}
 		return 1;
 	}
+	
 }

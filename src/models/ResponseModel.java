@@ -1,5 +1,6 @@
 package models;
 
+import java.util.List;
 import java.util.Map;
 
 public class ResponseModel {
@@ -151,9 +152,21 @@ public class ResponseModel {
 				return recipes.setDoNotShowResult(i, value);
 			} else if(list.equals("favorites")) {
 				return recipes.setFavoriteResult(i, value);
-			} else {
+			} else if(list.equals("toexplore")){
 				return recipes.setToExploreResult(i, value);
 			}
 		}
+		return true;
+	}
+	public boolean addToGroceryList(int i, int userid, String ingredientindex) throws Exception {
+		
+		List<IngredientModel> list = recipes.getIngredients(i);
+		int k = Integer.parseInt(ingredientindex);
+		IngredientModel ingredient = list.get(k);
+		System.out.println(ingredient.getIngredientName());
+		//add to database
+		DatabaseModel.InsertIntoGroceryList(userid, ingredient.getIngredientName());
+
+		return true;
 	}
 }

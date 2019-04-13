@@ -143,7 +143,8 @@ public class ResponseModel {
 		return true;
 	}
 	public boolean addToGroceryList(int i, int userid, String ingredientindex) throws Exception {
-		List<IngredientModel> list = recipes.getIngredients(i - 1);
+		
+		List<IngredientModel> list = recipes.getIngredients(i);
 		int k = Integer.parseInt(ingredientindex);
 		IngredientModel ingredient = list.get(k);
 		System.out.println(ingredient.getIngredientName());

@@ -15,7 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class DatabaseModel {
-	static final String SQL_PASSWORD = "root"; // SET YOUR MYSQL PASSWORD HERE TO GET DATABASE WORKING!!!!!!!
+	static final String SQL_PASSWORD = "NewPassword"; // SET YOUR MYSQL PASSWORD HERE TO GET DATABASE WORKING!!!!!!!
 	
 	public static int signInUser(String username, char[] password) throws Exception {
 		
@@ -517,8 +517,7 @@ public class DatabaseModel {
     	conn.close();
 		return rowCount;
 	}
-	
-	
+
 	
 	
 }

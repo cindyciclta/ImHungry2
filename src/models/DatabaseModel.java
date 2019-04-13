@@ -278,6 +278,7 @@ public class DatabaseModel {
 	public static boolean insertRestaurant(RestaurantModel restaurant, int searchId) throws Exception{
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		String json = gson.toJson(restaurant);
+		System.out.println(json);
 		String sql = "INSERT INTO restaurants (search_id, json_string) VALUES (?, ?)";
 		Connection conn = getConnection();
 		PreparedStatement ps = conn.prepareStatement(sql);
@@ -293,7 +294,9 @@ public class DatabaseModel {
 	
 	public static boolean insertRecipe(RecipeModel recipe, int searchId) throws Exception{
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		System.out.println("testing recipe " + recipe.getIngredients().size());
 		String json = gson.toJson(recipe);
+		System.out.println(json);
 		String sql = "INSERT INTO recipes (search_id, json_string) VALUES (?, ?)";
 		Connection conn = getConnection();
 		PreparedStatement ps = conn.prepareStatement(sql);

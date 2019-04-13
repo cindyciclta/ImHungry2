@@ -340,7 +340,7 @@
 										continue;
 									}
 								%>
-                                    <tr onclick=<%="redirectToRecipe(\"" + "/ImHungry/RedirectionController?action=recipe&term="+ecodedValue +
+                                    <tr onclick=<%="redirectToRecipe(\"" + "/ImHungry/RedirectionController?action=recipe&term="+ecodedValue + "&reci_page="+ reci_pgnum+
                                     "&index=" + index + "&item=" + i + "&token=" +token + "\")"%>>
                                         <td class="col">
                                         	<div class="result_cell">
@@ -413,7 +413,7 @@
 		                       <input class="btn btn-secondary" onclick=<%="redirectManageList("+ index +")"%> type="button" value="Manage Lists"/>
 		                   </li>
                             <li class="nav-item mb-3">
-                                <a class="btn btn-secondary" onclick=<%="redirectToRecipe(\"" + "/ImHungry/ResultsPageController?action=search&term="+ term +"&index=" + index +  "&token=" + token + "\")"%>>Return to Search</a>
+                                <a class="btn btn-secondary" onclick=<%="redirectToRecipe(\"" + "/ImHungry/ResultsPageController?action=search&term="+ term +"&reci_page="+ reci_pgnum+ "&index=" + index +  "&token=" + token + "\")"%>>Return to Search</a>
                             </li>
                             <li class="nav-item">
                                 <a id="signOutLink" class="btn btn-secondary" onclick=<%="redirectToRecipe(\"" + "/ImHungry/SignInView.jsp\")"%>>Sign Out</a>

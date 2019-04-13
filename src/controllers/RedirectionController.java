@@ -48,10 +48,15 @@ public class RedirectionController extends HttpServlet {
 		} else if (action.equals("addtogrocery")) {
 			String ingredientindex = request.getParameter("ingredientindex");
 			int userid = tokens.get(token);
-			int indexInt = Integer.parseInt(index);
-			System.out.println("woots_______" + ingredientindex);
+			String item = request.getParameter("item");
+			System.out.println("item "+item);
+			int itemint = Integer.parseInt(item);
+			int indexint = Integer.parseInt(index);
 			try {
-				responses.get(indexInt).addToGroceryList(indexInt, userid, ingredientindex);
+				System.out.println("ingredident index " + ingredientindex);
+				System.out.println("item index"+ item);
+				System.out.println("userid " + userid);
+				responses.get(indexint).addToGroceryList(itemint, userid, ingredientindex);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -91,6 +96,8 @@ public class RedirectionController extends HttpServlet {
 			int itemInt = Integer.parseInt(item);
 			request.setAttribute("item", itemInt);
 			request.setAttribute("token", token);
+			String reci_page = request.getParameter("reci_page");
+			request.setAttribute("reci_page", reci_page);
 			request.setAttribute("response", responses.get(indexInt).getFormattedDetailedRecipeAt(itemInt));
 			
 		} else if(action.equals("restaurant")) { //If it is redirecting to the restaurant page,  set the attributes accordingly

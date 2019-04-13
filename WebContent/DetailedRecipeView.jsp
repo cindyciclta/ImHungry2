@@ -112,14 +112,14 @@
 			}
 		}
 		
-		function addToGroceryList(num, index) {
+		function addToGroceryList(num, index, item) {
 
 			alert(num);
 			var xhr = new XMLHttpRequest();
 			var searchterm = "<%= term%>";
 			var token = "<%= token%>";
 			var trimmed = searchterm.replace(" ", "_");
-			xhr.open("GET", "/ImHungry/RedirectionController?action=addtogrocery&ingredientindex="+num+"&term="+ trimmed +"&index=" + index +"&token=" + token, true);
+			xhr.open("GET", "/ImHungry/RedirectionController?action=addtogrocery&ingredientindex="+num+"&term="+ trimmed +"&item="+ item+"&index=" + index +"&token=" + token, true);
 			xhr.send();
 			alert("woto");
 		}
@@ -129,6 +129,7 @@
 	Map<String, String> fields = ((Map<String, String>)request.getAttribute("response"));
 	int index = (int)request.getAttribute("index");
 	int item = (int)request.getAttribute("item");
+	String reci_page = (String)request.getAttribute("reci_page");
 	String link = fields.get("imageUrl");
 	%>
 	<div id="wrapper" class="container">
@@ -182,7 +183,7 @@
 			        							
 			        							</li>
 
-												<button type="button" id= "addtogrocery" onclick=<%= "addToGroceryList("+ count +","+index+")" %> >Add To Grocery List</button>
+												<button type="button" id= "addtogrocery" onclick=<%= "addToGroceryList("+ count +","+index+","+ item+")" %> >Add To Grocery List</button>
         									</td>
 										
 										<%

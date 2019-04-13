@@ -34,11 +34,12 @@ public class MockRecipeRequestModel extends EdamamRequestModel{
 	public ResponseCodeModel completeTask() {
  		ResponseCodeModel responseResult = ResponseCodeModel.OK;
  		List<RecipeModel> result = ExistRequest(term, limit);
-		if (result.size() > 0) {
-			System.out.println("Using cached recipes");
-	 		this.results = result;
-			return responseResult;
-		}else {
+ 		System.out.println("FOUND BUG: CACHED RECIPES NOT WORKING - (CINDY). WILL FIX LATER");
+//		if (result.size() > 0) {
+//			System.out.println("Using cached recipes");
+//	 		this.results = result;
+//			return responseResult;
+//		}else {
 			super.checkParameters(term, limit);
 			responseResult = super.completeTask();
 			this.results = super.getResults();
@@ -53,7 +54,7 @@ public class MockRecipeRequestModel extends EdamamRequestModel{
 			}catch(Exception e) {
 				
 			}
-		}
+//		}
 		
 		
 		return responseResult;

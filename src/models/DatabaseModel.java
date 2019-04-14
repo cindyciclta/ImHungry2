@@ -651,6 +651,7 @@ public class DatabaseModel {
     		preparedStmt.setString(1, name);
         	preparedStmt.setInt(2, item_id);
         	preparedStmt.setInt(3, userId);
+        	preparedStmt.executeUpdate();
         	
         	// TODO: Update place on move
         	if(!name.equals(exists.getString("name"))) {

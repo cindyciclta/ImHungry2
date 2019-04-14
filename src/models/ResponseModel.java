@@ -146,54 +146,57 @@ public class ResponseModel {
 			if(searchId == -1) {
 				searchId = DatabaseModel.AddSearchTermToHistory(userId, term, limit, radius);
 			}else {
-				int idTemp = DatabaseModel.AddSearchTermToHistory(userId, term, limit, radius);
+				DatabaseModel.AddSearchTermToHistory(userId, term, limit, radius);
 			}
 			
 			MockRecipeRequestModel edamam = new MockRecipeRequestModel(searchId);
 			response = edamam.checkParameters(term, limit);
-			ResponseCodeModel responseCode = edamam.completeTask();
+			edamam.completeTask();
 			this.recipes = edamam;
 			
 			MockYelpRequestModel yelp = new MockYelpRequestModel(searchId);
 			response = yelp.checkParameters(term, limit,radius);
-			responseCode = yelp.completeTask();
+			yelp.completeTask();
 			this.restaurants = yelp;
 			
 		}catch(Exception e) {
 			
+			e.printStackTrace();
 		}
 		
-		// TODO: add the google images API here
 		return response;
 	}
 	
 	public boolean addToList(int i, String list, String type, boolean value) {
 		boolean ret = true;
-		if(type.equals("restaurant")) {
-			if(list.equals(ListTypeEnum.DONOTSHOW.type)) {
-				ret = restaurants.setDoNotShowResult(i, value);
-			} else if(list.equals(ListTypeEnum.FAVORITES.type)) {
-				ret = restaurants.setFavoriteResult(i, value);
-			} else {
-				ret = restaurants.setToExploreResult(i, value);
-			}
-		}else {
-			if(list.equals(ListTypeEnum.DONOTSHOW.type)) {
-				ret = recipes.setDoNotShowResult(i, value);
-			} else if(list.equals(ListTypeEnum.FAVORITES.type)) {
-				ret = recipes.setFavoriteResult(i, value);
-			} else{
-				ret = recipes.setToExploreResult(i, value);
-			}
-		}
+		
 		try {
+			
 			if(i < 0) {
 				throw new Exception();
 			}
+			if(type.equals("restaurant")) {
+				if(list.equals(ListTypeEnum.DONOTSHOW.type)) {
+					ret = restaurants.setDoNotShowResult(i, value);
+				} else if(list.equals(ListTypeEnum.FAVORITES.type)) {
+					ret = restaurants.setFavoriteResult(i, value);
+				} else {
+					ret = restaurants.setToExploreResult(i, value);
+				}
+			}else {
+				if(list.equals(ListTypeEnum.DONOTSHOW.type)) {
+					ret = recipes.setDoNotShowResult(i, value);
+				} else if(list.equals(ListTypeEnum.FAVORITES.type)) {
+					ret = recipes.setFavoriteResult(i, value);
+				} else{
+					ret = recipes.setToExploreResult(i, value);
+				}
+			}
+			
 			recipes.recreateList();
 			restaurants.recreateList();
 		}catch(Exception e) {
-			
+			e.printStackTrace();
 		}
 		return ret;
 	}
@@ -217,7 +220,7 @@ public class ResponseModel {
 			}
 			groceryList = DatabaseModel.getGroceryListFromUser(userId);
 		}catch(Exception e) {
-			
+			e.printStackTrace();
 		}
 		return groceryList;
 	}
@@ -238,26 +241,25 @@ public class ResponseModel {
 			DatabaseModel.deleteFromGroceryList(userId, groceryItem);
 			return true;
 		}catch(Exception e) {
-			
+			e.printStackTrace();
 		}
 		return false;
 	}
 	
 	public boolean moveUpDownList(int i, String list, String type, int oldPlace, int newPlace ) {
-		if(type.equals("restaurant")) {
-			restaurants.moveUpDownList(i, oldPlace, newPlace, list);
-		}else {
-			recipes.moveUpDownList(i, oldPlace, newPlace, list);
-		}
-		
 		try {
 			if(i < 0) {
 				throw new Exception();
 			}
+			if(type.equals("restaurant")) {
+				restaurants.moveUpDownList(i, oldPlace, newPlace, list);
+			}else {
+				recipes.moveUpDownList(i, oldPlace, newPlace, list);
+			}
 			recipes.recreateList();
 			restaurants.recreateList();
 		}catch(Exception e) {
-			
+			e.printStackTrace();
 		}
 	
 		return true;

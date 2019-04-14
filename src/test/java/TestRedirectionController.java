@@ -141,6 +141,36 @@ public class TestRedirectionController extends Mockito{
     }
 	
 	@Test
+    public void testManageGroceryList() throws Exception {
+        when(request.getParameter("action")).thenReturn( "managegrocerylist" );
+        when(request.getParameter("index")).thenReturn( "0" );
+        when(request.getParameter("token")).thenReturn( "fakeToken" );
+        when(request.getRequestDispatcher("GroceryListView.jsp")).thenReturn(rd);
+        new RedirectionController().service(request, response);
+        verify(rd).forward(request, response);
+    }
+	
+	@Test
+    public void testDeleteGroceryList() throws Exception {
+        when(request.getParameter("action")).thenReturn( "deletegrocery" );
+        when(request.getParameter("index")).thenReturn( "0" );
+        when(request.getParameter("token")).thenReturn( "fakeToken" );
+        when(request.getParameter("item")).thenReturn( "chicken" );
+        new RedirectionController().service(request, response);
+    }
+	
+	@Test
+    public void testDeleteGroceryListNotCorrectAction() throws Exception {
+        when(request.getParameter("action")).thenReturn( "deletegsdfsdrocery" );
+        when(request.getParameter("index")).thenReturn( "0" );
+        when(request.getParameter("token")).thenReturn( "fakeToken" );
+        when(request.getParameter("item")).thenReturn( "chicken" );
+        new RedirectionController().service(request, response);
+    }
+	
+	
+	
+	@Test
     public void testRecipes() throws Exception {
         when(request.getParameter("action")).thenReturn( "recipe" );
         when(request.getParameter("index")).thenReturn( "1" );
@@ -202,6 +232,17 @@ public class TestRedirectionController extends Mockito{
 	@Test
     public void testAddToList() throws Exception {
         when(request.getParameter("action")).thenReturn( "addtolist" );
+        when(request.getParameter("index")).thenReturn( "1" );
+        when(request.getParameter("item")).thenReturn( "0" );
+        when(request.getParameter("list")).thenReturn( ListTypeEnum.DONOTSHOW.type );
+        when(request.getParameter("type")).thenReturn( "restaurant" );
+        when(request.getParameter("term")).thenReturn( "chicken" );
+        new RedirectionController().service(request, response);
+    }
+	
+	@Test
+    public void testAddToListMoveList() throws Exception {
+        when(request.getParameter("action")).thenReturn( "movetolist" );
         when(request.getParameter("index")).thenReturn( "1" );
         when(request.getParameter("item")).thenReturn( "0" );
         when(request.getParameter("list")).thenReturn( ListTypeEnum.DONOTSHOW.type );

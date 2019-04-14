@@ -172,7 +172,8 @@ public class RedirectionController extends HttpServlet {
 			String type = request.getParameter("type");
 			responses.get(indexInt).addToList(itemInt, list, type, false);
 
-		}else if(action.equals("moveplaceinlist")) {
+		}else if(action.equals("moveplaceinlist")){
+			
 			int indexInt = Integer.parseInt(index);
 			String item = request.getParameter("item");
 			int itemInt = Integer.parseInt(item);
@@ -181,6 +182,7 @@ public class RedirectionController extends HttpServlet {
 			String type = request.getParameter("type");
 			int oldPlace = Integer.parseInt(request.getParameter("oldplace"));
 			int newPlace = Integer.parseInt(request.getParameter("newplace"));
+			System.out.println(oldPlace + " " + newPlace);
 			responses.get(indexInt).moveUpDownList(itemInt, list, type, oldPlace, newPlace);
 		}else if(action.contentEquals("managegrocerylist")) {
 			dispatch = request.getRequestDispatcher("GroceryListView.jsp");

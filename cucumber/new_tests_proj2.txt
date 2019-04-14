@@ -56,9 +56,9 @@ LIST PERSISTENCE:
 		Test that persistent list item in to-explore list can be clicked on to view info page
 		Test that list item stays removed from persistent to-explore list after signing out and back in
 	DO NOT SHOW scenario:
-TODO	Test that list item remains in do-not-show list after signing out and back in
-TODO	Test that persistent list item in do-not-show list continues to be filtered out from search results
-TODO	Test that persistent list item in do-not-show can be clicked on to view info page
-TODO	Test that list item stays removed from persistent do-not-show list after signing out and back in
+		Test that list item remains in do-not-show list after signing out and back in
+		Test that persistent list item in do-not-show list continues to be filtered out from search results
+		Test that persistent list item in do-not-show can be clicked on to view info page
+		Test that list item stays removed from persistent do-not-show list after signing out and back in
 
 TODO list reordering and grocery list testing

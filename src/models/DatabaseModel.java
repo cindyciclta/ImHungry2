@@ -734,13 +734,12 @@ public class DatabaseModel {
     		if(rs.getInt("place") > oldPlace) {
     			int place = rs.getInt("place") - 1;
     			
-    			String update = "UPDATE places SET place=(?) where user_id=(?) and name=(?) and item_id=(?) and restaurant_or_recipe=(?)";
+    			String update = "UPDATE places SET place=(?) where user_id=(?) and name=(?) and item_id=(?)";
     			preparedStmt = conn.prepareStatement(update);
     			preparedStmt.setInt(1, place);
     	    	preparedStmt.setInt(2, userId);
     	    	preparedStmt.setString(3, oldName);
     	    	preparedStmt.setInt(4, rs.getInt("item_id"));
-    	    	preparedStmt.setString(5, restaurant);
     	    	preparedStmt.executeUpdate();
     		}
     	}
@@ -842,12 +841,11 @@ public class DatabaseModel {
 		int userId = getUserIdFromSearchId(searchId);
 		boolean ret = true;
 		
-		String query = "SELECT * from places where user_id=(?) and name=(?) and restaurant_or_recipe=(?)";
+		String query = "SELECT * from places where user_id=(?) and name=(?)";
 		Connection conn = getConnection();
 		PreparedStatement preparedStmt = conn.prepareStatement(query);
 		preparedStmt.setInt(1, userId);
     	preparedStmt.setString(2, name);
-    	preparedStmt.setString(3, restaurant);
     	ResultSet rs = preparedStmt.executeQuery();
 		
 		// Move Up
@@ -856,13 +854,12 @@ public class DatabaseModel {
 			while(rs.next()) {
 				int place = rs.getInt("place");
 				if(place < oldPlace && place >= newPlace) {
-					query = "UPDATE places set place = (?) where item_id = (?) and name = (?) and user_id = (?) and restaurant_or_recipe = (?)";
+					query = "UPDATE places set place = (?) where item_id = (?) and name = (?) and user_id = (?)";
 					preparedStmt = conn.prepareStatement(query);
 					preparedStmt.setInt(1, place+1);
 					preparedStmt.setInt(2, rs.getInt("item_id"));
 			    	preparedStmt.setString(3, name);
 			    	preparedStmt.setInt(4, userId);
-			    	preparedStmt.setString(5, restaurant);
 			    	preparedStmt.executeUpdate();
 				}
 			}
@@ -872,13 +869,12 @@ public class DatabaseModel {
 			while(rs.next()) {
 				int place = rs.getInt("place");
 				if(place > oldPlace && place <= newPlace) {
-					query = "UPDATE places set place = (?) where item_id = (?) and name = (?) and user_id = (?) and restaurant_or_recipe = (?)";
+					query = "UPDATE places set place = (?) where item_id = (?) and name = (?) and user_id = (?)";
 					preparedStmt = conn.prepareStatement(query);
 					preparedStmt.setInt(1, place-1);
 					preparedStmt.setInt(2, rs.getInt("item_id"));
 			    	preparedStmt.setString(3, name);
 			    	preparedStmt.setInt(4, userId);
-			    	preparedStmt.setString(5, restaurant);
 			    	preparedStmt.executeUpdate();
 				}
 			}

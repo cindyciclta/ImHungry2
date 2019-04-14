@@ -243,15 +243,14 @@
 		                       </div>
 		                   </li>
 		                   <li class="nav-item">
-		            
-		                       <input class="btn btn-secondary" onclick=<%="addToList("+ index + "," + item + "," + "\"recipe\"" + ")"%> type="button" value="Add to List">
+		                       <input id="add_to_list_btn" class="btn btn-secondary" onclick=<%="addToList("+ index + "," + item + "," + "\"recipe\"" + ")"%> type="button" value="Add to List">
 		                   </li>
 		                   <li class="nav-item my-3">
 		                       <a class="btn btn-secondary" onclick=<%="backToResults(\"" + "/ImHungry/RedirectionController?action=results&term="+term +"&index=" + index + "&token=" + token + "\")"%>>Back to Results</a>
 		                   </li>
 		                   <li class="nav-item">
                                 <a class="btn btn-secondary" onclick="printPage()">Printable Version</a>
-                            </li>
+                           </li>
 		               </ul>
 		           </div>
 		       	</div>

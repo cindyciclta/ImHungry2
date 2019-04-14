@@ -261,4 +261,9 @@ public abstract class YelpRequestModel implements ApiCallInterface<RestaurantMod
 		// NOT USED
 		return null;
 	}
+	
+	@Override
+	public void recreateList() throws Exception{
+		
+	}
 }

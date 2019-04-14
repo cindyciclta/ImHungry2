@@ -82,7 +82,6 @@
 		}
 		
 		function moveToList(index, item, type){
-			console.log("blah");
 			var e = document.getElementById("managelistselect");
 			list = e.options[e.selectedIndex].value;
 			if(list != ""){
@@ -101,6 +100,10 @@
 			var trimmed = term.replace(" ", "_");
 			xhr.open("GET", "/ImHungry/RedirectionController?action=removefromlist&term="+trimmed + "&index=" + index + "&list=" + originalList + "&item=" + item + "&type=" + type, true);
 			xhr.send();
+		}
+		
+		function moveUpDownList(index, oldIndex, newIndex, type){
+			
 		}
 		
 	</script>
@@ -148,7 +151,7 @@
 										
 										if(resultsFields.get("restaurant_or_recipe").equals("recipe")){
 									%>
-											<tr>
+											<tr id=<%="recipe-" + resultsFields.get("originalindex") %>>
 											  <td>
 								                <div class="container">
 								                    <div>
@@ -169,7 +172,7 @@
 				                                      <div class="h-100 row justify-content-center align-items-center">
 				                                          <table>
 				                                              <tbody>
-				                                                 <tr style="background-color:inherit" onclick=<%="redirectToRecipe(\"" + "/ImHungry/RedirectionController?action=recipe&term="+ecodedValue +"&index=" + index + "&item=" + i + "\")"%>>
+				                                                 <tr style="background-color:inherit" onclick=<%="redirectToRecipe(\"" + "/ImHungry/RedirectionController?action=recipe&term="+ecodedValue +"&index=" + index + "&item=" + resultsFields.get("originalindex") + "\")"%>>
 								                                    <td>
 									                                    <table class="table text-white">
 							                                                <tbody>
@@ -220,7 +223,7 @@
 									<%
 									}else{
 									 %>
-											 <tr>
+											 <tr id=<%="restaurant-" + resultsFields.get("originalindex") %>>
 											   <td>
 								                <div class="container">
 								                    <div class="movable-list-handle">
@@ -335,11 +338,27 @@
       
       <!-- Movable list reordering javascript -->
       <script type="text/javascript">
-      	console.log('reordering entered')
 		var list = document.getElementById('movable-list');
 		var sortable = Sortable.create(list, {
 			handle: '.movable-list-handle',
-			animation: 150
+			animation: 150,
+			onEnd: function (/**Event*/evt) {
+				var itemEl = evt.item;  // dragged HTMLElement
+				var itemId = itemEl.id;
+				var array = itemId.split("-");
+				var oldIndex = evt.oldIndex + 1;  // element's old index within old parent
+				var newIndex = evt.newIndex + 1;  // element's new index within new parent
+				var type = array[0];
+				var item = array[1];
+				console.log(item);
+				var list = <%="\"" + (String)request.getAttribute("list") + "\""%>;
+				var xhr = new XMLHttpRequest();
+				var term ="<%= term %>";
+				var index = <%=index%>;
+				var trimmed = term.replace(" ", "_");
+				xhr.open("GET", "/ImHungry/RedirectionController?action=moveplaceinlist&term="+trimmed + "&index=" + index + "&list=" + list + "&item=" + item + "&type=" + type +"&oldplace=" + oldIndex + "&newplace=" + newIndex);
+				xhr.send();
+			}
 		});
       </script>
 	

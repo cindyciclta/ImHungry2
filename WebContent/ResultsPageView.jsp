@@ -296,10 +296,29 @@
 									<ul class="pagination pagination-lg justify-content-center">
 									<% 
 										int restMaxPages = rm.getNumberOfRestaurants() / 5;
-										for (int k = 1 ; k <= restMaxPages ; k++) {
-											if ((k == 1) && (rest_pgnum != 1) ) { // make sure current page isn't first page (otherwise we don't show Prev. button)
+									
+										int rest_pg_lowerbound = 1;
+										int rest_pg_upperbound = restMaxPages;
+										
+										// handle pagination centering for Restaurant results
+										if (restMaxPages >= 5) {
+											rest_pg_lowerbound = Math.max(1, rest_pgnum - 2);
+											int rest_pg_lowerbound_diff = rest_pgnum - 1;
+											rest_pg_upperbound = Math.min(rest_pgnum + 2, restMaxPages);
+											int rest_pg_upperbound_diff = restMaxPages - rest_pgnum;
+											if (rest_pg_lowerbound_diff < 2) { // check if we need to extend upperbound (center is toward end)
+												rest_pg_upperbound = rest_pg_upperbound + (2 - rest_pg_lowerbound_diff);
+											}
+											if (rest_pg_upperbound_diff < 2) { // check if we need to lower lowerbound (center is toward beginning)
+												rest_pg_lowerbound = rest_pg_lowerbound - (2 - rest_pg_upperbound_diff);
+											}	
+										}
+										System.out.println("rest_pg_lowerbound = " + rest_pg_lowerbound);
+										System.out.println("rest_pg_upperbound = " + rest_pg_upperbound);
+										for (int k = rest_pg_lowerbound ; k <= rest_pg_upperbound ; k++) {
+											if ((k == rest_pg_lowerbound) && (rest_pgnum != 1) ) { // make sure current page isn't first page (otherwise we don't show Prev. button)
 									%>
-											<li class="page-item"><a  id=<%="rest-page-alt-prev"%> class="page-link" href=<%="/ImHungry/SearchPageController?action=search&term=" + term + "&token=" + token + "&limit=" + lim + "&radius=" + rad + "&rest_page=" + (rest_pgnum - 1) + "&reci_page=" + reci_pgnum %>>Previous</a></li>
+											<li class="page-item"><a  id=<%="rest-page-alt-prev"%> class="page-link" href=<%="/ImHungry/SearchPageController?action=search&term=" + term + "&token=" + token + "&limit=" + lim + "&radius=" + rad + "&rest_page=" + (rest_pgnum - 1) + "&reci_page=" + reci_pgnum%>>Previous</a></li>
 									<%
 											}
 											if (rest_pgnum == k) {
@@ -313,7 +332,7 @@
 											<li class="page-item"><a id=<%="rest-page-alt"+k%> class="page-link" href=<%="/ImHungry/SearchPageController?action=search&term=" + term + "&token=" + token + "&limit=" + lim + "&radius=" + rad + "&rest_page=" + k + "&reci_page=" + reci_pgnum %>><%= k %></a></li>
 									<%
 											}
-											if ((k == restMaxPages) && (rest_pgnum != restMaxPages)) { // make sure current page isn't last page (otherwise we don't show Next button)
+											if ((k == rest_pg_upperbound) && (rest_pgnum != restMaxPages)) { // make sure current page isn't last page (otherwise we don't show Next button)
 									%>
 											<li class="page-item"><a  id=<%="rest-page-alt-next"%> class="page-link" href=<%="/ImHungry/SearchPageController?action=search&term=" + term + "&token=" + token + "&limit=" + lim + "&radius=" + rad + "&rest_page=" + (rest_pgnum + 1) + "&reci_page=" + reci_pgnum %>>Next</a></li>
 									<%
@@ -382,8 +401,25 @@
 									<ul class="pagination pagination-lg justify-content-center">
 									<% 
 										int reciMaxPages = rm.getNumberOfRecipes() / 5;
-										for (int k = 1 ; k <= reciMaxPages ; k++){
-											if ((k == 1) && (reci_pgnum != 1) ) { // make sure current page isn't first page (otherwise we don't show Prev. button)
+									
+										int reci_pg_lowerbound = 1;
+										int reci_pg_upperbound = reciMaxPages;
+										
+										// handle pagination centering for Recipe results
+										if (reciMaxPages >= 5) {
+											reci_pg_lowerbound = Math.max(1, reci_pgnum - 2);
+											int reci_pg_lowerbound_diff = reci_pgnum - 1;
+											reci_pg_upperbound = Math.min(reci_pgnum + 2, reciMaxPages);
+											int reci_pg_upperbound_diff = reciMaxPages - reci_pgnum;
+											if (reci_pg_lowerbound_diff < 2) { // check if we need to extend upperbound (center is toward end)
+												reci_pg_upperbound = reci_pg_upperbound + (2 - reci_pg_lowerbound_diff);
+											}
+											if (reci_pg_upperbound_diff < 2) { // check if we need to lower lowerbound (center is toward beginning)
+												reci_pg_lowerbound = reci_pg_lowerbound - (2 - reci_pg_upperbound);
+											}	
+										}
+										for (int k = reci_pg_lowerbound; k <= reci_pg_upperbound; k++){
+											if ((k == reci_pg_lowerbound) && (reci_pgnum != 1) ) { // make sure current page isn't first page (otherwise we don't show Prev. button)
 									%>
 											<li class="page-item"><a id=<%="reci-page-alt-prev"%> class="page-link" href=<%="/ImHungry/SearchPageController?action=search&term=" + term + "&token=" + token + "&limit=" + lim + "&radius=" + rad + "&rest_page=" + rest_pgnum + "&reci_page=" + (reci_pgnum - 1) %>>Previous</a></li>
 									<%
@@ -399,7 +435,7 @@
 											<li class="page-item"><a id=<%="reci-page-alt"+k%> class="page-link" href=<%="/ImHungry/SearchPageController?action=search&term=" + term + "&token=" + token + "&limit=" + lim + "&radius=" + rad + "&rest_page=" + rest_pgnum + "&reci_page=" + k %>><%= k %></a></li>
 									<%
 											}
-											if ((k == reciMaxPages) && (reci_pgnum != reciMaxPages)) { // make sure current page isn't last page (otherwise we don't show Next button)
+											if ((k == reci_pg_upperbound) && (reci_pgnum != reciMaxPages)) { // make sure current page isn't last page (otherwise we don't show Next button)
 									%>
 											<li class="page-item"><a id=<%="reci-page-alt-next"%> class="page-link" href=<%="/ImHungry/SearchPageController?action=search&term=" + term + "&token=" + token + "&limit=" + lim + "&radius=" + rad + "&rest_page=" + rest_pgnum + "&reci_page=" + (reci_pgnum + 1) %>>Next</a></li>
 									<%

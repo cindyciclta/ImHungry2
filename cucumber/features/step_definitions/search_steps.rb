@@ -23,7 +23,15 @@ Given(/^I selected "([^"]*)" from the drop down$/) do |arg1|
 end
 
 Given(/^I clicked the "([^"]*)" button$/) do |arg1|
-  click_on(arg1)
+  click_on(arg1, wait:30)
+end
+
+When(/^I add it to the list$/) do
+  page.find('#add_to_list_btn', wait:30).click
+end
+
+When(/^I manage the list$/) do
+  page.find('#manage_lists_btn', wait:30).click
 end
 
 Given(/^I clicks the "([^"]*)" button$/) do |arg1|
@@ -39,7 +47,7 @@ When(/^I click on "([^"]*)"$/) do |arg1|
 end
 
 Then(/^there should be "([^"]*)" as the first recipe$/) do |arg1|
-  expect(page.find('#reci-result1', wait:40)).to have_css('td', text: arg1)
+  expect(page.find('#reci-result0', wait:40)).to have_content(arg1, wait:40)
 end
 
 Then(/^I am on the "([^"]*)" page for "([^"]*)"$/) do |arg1, arg2|
@@ -55,7 +63,7 @@ When(/^I refresh the page$/) do
 end
 
 Then(/^I do not see "([^"]*)"$/) do |arg1|
-  expect(page).to have_no_content(arg1)
+  expect(page).to have_no_content(arg1, wait:30)
 end
 
 When(/^I move "([^"]*)"$/) do |arg1|
@@ -450,6 +458,10 @@ end
 
 Then(/^I should see "([^"]*)" on the page$/) do |arg1|
   expect(page).to have_content(arg1)
+end
+
+Then(/^I should not see "([^"]*)" on the page$/) do |arg1|
+  expect(page).not_to have_content(arg1, wait:35)
 end
 
 Then(/^I am the "([^"]*)" page$/) do |arg1|

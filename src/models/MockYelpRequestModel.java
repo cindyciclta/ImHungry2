@@ -1,6 +1,7 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +62,9 @@ public class MockYelpRequestModel extends YelpRequestModel{
 		return responseResult;	
 	}
 	
-	private void recreateList() throws Exception{
+	
+	@Override
+	public void recreateList() throws Exception{
 		List<RestaurantModel> listItems = DatabaseModel.getRestaurantsInList(searchId);
 		this.listItems.clear();
 			
@@ -80,6 +83,7 @@ public class MockYelpRequestModel extends YelpRequestModel{
 					}
 				}
 			}
+			Collections.sort(this.results);
 	}
 	
 	@Override

@@ -104,6 +104,7 @@ public class ResponseModel {
 				ret = recipes.getFormattedResultsFieldsListAt(k);
 			}
 		}
+	
 		
 		return ret;
 	}
@@ -185,6 +186,15 @@ public class ResponseModel {
 				ret = recipes.setToExploreResult(i, value);
 			}
 		}
+		try {
+			if(i < 0) {
+				throw new Exception();
+			}
+			recipes.recreateList();
+			restaurants.recreateList();
+		}catch(Exception e) {
+			
+		}
 		return ret;
 	}
 	
@@ -204,6 +214,17 @@ public class ResponseModel {
 		}else {
 			recipes.moveUpDownList(i, oldPlace, newPlace, list);
 		}
+		
+		try {
+			if(i < 0) {
+				throw new Exception();
+			}
+			recipes.recreateList();
+			restaurants.recreateList();
+		}catch(Exception e) {
+			
+		}
+	
 		return true;
 	}
 }

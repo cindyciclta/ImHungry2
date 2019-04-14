@@ -1,6 +1,7 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +60,8 @@ public class MockRecipeRequestModel extends EdamamRequestModel{
  		return responseResult;
 	}
 	
-	private void recreateList() throws Exception{
+	@Override
+	public void recreateList() throws Exception{
 		this.listItems.clear();
 		List<RecipeModel> listItems = DatabaseModel.getRecipesInList(searchId);
 			
@@ -77,8 +79,8 @@ public class MockRecipeRequestModel extends EdamamRequestModel{
 						results.get(i).setInToExplore(item.isInToExplore());
 					}
 				}
-				
 			}
+			Collections.sort(this.results);
 	}
 	
 	@Override

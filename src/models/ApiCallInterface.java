@@ -34,5 +34,7 @@ public interface ApiCallInterface<T> {
 	public List<IngredientModel> getIngredients(int i);
 	
 	public List<T> getListItems();
+	
+	public void recreateList() throws Exception;
 
 }

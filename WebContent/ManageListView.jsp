@@ -101,12 +101,8 @@
 			xhr.send();
 		}
 		
-		function moveUpdDownList(index, oldIndex, newIndex, list, type){
-			var xhr = new XMLHttpRequest();
-			var term ="<%= term %>";
-			var trimmed = term.replace(" ", "_");
-			xhr.open("GET", "/ImHungry/RedirectionController?action=removefromlist&term="+trimmed + "&index=" + index + "&list=" + originalList + "&item=" + item + "&type=" + type, true);
-			xhr.send();
+		function moveUpDownList(index, oldIndex, newIndex, type){
+			
 		}
 		
 	</script>
@@ -154,7 +150,7 @@
 										
 										if(resultsFields.get("restaurant_or_recipe").equals("recipe")){
 									%>
-											<tr>
+											<tr id=<%="recipe-" + resultsFields.get("originalindex") %>>
 											  <td>
 								                <div class="container">
 								                    <div>
@@ -226,7 +222,7 @@
 									<%
 									}else{
 									 %>
-											 <tr>
+											 <tr id=<%="restaurant-" + resultsFields.get("originalindex") %>>
 											   <td>
 								                <div class="container">
 								                    <div class="movable-list-handle">
@@ -347,11 +343,20 @@
 			animation: 150,
 			onEnd: function (/**Event*/evt) {
 				var itemEl = evt.item;  // dragged HTMLElement
-				evt.oldIndex;  // element's old index within old parent
-				evt.newIndex;  // element's new index within new parent
-				console.log(evt.newIndex + " " + evt.oldIndex);
-				
-				
+				var itemId = itemEl.id;
+				var array = itemId.split("-");
+				var oldIndex = evt.oldIndex + 1;  // element's old index within old parent
+				var newIndex = evt.newIndex + 1;  // element's new index within new parent
+				var type = array[0];
+				var item = array[1];
+				console.log(item);
+				var list = <%="\"" + (String)request.getAttribute("list") + "\""%>;
+				var xhr = new XMLHttpRequest();
+				var term ="<%= term %>";
+				var index = <%=index%>;
+				var trimmed = term.replace(" ", "_");
+				xhr.open("GET", "/ImHungry/RedirectionController?action=moveplaceinlist&term="+trimmed + "&index=" + index + "&list=" + list + "&item=" + item + "&type=" + type +"&oldplace=" + oldIndex + "&newplace=" + newIndex);
+				xhr.send();
 			}
 		});
       </script>

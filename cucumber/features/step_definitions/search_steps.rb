@@ -205,7 +205,7 @@ Then(/^I should be able to print$/) do
 end
 
 Then(/^I should see a drop down box for lists$/) do
-  page.find('select#managelistselect.form-control')
+  page.find('select#managelistselect.form-control', wait:35)
 end
 
 Given(/^I select restaurant, "([^"]*)"$/) do |arg1|

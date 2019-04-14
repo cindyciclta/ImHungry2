@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import models.IngredientModel;
 import models.RecipeModel;
+import models.RestaurantModel;
 
 public class TestRecipeModel {
 	
@@ -265,6 +266,60 @@ public class TestRecipeModel {
 		rmFavorite.setPrepTime(2);
 		
 		assertEquals(-1, rm.compareTo(rmFavorite));
+	}
+	
+	@Test
+	public void testIngredients() {
+		RecipeModel rm = new RecipeModel();
+		assertEquals(0, rm.getIngredients());
+	}
+	
+	@Test
+	public void testEqualsNull() {
+		RecipeModel rm = new RecipeModel();
+		assertFalse(rm.equals(null));
+	}
+	
+	@Test
+	public void testEqualsWrongClass() {
+		RecipeModel rm = new RecipeModel();
+		assertFalse(rm.equals("restaurant"));
+	}
+	
+	@Test
+	public void testEqualsNullName() {
+		RecipeModel rm = new RecipeModel();
+		rm.setName("sdfs");
+		assertFalse(rm.equals(new RecipeModel()));
+	}
+	
+	@Test
+	public void testEqualsNullNameOther() {
+		RecipeModel rm = new RecipeModel();
+		RecipeModel rm2 = new RecipeModel();
+		rm2.setName("sdfs");
+		assertFalse(rm.equals(rm2));
+	}
+	
+	@Test
+	public void testEqualValid() {
+		RecipeModel rm = new RecipeModel();
+		rm.setName("sdfs");
+		rm.hashCode();
+		RecipeModel rm2 = new RecipeModel();
+		rm2.setName("sdfs");
+		assertTrue(rm.equals(rm2));
+	}
+	
+
+	@Test
+	public void testEqualWrongName() {
+		RecipeModel rm = new RecipeModel();
+		rm.setName("sdfs");
+		rm.hashCode();
+		RecipeModel rm2 = new RecipeModel();
+		rm2.setName("sdfsdfs");
+		assertFalse(rm.equals(rm2));
 	}
 
 }

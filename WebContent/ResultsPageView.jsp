@@ -37,6 +37,9 @@
         .nested-tr {
             background-color: inherit;
         }
+        tr {
+        	max-width: 35vw;
+        }
 		
 		body, html {
 			height: 100%;
@@ -77,9 +80,6 @@
 		
 		#table-outer-scroll {
 			overflow-x: scroll;
-		}
-		.result_cell {
-			height: 26vh;
 		}
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -267,22 +267,20 @@
                                     <tr onclick=<%="redirectToRestaurant(\"" + "/ImHungry/RedirectionController?action=restaurant&term="+term +"&index=" + 
                                     index + "&item=" + i + "&token=" +token + "\")"%>>
                                         <td class="col">
-                                        	<div class="result_cell">
                                             <table class="table text-white">
                                                 <tbody>
                                                     <tr style="background-color: inherit;">
-                                                        <td style="width: 10vw; max-height: 3vh; min-height: 2vh"><%=resultsFields.get("name")%></td>
-                                                        <td style="max-height: 3vh"><%=resultsFields.get("stars")%></td>
+                                                        <td><%=resultsFields.get("name")%></td>
+                                                        <td><%=resultsFields.get("stars")%></td>
                                                     </tr>
                                                     <tr style="background-color: inherit;">
-                                                        <td style="min-width: 7vw"><%=resultsFields.get("drivingTime")%></td>
-                                                        <td style="min-width: 12vw; max-height: 3vh"><%=resultsFields.get("address")%></td>
+                                                        <td><%=resultsFields.get("drivingTime")%></td>
+                                                        <td><%=resultsFields.get("address")%></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                            </div>
                                         </td>
-                                        <td class="col"><div class="result_cell"><%=resultsFields.get("priceRange")%></div></td>
+                                        <td class="col"><%=resultsFields.get("priceRange")%></td>
                                     </tr>
                                     
                                     <%
@@ -373,20 +371,18 @@
                                     <tr onclick=<%="redirectToRecipe(\"" + "/ImHungry/RedirectionController?action=recipe&term="+ecodedValue + "&reci_page="+ reci_pgnum+
                                     "&index=" + index + "&item=" + i + "&token=" +token + "\")"%>>
                                         <td class="col">
-                                        	<div class="result_cell">
                                             <table class="table text-white">
                                                 <tbody>
                                                     <tr style="background-color: inherit;">
-                                                        <td style="width: 12vw; max-height: 3vh"><%=resultsFields.get("name")%></td>
+                                                        <td><%=resultsFields.get("name")%></td>
                                                         <td><%=resultsFields.get("stars")%></td>
                                                     </tr>
                                                     <tr style="background-color: inherit;">
-                                                        <td style="min-width: 8vw; max-height: 4vh">Prep: <%=resultsFields.get("prepTime") + " minutes"%></td>
+                                                        <td>Prep: <%=resultsFields.get("prepTime") + " minutes"%></td>
                                                         <td>Cook: <%=resultsFields.get("cookTime") + " minutes"%></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                            </div>
                                         </td>
                                     </tr>
                                     

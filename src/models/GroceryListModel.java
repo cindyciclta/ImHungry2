@@ -11,5 +11,6 @@ public class GroceryListModel {
 	public String getItem(int index) {
 		return items.get(index);
 	}
+	public int getSize() {return items.size();}
 	
 }

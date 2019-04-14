@@ -394,16 +394,7 @@ public class DatabaseModel {
 		int userid = GetUserID(username);
 		Connection conn = getConnection();
 		
-		if(userid != -1) {
-			PreparedStatement ps = conn.prepareStatement("SELECT * from grocery_list where user_id=(?)");
-			ps.setInt(1, userid);
-			ResultSet rsGroceryList = ps.executeQuery();
-			
-			while(rsGroceryList.next()) {
-				gl.additem(rsGroceryList.getString("selected_item"));
-			}
-		}
-		return gl;
+		return getGroceryListFromUser(userid);
 	}
 	public static GroceryListModel getGroceryListFromUser(int userid) throws Exception{
 		GroceryListModel gl = new GroceryListModel();
@@ -703,20 +694,19 @@ public class DatabaseModel {
 		Connection conn = getConnection();
 		String query = "SELECT * from places where user_id=(?) and name=(?) and item_id=(?)";
 		PreparedStatement preparedStmt = conn.prepareStatement(query);
-		preparedStmt.setInt(2, userId);
-    	preparedStmt.setString(3, newName);
-    	preparedStmt.setInt(4, itemId);
+		preparedStmt.setInt(1, userId);
+    	preparedStmt.setString(2, oldName);
+    	preparedStmt.setInt(3, itemId);
     	ResultSet rs = preparedStmt.executeQuery();
-    	if(rs.next()) {
-    		oldPlace = rs.getInt("place");
-    	}
+    	rs.next();
+    	oldPlace = rs.getInt("place");
 		
 		// Up everything after the number on the old list by 1
 		ret = updatePlaceOnDelete(userId, oldName, oldPlace, restaurant);
 		
 		// Add to the end of the new list
 		int count = countItemsInList(newName, userId);
-		String update = "UPDATE places SET place=(?) where where user_id=(?) and name=(?) and item_id=(?) and restaurant_or_recipe=(?)";
+		String update = "UPDATE places SET place=(?) where user_id=(?) and name=(?) and item_id=(?) and restaurant_or_recipe=(?)";
 		preparedStmt = conn.prepareStatement(update);
 		preparedStmt.setInt(1, count+1);
     	preparedStmt.setInt(2, userId);
@@ -730,7 +720,7 @@ public class DatabaseModel {
 	}
 	
 	
-	public static boolean updatePlaceOnDelete(int userId, String oldName, int oldPlace, String restaurant) throws Exception{
+	private static boolean updatePlaceOnDelete(int userId, String oldName, int oldPlace, String restaurant) throws Exception{
 		boolean ret = true;
 		
 		// Up everything after the number on the old list by 1
@@ -744,7 +734,7 @@ public class DatabaseModel {
     		if(rs.getInt("place") > oldPlace) {
     			int place = rs.getInt("place") - 1;
     			
-    			String update = "UPDATE places SET place=(?) where where user_id=(?) and name=(?) and item_id=(?) and restaurant_or_recipe=(?)";
+    			String update = "UPDATE places SET place=(?) where user_id=(?) and name=(?) and item_id=(?) and restaurant_or_recipe=(?)";
     			preparedStmt = conn.prepareStatement(update);
     			preparedStmt.setInt(1, place);
     	    	preparedStmt.setInt(2, userId);
@@ -812,15 +802,65 @@ public class DatabaseModel {
 		return true;
 	}
 	
-	public static boolean updatePlaceOnMoveUpDown(int itemId, int userId, int oldName, int oldPlace, int newPlace,
+	public static boolean updatePlaceOnMoveUpDown(int itemId, int searchId, String name, int oldPlace, int newPlace,
 			String restaurant) throws Exception{
+		
+		int userId = getUserIdFromSearchId(searchId);
 		boolean ret = true;
 		
+		String query = "SELECT * from places where user_id=(?) and name=(?) and restaurant_or_recipe=(?)";
+		Connection conn = getConnection();
+		PreparedStatement preparedStmt = conn.prepareStatement(query);
+		preparedStmt.setInt(1, userId);
+    	preparedStmt.setString(2, name);
+    	preparedStmt.setString(3, restaurant);
+    	ResultSet rs = preparedStmt.executeQuery();
+		
 		// Move Up
+		if(newPlace < oldPlace) {
+			// down the places of all items in between [newPlace, oldPlace)
+			while(rs.next()) {
+				int place = rs.getInt("place");
+				if(place < oldPlace && place >= newPlace) {
+					query = "UPDATE places set place = (?) where item_id = (?) and name = (?) and user_id = (?) and restaurant_or_recipe = (?)";
+					preparedStmt = conn.prepareStatement(query);
+					preparedStmt.setInt(1, place+1);
+					preparedStmt.setInt(2, rs.getInt("item_id"));
+			    	preparedStmt.setString(3, name);
+			    	preparedStmt.setInt(4, userId);
+			    	preparedStmt.setString(5, restaurant);
+			    	preparedStmt.executeUpdate();
+				}
+			}
+			
+		}else {
+			// up all the places of the items in between (oldPlace, newPlace]
+			while(rs.next()) {
+				int place = rs.getInt("place");
+				if(place > oldPlace && place <= newPlace) {
+					query = "UPDATE places set place = (?) where item_id = (?) and name = (?) and user_id = (?) and restaurant_or_recipe = (?)";
+					preparedStmt = conn.prepareStatement(query);
+					preparedStmt.setInt(1, place-1);
+					preparedStmt.setInt(2, rs.getInt("item_id"));
+			    	preparedStmt.setString(3, name);
+			    	preparedStmt.setInt(4, userId);
+			    	preparedStmt.setString(5, restaurant);
+			    	preparedStmt.executeUpdate();
+				}
+			}
+		}
 		
-		// Move down
-		
+		// update the place of the item
+		query = "UPDATE places set place = (?) where item_id = (?) and name = (?) and user_id = (?) and restaurant_or_recipe = (?)";
+		preparedStmt = conn.prepareStatement(query);
+		preparedStmt.setInt(1, newPlace);
+		preparedStmt.setInt(2, itemId);
+    	preparedStmt.setString(3, name);
+    	preparedStmt.setInt(4, userId);
+    	preparedStmt.setString(5, restaurant);
+    	preparedStmt.executeUpdate();
 		
 		return ret;
 	}
 }
+

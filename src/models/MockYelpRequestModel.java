@@ -51,31 +51,34 @@ public class MockYelpRequestModel extends YelpRequestModel{
  				for(RestaurantModel model : this.results) {
  					DatabaseModel.insertRestaurant(model, searchId);
  				}
- 				
  			}
- 			List<RestaurantModel> listItems = DatabaseModel.getRestaurantsInList(searchId);
+ 			recreateList();
  			
- 			// add to listItems
- 			for(RestaurantModel item : listItems) {
- 				this.listItems.add(item);
- 			}
- 			
- 		    // Recorrelate against the list
- 			for(RestaurantModel item : listItems) {
- 				for(int i = 0 ; i < results.size() ; i++) {
- 					if(item.equals(results.get(i))) {
- 						results.get(i).setInFavorites(item.isInFavorites());
- 						results.get(i).setInDoNotShow(item.isInDoNotShow());
- 						results.get(i).setInToExplore(item.isInToExplore());
- 					}
- 				}
- 				
- 			}
  		}catch(Exception e) {
  			
  		}
 		
 		return responseResult;	
+	}
+	
+	private void recreateList() throws Exception{
+		List<RestaurantModel> listItems = DatabaseModel.getRestaurantsInList(searchId);
+			
+			// add to listItems
+			for(RestaurantModel item : listItems) {
+				this.listItems.add(item);
+			}
+			
+		    // Recorrelate against the list
+			for(RestaurantModel item : listItems) {
+				for(int i = 0 ; i < results.size() ; i++) {
+					if(item.equals(results.get(i))) {
+						results.get(i).setInFavorites(item.isInFavorites());
+						results.get(i).setInDoNotShow(item.isInDoNotShow());
+						results.get(i).setInToExplore(item.isInToExplore());
+					}
+				}
+			}
 	}
 	
 	@Override
@@ -107,9 +110,24 @@ public class MockYelpRequestModel extends YelpRequestModel{
 				ret = DatabaseModel.deleteRestaurant(results.get(i), searchId);
 			}
 			ret = DatabaseModel.insertRestaurantIntoList(searchId, results.get(i));
+			recreateList();
 		}catch(Exception e) {
 			
 		}
 		return ret;
+	}
+
+	@Override
+	public boolean moveUpDownList(int i, int oldPlace, int newPlace, String list) {
+		try {
+			int itemId = DatabaseModel.getItemIdFromRestaurant(listItems.get(i));
+			DatabaseModel.updatePlaceOnMoveUpDown(itemId, searchId, list, oldPlace, newPlace,
+					"restaurant");
+			recreateList();
+		}catch(Exception e) {
+			
+			return false;
+		}
+		return true;
 	}
 }

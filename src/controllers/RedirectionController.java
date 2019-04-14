@@ -42,7 +42,6 @@ public class RedirectionController extends HttpServlet {
 		
 
 		request.setAttribute("term", term);
-		System.out.println("whehehehreh "+ action);
 		if(action == null || action.isEmpty() || index == null || index.isEmpty()) {
 			dispatch = request.getRequestDispatcher("SearchPageView.jsp");
 		} else if (action.equals("addtogrocery")) {
@@ -169,7 +168,19 @@ public class RedirectionController extends HttpServlet {
 			String type = request.getParameter("type");
 			responses.get(indexInt).addToList(itemInt, list, type, false);
 
-		} 
+		}else if(action.equals("moveplaceinlist")) {
+			int indexInt = Integer.parseInt(index);
+			String item = request.getParameter("item");
+			int itemInt = Integer.parseInt(item);
+			
+			String list = request.getParameter("list");
+			String type = request.getParameter("type");
+			int oldPlace = Integer.parseInt(request.getParameter("oldplace"));
+			int newPlace = Integer.parseInt(request.getParameter("newplace"));
+			responses.get(indexInt).moveUpDownList(itemInt, list, type, oldPlace, newPlace);
+		}
+		
+		
 		if (dispatch != null) {
 			dispatch.forward(request, response);	
 		}

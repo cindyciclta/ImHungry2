@@ -175,4 +175,13 @@ public class ResponseModel {
 
 		return true;
 	}
+	
+	public boolean moveUpDownList(int i, String list, String type, int oldPlace, int newPlace ) {
+		if(type.equals("restaurant")) {
+			restaurants.moveUpDownList(i, oldPlace, newPlace, list);
+		}else {
+			recipes.moveUpDownList(i, oldPlace, newPlace, list);
+		}
+		return true;
+	}
 }

@@ -24,6 +24,8 @@ public interface ApiCallInterface<T> {
 	public boolean setDoNotShowResult(int i, boolean value);
 	public boolean setGroceryListResult(int i, boolean value);
 	
+	public boolean moveUpDownList(int i, int oldPlace, int newPlace, String list);
+	
 	public int getListSize();
 	public Map<String, String> getFormattedResultsFieldsListAt(int i);
 	

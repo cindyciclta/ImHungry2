@@ -61,6 +61,10 @@
 	String ecodedValue = URLEncoder.encode(term, "UTF-8");
 	%>
 	<script>
+	
+		function redirectToRecipe(link){
+			window.location = link;
+		}
 		
 		function redirectToManageList(index){
 			var term ="<%= term %>";

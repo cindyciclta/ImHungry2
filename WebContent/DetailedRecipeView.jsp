@@ -114,14 +114,12 @@
 		
 		function addToGroceryList(num, index, item) {
 
-			alert(num);
 			var xhr = new XMLHttpRequest();
 			var searchterm = "<%= term%>";
 			var token = "<%= token%>";
 			var trimmed = searchterm.replace(" ", "_");
 			xhr.open("GET", "/ImHungry/RedirectionController?action=addtogrocery&ingredientindex="+num+"&term="+ trimmed +"&item="+ item+"&index=" + index +"&token=" + token, true);
 			xhr.send();
-			alert("woto");
 		}
 	</script>
 	

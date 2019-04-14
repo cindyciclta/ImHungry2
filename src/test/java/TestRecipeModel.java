@@ -271,7 +271,7 @@ public class TestRecipeModel {
 	@Test
 	public void testIngredients() {
 		RecipeModel rm = new RecipeModel();
-		assertEquals(0, rm.getIngredients());
+		assertEquals(0, rm.getIngredients().size());
 	}
 	
 	@Test

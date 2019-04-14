@@ -123,10 +123,35 @@ public class TestRecipeRequestModel{
 		assertFalse(cached.setToExploreResult(100, true));
 	}
 	
+	@Test
+	public void testMoveUpDown() {
+		assertTrue(cached.setDoNotShowResult(0, true));
+		assertTrue(cached.setDoNotShowResult(1, true));
+		assertTrue(cached.moveUpDownList(0, 1, 2, "donotshow"));
+		cached.sort();
+	}
+	
+	@Test
+	public void testUpdateList() {
+		assertFalse(cached.updateList(-1));
+	}
+	
+	@Test
+	public void testMoveUpDownList() {
+		assertFalse(cached.moveUpDownList(-1, 1, 2, "favorites"));
+	}
+	
 	
 	@Test
 	public void testSetDoNotShow() {
 		//assertEquals(ResponseCodeModel.OK, cached.completeTask("coffee", 5));
+		assertTrue(cached.setDoNotShowResult(0, true));
+		for(int i = 0 ; i < cached.getResultsSize() ; i++) {
+			cached.setDoNotShowResult(i, false);
+			cached.setToExploreResult(i, false);
+			cached.setFavoriteResult(i, false);
+		}
+		
 		assertTrue(cached.setDoNotShowResult(0, true));
 		assertFalse(cached.setDoNotShowResult(-1, true));
 		assertFalse(cached.setDoNotShowResult(100, true));

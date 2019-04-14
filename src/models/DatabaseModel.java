@@ -516,6 +516,7 @@ public class DatabaseModel {
     		preparedStmt.setString(1, name);
         	preparedStmt.setInt(2, item_id);
         	preparedStmt.setInt(3, userId);
+        	preparedStmt.executeUpdate();
         	
         	// TODO: Update place on move
         	if(!name.equals(exists.getString("name"))) {
@@ -524,7 +525,6 @@ public class DatabaseModel {
         	}
     	}else {
     		int count = countItemsInList(name, userId);
-        	conn = getConnection();
         	query = "INSERT INTO list_restaurants (item_id, user_id, name) values (?, ?, ?)";
         	preparedStmt = conn.prepareStatement(query);
         	preparedStmt.setInt(1, item_id);
@@ -659,7 +659,6 @@ public class DatabaseModel {
         	conn.close();
     	}else {
     		int count = countItemsInList(name, userId);
-        	conn = getConnection();
         	query = "INSERT INTO list_recipes (item_id, user_id, name) values (?, ?, ?)";
         	preparedStmt = conn.prepareStatement(query);
         	preparedStmt.setInt(1, item_id);
@@ -667,11 +666,9 @@ public class DatabaseModel {
         	preparedStmt.setString(3, name);
         	preparedStmt.executeUpdate();
         	preparedStmt.close();
-        	conn.close();
         	
         	// add the place
         	query = "INSERT INTO places (item_id, user_id, name, place, restaurant_or_recipe) values (?, ?, ?, ?, ?)";
-        	conn = getConnection();
         	preparedStmt = conn.prepareStatement(query);
         	preparedStmt.setInt(1, item_id);
         	preparedStmt.setInt(2, userId);
@@ -706,13 +703,14 @@ public class DatabaseModel {
 		
 		// Add to the end of the new list
 		int count = countItemsInList(newName, userId);
-		String update = "UPDATE places SET place=(?) where user_id=(?) and name=(?) and item_id=(?) and restaurant_or_recipe=(?)";
+		String update = "UPDATE places SET place=(?) , name=(?) where user_id=(?) and name=(?) and item_id=(?) and restaurant_or_recipe=(?)";
 		preparedStmt = conn.prepareStatement(update);
 		preparedStmt.setInt(1, count+1);
-    	preparedStmt.setInt(2, userId);
-    	preparedStmt.setString(3, newName);
-    	preparedStmt.setInt(4, itemId);
-    	preparedStmt.setString(5, restaurant);
+		preparedStmt.setString(2, newName);
+    	preparedStmt.setInt(3, userId);
+    	preparedStmt.setString(4, oldName);
+    	preparedStmt.setInt(5, itemId);
+    	preparedStmt.setString(6, restaurant);
     	preparedStmt.executeUpdate();
 		
     	conn.close();
@@ -744,7 +742,7 @@ public class DatabaseModel {
     	    	preparedStmt.executeUpdate();
     		}
     	}
-		
+		conn.close();
 		return ret;
 	}
 	
@@ -752,26 +750,44 @@ public class DatabaseModel {
 		int userId = getUserIdFromSearchId(searchId);
 		int itemId = getItemIdFromRecipe(rm);
 		
-		// Delete from list
-		String query = "DELETE from list_recipes where user_id=(?) and item_id=(?)";
 		Connection conn = getConnection();
+		String query = "SELECT * from list_recipes where user_id=(?) and item_id=(?)";
 		PreparedStatement preparedStmt = conn.prepareStatement(query);
     	preparedStmt.setInt(1, userId);
     	preparedStmt.setInt(2, itemId);
-    	preparedStmt.executeUpdate();
+    	ResultSet rsNext = preparedStmt.executeQuery();
 		
-		// Get old name and place
-		query = "SELECT * from places where user_id=(?) and item_id=(?) and restaurant_or_recipe=(?)";
-		conn = getConnection();
-		preparedStmt = conn.prepareStatement(query);
-    	preparedStmt.setInt(1, userId);
-    	preparedStmt.setInt(2, itemId);
-    	preparedStmt.setString(3, "recipe");
-    	ResultSet rs = preparedStmt.executeQuery();
-		rs.next();
-		int place = rs.getInt("place");
-		String name = rs.getString("name");
-		updatePlaceOnDelete(userId, name, place, "recipe");
+    	if(rsNext.next()) {
+    		// Delete from list
+    		query = "DELETE from list_recipes where user_id=(?) and item_id=(?)";
+    		preparedStmt = conn.prepareStatement(query);
+        	preparedStmt.setInt(1, userId);
+        	preparedStmt.setInt(2, itemId);
+        	preparedStmt.executeUpdate();
+    		
+    		// Get old name and place
+    		query = "SELECT * from places where user_id=(?) and item_id=(?) and restaurant_or_recipe=(?)";
+    		preparedStmt = conn.prepareStatement(query);
+        	preparedStmt.setInt(1, userId);
+        	preparedStmt.setInt(2, itemId);
+        	preparedStmt.setString(3, "recipe");
+        	ResultSet rs = preparedStmt.executeQuery();
+    		rs.next();
+    		int place = rs.getInt("place");
+    		String name = rs.getString("name");
+    		
+    		query = "DELETE from places where user_id=(?) and item_id=(?) and restaurant_or_recipe=(?)";
+    		preparedStmt = conn.prepareStatement(query);
+        	preparedStmt.setInt(1, userId);
+        	preparedStmt.setInt(2, itemId);
+        	preparedStmt.setString(3, "recipe");
+        	preparedStmt.executeUpdate();
+        	
+    		updatePlaceOnDelete(userId, name, place, "recipe");
+    	}
+		
+		
+		conn.close();
 		return true;
 	}
 	
@@ -779,26 +795,42 @@ public class DatabaseModel {
 		int userId = getUserIdFromSearchId(searchId);
 		int itemId = getItemIdFromRestaurant(rm);
 		
-		// Delete from list
-		String query = "DELETE from list_restaurants where user_id=(?) and item_id=(?)";
+		String query = "SELECT * from list_restaurants where user_id=(?) and item_id=(?)";
 		Connection conn = getConnection();
 		PreparedStatement preparedStmt = conn.prepareStatement(query);
     	preparedStmt.setInt(1, userId);
     	preparedStmt.setInt(2, itemId);
-    	preparedStmt.executeUpdate();
-		
-		// Get old name and place
-		query = "SELECT * from places where user_id=(?) and item_id=(?) and restaurant_or_recipe=(?)";
-		conn = getConnection();
-		preparedStmt = conn.prepareStatement(query);
-    	preparedStmt.setInt(1, userId);
-    	preparedStmt.setInt(2, itemId);
-    	preparedStmt.setString(3, "restaurant");
     	ResultSet rs = preparedStmt.executeQuery();
-		rs.next();
-		int place = rs.getInt("place");
-		String name = rs.getString("name");
-		updatePlaceOnDelete(userId, name, place, "restaurant");
+    	
+    	if(rs.next()) {
+    		// Delete from list
+    		query = "DELETE from list_restaurants where user_id=(?) and item_id=(?)";
+    		preparedStmt = conn.prepareStatement(query);
+        	preparedStmt.setInt(1, userId);
+        	preparedStmt.setInt(2, itemId);
+        	preparedStmt.executeUpdate();
+    		
+    		// Get old name and place
+    		query = "SELECT * from places where user_id=(?) and item_id=(?) and restaurant_or_recipe=(?)";
+    		preparedStmt = conn.prepareStatement(query);
+        	preparedStmt.setInt(1, userId);
+        	preparedStmt.setInt(2, itemId);
+        	preparedStmt.setString(3, "restaurant");
+        	rs = preparedStmt.executeQuery();
+    		rs.next();
+    		int place = rs.getInt("place");
+    		String name = rs.getString("name");
+
+    		
+    		query = "DELETE from places where user_id=(?) and item_id=(?) and restaurant_or_recipe=(?)";
+    		preparedStmt = conn.prepareStatement(query);
+        	preparedStmt.setInt(1, userId);
+        	preparedStmt.setInt(2, itemId);
+        	preparedStmt.setString(3, "restaurant");
+        	preparedStmt.executeUpdate();
+        	updatePlaceOnDelete(userId, name, place, "restaurant");
+    	}
+    	conn.close();
 		return true;
 	}
 	
@@ -859,7 +891,7 @@ public class DatabaseModel {
     	preparedStmt.setInt(4, userId);
     	preparedStmt.setString(5, restaurant);
     	preparedStmt.executeUpdate();
-		
+		conn.close();
 		return ret;
 	}
 }

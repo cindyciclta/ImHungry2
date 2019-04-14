@@ -64,26 +64,48 @@ public class ResponseModel {
 		return restaurants.getResultsSize();
 	}
 	
-	public int getNumberOfListItems() {
-		return recipes.getListSize() + restaurants.getListSize();
-	}
-	
-	public Map<String, String> getFormattedResultListAt(int i){
+	public int getNumberOfListItems(String list) {
+		
+		int count = 0;
 		for(int k = 0 ; k < restaurants.getListSize() ; k++) {
-			if(restaurants.getFormattedResultsFieldsListAt(k).get("place").equals(
-					Integer.toString(i+1))) {
-				return restaurants.getFormattedResultsFieldsListAt(k);
+			String place = restaurants.getFormattedResultsFieldsListAt(k).get("modifier");
+			if(place.equals(list)) {
+				count += 1;
 			}
 		}
 		
 		for(int k = 0 ; k < recipes.getListSize() ; k++) {
-			if(recipes.getFormattedResultsFieldsListAt(k).get("place").equals(
-					Integer.toString(i+1))) {
-				return recipes.getFormattedResultsFieldsListAt(k);
+			if(recipes.getFormattedResultsFieldsListAt(k).get("modifier").equals(
+					list) ) {
+				count += 1;
 			}
 		}
 		
-		return null;
+		
+		return count;
+	}
+	
+	public Map<String, String> getFormattedResultListAt(int i, String list){
+		Map<String, String> ret = null;
+		for(int k = 0 ; k < restaurants.getListSize() ; k++) {
+			String place = restaurants.getFormattedResultsFieldsListAt(k).get("place");
+			String modifier = restaurants.getFormattedResultsFieldsListAt(k).get("modifier");
+			if(place.equals(
+					Integer.toString(i+1)) && modifier.equals(list)) 
+					 {
+				ret = restaurants.getFormattedResultsFieldsListAt(k);
+			}
+		}
+		
+		for(int k = 0 ; k < recipes.getListSize() ; k++) {
+			String modifier = recipes.getFormattedResultsFieldsListAt(k).get("modifier");
+			if(recipes.getFormattedResultsFieldsListAt(k).get("place").equals(
+					Integer.toString(i+1) ) && modifier.equals(list)) {
+				ret = recipes.getFormattedResultsFieldsListAt(k);
+			}
+		}
+		
+		return ret;
 	}
 	
 	public boolean checkParameters(String term, int limit) {
@@ -145,34 +167,34 @@ public class ResponseModel {
 	}
 	
 	public boolean addToList(int i, String list, String type, boolean value) {
+		boolean ret = true;
 		if(type.equals("restaurant")) {
 			if(list.equals("donotshow")) {
-				return restaurants.setDoNotShowResult(i, value);
+				ret = restaurants.setDoNotShowResult(i, value);
 			} else if(list.equals("favorites")) {
-				return restaurants.setFavoriteResult(i, value);
+				ret = restaurants.setFavoriteResult(i, value);
 			} else {
-				return restaurants.setToExploreResult(i, value);
+				ret = restaurants.setToExploreResult(i, value);
 			}
 		}else {
 			if(list.equals("donotshow")) {
-				return recipes.setDoNotShowResult(i, value);
+				ret = recipes.setDoNotShowResult(i, value);
 			} else if(list.equals("favorites")) {
-				return recipes.setFavoriteResult(i, value);
-			} else if(list.equals("toexplore")){
-				return recipes.setToExploreResult(i, value);
+				ret = recipes.setFavoriteResult(i, value);
+			} else{
+				ret = recipes.setToExploreResult(i, value);
 			}
 		}
-		return true;
+		return ret;
 	}
+	
 	public boolean addToGroceryList(int i, int userid, String ingredientindex) throws Exception {
 		
 		List<IngredientModel> list = recipes.getIngredients(i);
 		int k = Integer.parseInt(ingredientindex);
 		IngredientModel ingredient = list.get(k);
-		System.out.println(ingredient.getIngredientName());
 		//add to database
 		DatabaseModel.InsertIntoGroceryList(userid, ingredient.getIngredientName());
-
 		return true;
 	}
 	

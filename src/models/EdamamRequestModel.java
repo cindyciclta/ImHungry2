@@ -312,8 +312,6 @@ public abstract class EdamamRequestModel implements ApiCallInterface<RecipeModel
 	private void addOrRemoveValue(RecipeModel recipe, boolean value, boolean removed) {
 		if(!listItems.contains(recipe) && value) {
 			listItems.add(recipe);
-		}else if(listItems.contains(recipe) && removed) {
-			listItems.remove(recipe);
 		}
 	}
 
@@ -352,6 +350,11 @@ public abstract class EdamamRequestModel implements ApiCallInterface<RecipeModel
 			return null;
 		}
 		Map<String, String> list= listItems.get(i).getFormattedFieldsForResults();
+		for(int k = 0 ; k < results.size() ; k++) {
+			if(listItems.get(i).equals(results.get(k))) {
+				list.put("originalindex", Integer.toString(k));
+			}
+		}
 		list.put("place", Integer.toString(listItems.get(i).getOrder()));
 		list.put("restaurant_or_recipe", "recipe");
 		return list;

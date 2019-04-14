@@ -25,7 +25,7 @@ public class MockRecipeRequestModel extends EdamamRequestModel{
 			
 			return DatabaseModel.getRecipesFromSearchTerm(term, limit);
 		}catch(Exception e) {
-			
+			e.printStackTrace();
 		}
 		return new ArrayList<RecipeModel>();
 	}
@@ -54,12 +54,14 @@ public class MockRecipeRequestModel extends EdamamRequestModel{
  			
  			
  		}catch(Exception e) {
+ 			e.printStackTrace();
  		}
  		
  		return responseResult;
 	}
 	
 	private void recreateList() throws Exception{
+		this.listItems.clear();
 		List<RecipeModel> listItems = DatabaseModel.getRecipesInList(searchId);
 			
 			// add to listItems
@@ -83,50 +85,66 @@ public class MockRecipeRequestModel extends EdamamRequestModel{
 	@Override
 	public boolean setFavoriteResult(int i, boolean value) {
 		boolean ret = super.setFavoriteResult(i,  value);
-		return ret && updateList(i);
+		if(!ret) {
+			return false;
+		}
+		return updateList(i);
 	}
 	
 	@Override
 	public boolean setToExploreResult(int i, boolean value) {
 		boolean ret = super.setToExploreResult(i,  value);
-		return ret && updateList(i);
+		if(!ret) {
+			return false;
+		}
+		return updateList(i);
 	}
 	
 	@Override
 	public boolean setDoNotShowResult(int i, boolean value) {
 		boolean ret = super.setDoNotShowResult(i,  value);
-		return ret && updateList(i);
+		if(!ret) {
+			return false;
+		}
+		return updateList(i);
 	}
 	
-	private boolean updateList(int i) {
+	public boolean updateList(int i) {
 		boolean ret = true;
 		try {
-			if(!ret) {
+			if(i < 0) {
+				ret = false;
 				throw new Exception();
 			}
 			if(!results.get(i).isInToExplore() && !results.get(i).isInFavorites() 
 					&& !results.get(i).isInDoNotShow()) {
 				ret = DatabaseModel.deleteRecipe(results.get(i), searchId);
+			}else {
+				ret = DatabaseModel.insertRecipeIntoList(searchId, results.get(i));
 			}
-			ret = DatabaseModel.insertRecipeIntoList(searchId, results.get(i));
 			recreateList();
 		}catch(Exception e) {
-			
+			e.printStackTrace();
 		}
 		return ret;
 	}
 	
 	@Override
 	public boolean moveUpDownList(int i, int oldPlace, int newPlace, String list) {
+		boolean ret = true;
 		try {
+			if(i < 0) {
+				ret = false;
+				throw new Exception();
+			}
 			int itemId = DatabaseModel.getItemIdFromRecipe(listItems.get(i));
 			DatabaseModel.updatePlaceOnMoveUpDown(itemId, searchId, list, oldPlace, newPlace,
 					"recipe");
 			recreateList();
 		}catch(Exception e) {
-			
+			e.printStackTrace();
 			return false;
 		}
-		return true;
+		return ret;
 	}
 }

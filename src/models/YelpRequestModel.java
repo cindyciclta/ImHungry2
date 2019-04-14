@@ -91,7 +91,6 @@ public abstract class YelpRequestModel implements ApiCallInterface<RestaurantMod
 			
 			// Parse out all restaurant fields
 			JSONArray businesses = json.getJSONArray("businesses");
-			System.out.println("__________________"+ businesses.length() + " ___ "+ limit);
 			for(int i = 0 ; i < Math.min(limit, businesses.length()) ; i++) {
 				
 				RestaurantModel restaurant = new RestaurantModel();
@@ -218,8 +217,6 @@ public abstract class YelpRequestModel implements ApiCallInterface<RestaurantMod
 	private void addOrRemoveValue(RestaurantModel restauarant, boolean value, boolean removed) {
 		if(!listItems.contains(restauarant) && value) {
 			listItems.add(restauarant);
-		}else if(listItems.contains(restauarant) && !removed) {
-			listItems.remove(restauarant);
 		}
 	}
 	
@@ -241,8 +238,14 @@ public abstract class YelpRequestModel implements ApiCallInterface<RestaurantMod
 		if(i >= listItems.size()) {
 			return null;
 		}
-		
 		Map<String, String> list = listItems.get(i).getFormattedFieldsForResultsPage();
+		for(int k = 0 ; k < results.size() ; k++) {
+			if(listItems.get(i).equals(results.get(k))) {
+				list.put("originalindex", Integer.toString(k));
+			}
+		}
+		
+		
 		list.put("place", Integer.toString(listItems.get(i).getOrder()));
 		list.put("restaurant_or_recipe", "restaurant");
 		return list;

@@ -105,6 +105,8 @@
 	<%
 		ResponseModel rm = ((ResponseModel)request.getAttribute("response"));
 		String title = (String)request.getAttribute("title");
+		String lst = (String)request.getAttribute("list");
+		
 		int index = (int)request.getAttribute("index");
 	%>
 
@@ -124,10 +126,11 @@
                                </thead>
                                <tbody>
                                    <%
+                                   
 									int count = 0;
-									for(int i = 0 ; i < rm.getNumberOfListItems() ; i++){
+									for(int i = 0 ; i < rm.getNumberOfListItems(lst) ; i++){
 										count += 1;
-										Map<String, String> resultsFields = rm.getFormattedResultListAt(i);
+										Map<String, String> resultsFields = rm.getFormattedResultListAt(i, lst);
 										
 										// Skip do not show results
 										if(title.equals("Do Not Show") && !resultsFields.get("modifier").equals("donotshow")){
@@ -177,7 +180,7 @@
 									                                <tr style="background-color:inherit">
 									                                    <td>
 									                                        <button type="button" class="btn btn-default btn-sm"
-									                                        	onclick=<%= "removeFromList(" + index + "," + i + "," + "\"" + resultsFields.get("modifier") + "\"" + ",\"recipe\")"%>>
+									                                        	onclick=<%= "removeFromList(" + index + "," + resultsFields.get("originalindex") + "," + "\"" + resultsFields.get("modifier") + "\"" + ",\"recipe\")"%>>
 									                                            <i style="color:white" class="fas fa-times"></i>
 									                                        </button>
 									                                    </td>
@@ -185,7 +188,7 @@
 									                                <tr style="background-color:inherit">
 									                                    <td>
 									                                        <button type="button" class="btn btn-default btn-sm"
-									                                        	onclick=<%= "moveToList(" + index + "," + i + ",\"recipe\")"%> >
+									                                        	onclick=<%= "moveToList(" + index + "," + resultsFields.get("originalindex") + ",\"recipe\")"%> >
 									                                            <i style="color:white" class="fas fa-sign-out-alt"></i>
 									                                        </button>
 									                                    </td>
@@ -237,7 +240,7 @@
 		                                                           <tr style="background-color:inherit">
 		                                                               <td>
 		                                                                   <button type="button" class="btn btn-default btn-sm"
-		                                                                  		onclick=<%= "removeFromList("+ index + "," + i + "," + "\"" + resultsFields.get("modifier") + "\"" + ",\"restaurant\")"%>>
+		                                                                  		onclick=<%= "removeFromList("+ index + "," + resultsFields.get("originalindex") + "," + "\"" + resultsFields.get("modifier") + "\"" + ",\"restaurant\")"%>>
 		                                                                       <i style="color:white" class="fas fa-times"></i>
 		                                                                   </button>
 		                                                               </td>
@@ -245,7 +248,7 @@
 		                                                           <tr style="background-color:inherit">
 		                                                               <td>
 		                                                                   <button type="button" class="btn btn-default btn-sm"
-		                                                                  		onclick=<%= "moveToList(" + index + "," + i + ",\"restaurant\")"%>>
+		                                                                  		onclick=<%= "moveToList(" + index + "," + resultsFields.get("originalindex") + ",\"restaurant\")"%>>
 		                                                                       <i style="color:white" class="fas fa-sign-out-alt"></i>
 		                                                                   </button>
 		                                                               </td>

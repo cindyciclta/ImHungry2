@@ -38,6 +38,10 @@ When(/^I click on "([^"]*)"$/) do |arg1|
   click_link_or_button arg1
 end
 
+Then(/^there should be "([^"]*)" as the first recipe$/) do |arg1|
+  expect(page.find('#reci-result1', wait:40)).to have_css('td', text: arg1)
+end
+
 Then(/^I am on the "([^"]*)" page for "([^"]*)"$/) do |arg1, arg2|
   expect(page).to have_current_path('/'+arg1+'?Search='+arg2)
 end
@@ -59,6 +63,7 @@ When(/^I move "([^"]*)"$/) do |arg1|
 end
 
 When(/^I select "([^"]*)" from the drop down$/) do |arg1|
+  expect(page).to have_css('#managelistselect', wait: 50)
   select arg1, :from => "managelistselect"
 end
 

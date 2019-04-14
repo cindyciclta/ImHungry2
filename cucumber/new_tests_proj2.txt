@@ -37,3 +37,14 @@ Test that two most recent searches appear in search history in order
 Test that consecutive duplicate searches only show up once in search history
 Test that clicking on search history link leads to result page for that search
 Test that search history is only saved for the target user account
+
+cucumber/features/ManageList/P2_ManageList.feature
+LIST PERSISTENCE:
+	Test that list item remains in favorites after signing out and back in
+	Test that persistent list item in favorites continues to be prioritized in search results
+	Test that persistent list item in favorites can be clicked on to view info page
+TODO	Test that list item remains in to-explore list after signing out and back in
+TODO	Test that persistent list item in to-explore list can be clicked on to view info page
+TODO	Test that list item remains in do-not-show list after signing out and back in
+TODO	Test that persistent list item in do-not-show list continues to be filtered out from search results
+TODO	Test that persistent list item in do-not-show can be clicked on to view info page

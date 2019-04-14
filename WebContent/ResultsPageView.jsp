@@ -264,7 +264,7 @@
 									
 									%>
                                 	
-                                    <tr onclick=<%="redirectToRestaurant(\"" + "/ImHungry/RedirectionController?action=restaurant&term="+term +"&index=" + 
+                                    <tr id=<%="rest-result"+i%> onclick=<%="redirectToRestaurant(\"" + "/ImHungry/RedirectionController?action=restaurant&term="+term +"&index=" + 
                                     index + "&item=" + i + "&token=" +token + "\")"%>>
                                         <td class="col">
                                             <table class="table text-white">
@@ -368,7 +368,7 @@
 										continue;
 									}
 								%>
-                                    <tr onclick=<%="redirectToRecipe(\"" + "/ImHungry/RedirectionController?action=recipe&term="+ecodedValue + "&reci_page="+ reci_pgnum+
+                                    <tr id=<%="reci-result"+i%> onclick=<%="redirectToRecipe(\"" + "/ImHungry/RedirectionController?action=recipe&term="+ecodedValue + "&reci_page="+ reci_pgnum+
                                     "&index=" + index + "&item=" + i + "&token=" +token + "\")"%>>
                                         <td class="col">
                                             <table class="table text-white">

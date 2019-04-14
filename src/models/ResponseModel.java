@@ -169,17 +169,17 @@ public class ResponseModel {
 	public boolean addToList(int i, String list, String type, boolean value) {
 		boolean ret = true;
 		if(type.equals("restaurant")) {
-			if(list.equals("donotshow")) {
+			if(list.equals(ListTypeEnum.DONOTSHOW.type)) {
 				ret = restaurants.setDoNotShowResult(i, value);
-			} else if(list.equals("favorites")) {
+			} else if(list.equals(ListTypeEnum.FAVORITES.type)) {
 				ret = restaurants.setFavoriteResult(i, value);
 			} else {
 				ret = restaurants.setToExploreResult(i, value);
 			}
 		}else {
-			if(list.equals("donotshow")) {
+			if(list.equals(ListTypeEnum.DONOTSHOW.type)) {
 				ret = recipes.setDoNotShowResult(i, value);
-			} else if(list.equals("favorites")) {
+			} else if(list.equals(ListTypeEnum.FAVORITES.type)) {
 				ret = recipes.setFavoriteResult(i, value);
 			} else{
 				ret = recipes.setToExploreResult(i, value);

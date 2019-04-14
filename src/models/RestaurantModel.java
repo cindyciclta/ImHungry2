@@ -90,11 +90,11 @@ public class RestaurantModel extends ListItemModel implements Comparable<Restaur
 		
 		String modifier = "";
 		if(isInDoNotShow()) {
-			modifier = "donotshow";
+			modifier = ListTypeEnum.DONOTSHOW.type;
 		} else if(isInFavorites()) {
-			modifier = "favorites";
+			modifier = ListTypeEnum.FAVORITES.type;
 		} else if(isInToExplore()) {
-			modifier = "toexplore";
+			modifier = ListTypeEnum.TOEXPLORE.type;
 		}
 		toReturn.put("modifier", modifier);
 		

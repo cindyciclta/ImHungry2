@@ -2,6 +2,7 @@ package test.java;
 
 import controllers.RedirectionController;
 import models.DatabaseModel;
+import models.ListTypeEnum;
 import models.ResponseModel;
 
 import static org.junit.Assert.*;
@@ -111,7 +112,7 @@ public class TestRedirectionController extends Mockito{
     public void testManageListDoNotShow() throws Exception {
         when(request.getParameter("action")).thenReturn( "managelist" );
         when(request.getParameter("index")).thenReturn( "0" );
-        when(request.getParameter("list")).thenReturn( "donotshow" );
+        when(request.getParameter("list")).thenReturn( ListTypeEnum.DONOTSHOW.type );
         when(request.getRequestDispatcher("ManageListView.jsp")).thenReturn(rd);
         new RedirectionController().service(request, response);
         verify(rd).forward(request, response);
@@ -121,7 +122,7 @@ public class TestRedirectionController extends Mockito{
     public void testManageListFavorites() throws Exception {
         when(request.getParameter("action")).thenReturn( "managelist" );
         when(request.getParameter("index")).thenReturn( "0" );
-        when(request.getParameter("list")).thenReturn( "favorites" );
+        when(request.getParameter("list")).thenReturn( ListTypeEnum.FAVORITES.type );
         when(request.getParameter("length")).thenReturn( "10" );
         when(request.getParameter("jsonarray")).thenReturn( "jsarray" );
         when(request.getRequestDispatcher("ManageListView.jsp")).thenReturn(rd);
@@ -133,7 +134,7 @@ public class TestRedirectionController extends Mockito{
     public void testManageListToExplore() throws Exception {
         when(request.getParameter("action")).thenReturn( "managelist" );
         when(request.getParameter("index")).thenReturn( "0" );
-        when(request.getParameter("list")).thenReturn( "toexplore" );
+        when(request.getParameter("list")).thenReturn( ListTypeEnum.TOEXPLORE.type );
         when(request.getRequestDispatcher("ManageListView.jsp")).thenReturn(rd);
         new RedirectionController().service(request, response);
         verify(rd).forward(request, response);
@@ -203,7 +204,7 @@ public class TestRedirectionController extends Mockito{
         when(request.getParameter("action")).thenReturn( "addtolist" );
         when(request.getParameter("index")).thenReturn( "1" );
         when(request.getParameter("item")).thenReturn( "0" );
-        when(request.getParameter("list")).thenReturn( "donotshow" );
+        when(request.getParameter("list")).thenReturn( ListTypeEnum.DONOTSHOW.type );
         when(request.getParameter("type")).thenReturn( "restaurant" );
         when(request.getParameter("term")).thenReturn( "chicken" );
         new RedirectionController().service(request, response);
@@ -216,7 +217,7 @@ public class TestRedirectionController extends Mockito{
         when(request.getParameter("item")).thenReturn( "0" );
         when(request.getParameter("oldplace")).thenReturn( "1" );
         when(request.getParameter("newplace")).thenReturn( "2" );
-        when(request.getParameter("list")).thenReturn( "donotshow" );
+        when(request.getParameter("list")).thenReturn( ListTypeEnum.DONOTSHOW.type );
         when(request.getParameter("type")).thenReturn( "restaurant" );
         when(request.getParameter("term")).thenReturn( "chicken" );
         new RedirectionController().service(request, response);
@@ -251,7 +252,7 @@ public class TestRedirectionController extends Mockito{
         when(request.getParameter("action")).thenReturn( "removefromlist" );
         when(request.getParameter("index")).thenReturn( "1" );
         when(request.getParameter("item")).thenReturn( "0" );
-        when(request.getParameter("list")).thenReturn( "donotshow" );
+        when(request.getParameter("list")).thenReturn( ListTypeEnum.DONOTSHOW.type );
         when(request.getParameter("type")).thenReturn( "restaurant" );
         when(request.getParameter("term")).thenReturn( "chicken" );
         new RedirectionController().service(request, response);
@@ -263,7 +264,7 @@ public class TestRedirectionController extends Mockito{
         when(request.getParameter("term")).thenReturn( "chicken" );
         when(request.getParameter("index")).thenReturn( "1" );
         when(request.getParameter("item")).thenReturn( "0" );
-        when(request.getParameter("list")).thenReturn( "donotshow" );
+        when(request.getParameter("list")).thenReturn( ListTypeEnum.DONOTSHOW.type );
         when(request.getParameter("type")).thenReturn( "restaurant" );
     
     }

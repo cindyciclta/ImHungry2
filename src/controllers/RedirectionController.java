@@ -18,6 +18,7 @@ import org.json.JSONArray;
 import models.CollageGenerationModel;
 import models.DatabaseModel;
 import models.GoogleImageRequestModel;
+import models.ListTypeEnum;
 import models.ResponseModel;
 import models.SearchTermModel;
 
@@ -66,8 +67,8 @@ public class RedirectionController extends HttpServlet {
 			request.removeAttribute("title");
 			if(list.equals("donotshow")) {
 				request.setAttribute("title", "Do Not Show");
-			} else if(list.equals("favorites")) {
-				request.setAttribute("title", "Favorites");
+			} else if(list.equals(ListTypeEnum.FAVORITES.type)) {
+				request.setAttribute("title", ListTypeEnum.FAVORITES.type);
 			} else {
 				request.setAttribute("title", "To Explore");
 			}

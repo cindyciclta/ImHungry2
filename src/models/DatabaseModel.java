@@ -91,7 +91,7 @@ public class DatabaseModel {
 			preparedStmt = conn.prepareStatement(sql);
 			preparedStmt.setString(1, username);
 			preparedStmt.setString(2, String.valueOf(password)); 
-			int affectedRows = preparedStmt.executeUpdate();
+			preparedStmt.executeUpdate();
 				
 		}
 		return returnVal;
@@ -357,14 +357,7 @@ public class DatabaseModel {
 		int userid = GetUserID(username);
 		String sql = "INSERT INTO grocery_list (selected_item, user_id, ordering) VALUES (?, ?, ?)";
 		if (userid != -1) {
-			Connection conn = getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-			
-			ps.setString(1, groceryitem);
-			ps.setInt(2, userid);
-			ps.setInt(3, 1); //ordering fix later
-			
-			ps.executeUpdate();
+			return InsertIntoGroceryList(userid, groceryitem);
 			
 			 
 		}
@@ -373,43 +366,36 @@ public class DatabaseModel {
 	public static boolean InsertIntoGroceryList(int userid,  String groceryitem) throws Exception {
 
 		String sql = "INSERT INTO grocery_list (selected_item, user_id, ordering) VALUES (?, ?, ?)";
-		if (userid != -1) {
-			Connection conn = getConnection();
-			PreparedStatement ps = conn.prepareStatement(sql);
-			
-			ps.setString(1, groceryitem);
-			ps.setInt(2, userid);
-			ps.setInt(3, 1); //ordering fix later
-			
-			ps.executeUpdate();
-			
-			 
-		}
+
+		Connection conn = getConnection();
+		PreparedStatement ps = conn.prepareStatement(sql);
+		
+		ps.setString(1, groceryitem);
+		ps.setInt(2, userid);
+		ps.setInt(3, 1); //ordering fix later
+		
+		ps.executeUpdate();
 		return true;
 	}
 	
-	public static GroceryListModel getGroceryListFromUser(String username) throws Exception{
-		GroceryListModel gl = new GroceryListModel();
-		
+	public static GroceryListModel getGroceryListFromUser(String username) throws Exception{		
 		int userid = GetUserID(username);
-		Connection conn = getConnection();
-		
 		return getGroceryListFromUser(userid);
 	}
+	
 	public static GroceryListModel getGroceryListFromUser(int userid) throws Exception{
 		GroceryListModel gl = new GroceryListModel();
 		
 		Connection conn = getConnection();
+
+		PreparedStatement ps = conn.prepareStatement("SELECT * from grocery_list where user_id=(?)");
+		ps.setInt(1, userid);
+		ResultSet rsGroceryList = ps.executeQuery();
 		
-		if(userid != -1) {
-			PreparedStatement ps = conn.prepareStatement("SELECT * from grocery_list where user_id=(?)");
-			ps.setInt(1, userid);
-			ResultSet rsGroceryList = ps.executeQuery();
-			
-			while(rsGroceryList.next()) {
-				gl.additem(rsGroceryList.getString("selected_item"));
-			}
+		while(rsGroceryList.next()) {
+			gl.additem(rsGroceryList.getString("selected_item"));
 		}
+		
 		return gl;
 	}
 	
@@ -426,8 +412,10 @@ public class DatabaseModel {
 		PreparedStatement preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
     	preparedStmt.setInt (1, searchId);
     	ResultSet rs = preparedStmt.executeQuery();
-		rs.next();
-		userId = rs.getInt("user_id");
+		if(rs.next()) {
+			userId = rs.getInt("user_id");
+		}
+	
 		 
 		return userId;
 	}
@@ -449,9 +437,9 @@ public class DatabaseModel {
 	    	restaurant.next();
 	    	Gson g = new Gson();
 	    	RestaurantModel rm = g.fromJson(restaurant.getString("json_string"), RestaurantModel.class);
-	    	if(rs.getString("name").equals("donotshow")) {
+	    	if(rs.getString("name").equals(ListTypeEnum.DONOTSHOW.type)) {
 	    		rm.setInDoNotShow(true);
-	    	}else if(rs.getString("name").equals("toexplore")) {
+	    	}else if(rs.getString("name").equals(ListTypeEnum.TOEXPLORE.type)) {
 	    		rm.setInToExplore(true);
 	    	}else {
 	    		rm.setInFavorites(true);
@@ -497,11 +485,11 @@ public class DatabaseModel {
 		int item_id = getItemIdFromRestaurant(rm);
 		
     	// Get Number of Items in list
-    	String name = "toexplore";
+    	String name = ListTypeEnum.TOEXPLORE.type;
     	if(rm.isInFavorites()) {
-    		name = "favorites";
+    		name = ListTypeEnum.FAVORITES.type;
     	}else if(rm.isInDoNotShow()) {
-    		name = "donotshow";
+    		name = ListTypeEnum.DONOTSHOW.type;
     	}
     	// Stop adding something that is already in list
     	Connection conn = getConnection();
@@ -578,9 +566,9 @@ public class DatabaseModel {
 	    	restaurant.next();
 	    	Gson g = new Gson();
 	    	RecipeModel rm = g.fromJson(restaurant.getString("json_string"), RecipeModel.class);
-	    	if(rs.getString("name").equals("donotshow")) {
+	    	if(rs.getString("name").equals(ListTypeEnum.DONOTSHOW.type)) {
 	    		rm.setInDoNotShow(true);
-	    	}else if(rs.getString("name").equals("toexplore")) {
+	    	}else if(rs.getString("name").equals(ListTypeEnum.TOEXPLORE.type)) {
 	    		rm.setInToExplore(true);
 	    	}else {
 	    		rm.setInFavorites(true);
@@ -629,11 +617,11 @@ public class DatabaseModel {
 		
     	
     	// Get Number of Items in list
-    	String name = "toexplore";
+    	String name = ListTypeEnum.TOEXPLORE.type;
     	if(rm.isInFavorites()) {
-    		name = "favorites";
+    		name = ListTypeEnum.FAVORITES.type;
     	}else if(rm.isInDoNotShow()) {
-    		name = "donotshow";
+    		name = ListTypeEnum.DONOTSHOW.type;
     	}
     	
     	// Stop adding something that is already in list
@@ -685,7 +673,7 @@ public class DatabaseModel {
 	}
 	
 	public static int updatePlaceOnMoveList(int itemId, int userId, String newName, String oldName, String restaurant) throws Exception{
-		boolean ret = true;
+
 		int oldPlace = -1;
 		
 		Connection conn = getConnection();
@@ -699,7 +687,7 @@ public class DatabaseModel {
     	oldPlace = rs.getInt("place");
 		
 		// Up everything after the number on the old list by 1
-		ret = updatePlaceOnDelete(userId, oldName, oldPlace, restaurant);
+		updatePlaceOnDelete(userId, oldName, oldPlace, restaurant);
 		
 		// Add to the end of the new list
 		int count = countItemsInList(newName, userId);

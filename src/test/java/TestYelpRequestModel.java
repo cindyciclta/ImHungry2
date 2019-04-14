@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import models.YelpRequestModel;
 import models.DatabaseModel;
+import models.ListTypeEnum;
 import models.MockYelpRequestModel;
 import models.ResponseCodeModel;
 
@@ -143,7 +144,7 @@ public class TestYelpRequestModel {
 		assertEquals(5, cached.getResultsSize());
 		assertTrue(cached.setDoNotShowResult(0, true));
 		assertTrue(cached.setDoNotShowResult(1, true));
-		assertTrue(cached.moveUpDownList(0, 1, 2, "donotshow"));
+		assertTrue(cached.moveUpDownList(0, 1, 2, ListTypeEnum.DONOTSHOW.type));
 		cached.sort();
 	}
 	
@@ -154,7 +155,7 @@ public class TestYelpRequestModel {
 	
 	@Test
 	public void testMoveUpDownList() {
-		assertFalse(cached.moveUpDownList(-1, 1, 2, "favorites"));
+		assertFalse(cached.moveUpDownList(-1, 1, 2, ListTypeEnum.FAVORITES.type));
 	}
 	
 	@Test

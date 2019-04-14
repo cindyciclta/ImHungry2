@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import models.DatabaseModel;
 import models.EdamamRequestModel;
+import models.ListTypeEnum;
 import models.ResponseModel;
 
 public class TestResponseModel {
@@ -64,14 +65,14 @@ public class TestResponseModel {
 	@Test
 	public void testSort() {
 		for(int i = 0 ; i < rm.getNumberOfRecipes() ; i++) {
-			rm.addToList(i, "favorites", "recipe", false);
-			rm.addToList(i, "donotshow", "recipe", false);
-			rm.addToList(i, "toexplore", "recipe", false);
+			rm.addToList(i, ListTypeEnum.FAVORITES.type, "recipe", false);
+			rm.addToList(i, ListTypeEnum.DONOTSHOW.type, "recipe", false);
+			rm.addToList(i, ListTypeEnum.TOEXPLORE.type, "recipe", false);
 		}
 		for(int i = 0 ; i < rm.getNumberOfRestaurants() ; i++) {
-			rm.addToList(i, "favorites", "restaurant", false);
-			rm.addToList(i, "donotshow", "restaurant", false);
-			rm.addToList(i, "toexplore", "restaurant", false);
+			rm.addToList(i, ListTypeEnum.FAVORITES.type, "restaurant", false);
+			rm.addToList(i, ListTypeEnum.DONOTSHOW.type, "restaurant", false);
+			rm.addToList(i, ListTypeEnum.TOEXPLORE.type, "restaurant", false);
 		}
 		
 		rm.sort();
@@ -88,9 +89,9 @@ public class TestResponseModel {
 	
 	@Test
 	public void testRestaurantDoNotShow() {
-		rm.addToList(0, "donotshow", "restaurant", true);
+		rm.addToList(0, ListTypeEnum.DONOTSHOW.type, "restaurant", true);
 		Map<String, String> modifiers = rm.getFormattedRestaurantResultsAt(0);
-		assertEquals("donotshow", modifiers.get("modifier"));
+		assertEquals(ListTypeEnum.DONOTSHOW.type, modifiers.get("modifier"));
 	}
 	
 	@Test
@@ -100,18 +101,18 @@ public class TestResponseModel {
 		assertTrue(rm.getSearchResults());
 		assertEquals(rm.getNumberOfRestaurants(), 5);
 		for(int i = 0 ; i < rm.getNumberOfRecipes() ; i++) {
-			rm.addToList(i, "favorites", "recipe", false);
-			rm.addToList(i, "donotshow", "recipe", false);
-			rm.addToList(i, "toexplore", "recipe", false);
+			rm.addToList(i, ListTypeEnum.FAVORITES.type, "recipe", false);
+			rm.addToList(i, ListTypeEnum.DONOTSHOW.type, "recipe", false);
+			rm.addToList(i, ListTypeEnum.TOEXPLORE.type, "recipe", false);
 		}
 		for(int i = 0 ; i < rm.getNumberOfRestaurants() ; i++) {
-			rm.addToList(i, "favorites", "restaurant", false);
-			rm.addToList(i, "donotshow", "restaurant", false);
-			rm.addToList(i, "toexplore", "restaurant", false);
+			rm.addToList(i, ListTypeEnum.FAVORITES.type, "restaurant", false);
+			rm.addToList(i, ListTypeEnum.DONOTSHOW.type, "restaurant", false);
+			rm.addToList(i, ListTypeEnum.TOEXPLORE.type, "restaurant", false);
 		}
-		assertEquals(0, rm.getNumberOfListItems("donotshow"));
-		assertEquals(0, rm.getNumberOfListItems("favorites"));
-		assertEquals(0, rm.getNumberOfListItems("toexplore"));
+		assertEquals(0, rm.getNumberOfListItems(ListTypeEnum.DONOTSHOW.type));
+		assertEquals(0, rm.getNumberOfListItems(ListTypeEnum.FAVORITES.type));
+		assertEquals(0, rm.getNumberOfListItems(ListTypeEnum.TOEXPLORE.type));
 	}
 	
 	@Test
@@ -121,22 +122,22 @@ public class TestResponseModel {
 		assertTrue(rm.getSearchResults());
 		assertEquals(rm.getNumberOfRestaurants(), 5);
 		for(int i = 0 ; i < rm.getNumberOfRecipes() ; i++) {
-			rm.addToList(i, "favorites", "recipe", false);
-			rm.addToList(i, "donotshow", "recipe", false);
-			rm.addToList(i, "toexplore", "recipe", false);
+			rm.addToList(i, ListTypeEnum.FAVORITES.type, "recipe", false);
+			rm.addToList(i, ListTypeEnum.DONOTSHOW.type, "recipe", false);
+			rm.addToList(i, ListTypeEnum.TOEXPLORE.type, "recipe", false);
 		}
 		for(int i = 0 ; i < rm.getNumberOfRestaurants() ; i++) {
-			rm.addToList(i, "favorites", "restaurant", false);
-			rm.addToList(i, "donotshow", "restaurant", false);
-			rm.addToList(i, "toexplore", "restaurant", false);
+			rm.addToList(i, ListTypeEnum.FAVORITES.type, "restaurant", false);
+			rm.addToList(i, ListTypeEnum.DONOTSHOW.type, "restaurant", false);
+			rm.addToList(i, ListTypeEnum.TOEXPLORE.type, "restaurant", false);
 		}
 		
-		assertEquals(0, rm.getNumberOfListItems("donotshow"));
-		assertEquals(0, rm.getNumberOfListItems("favorites"));
-		assertEquals(0, rm.getNumberOfListItems("toexplore"));
-		rm.addToList(2, "favorites", "recipe", true);
-		assertNotNull(rm.getFormattedResultListAt(0, "favorites"));
-		assertNotNull(rm.getFormattedResultListAt(0, "favorites").get("prepTime"));
+		assertEquals(0, rm.getNumberOfListItems(ListTypeEnum.DONOTSHOW.type));
+		assertEquals(0, rm.getNumberOfListItems(ListTypeEnum.FAVORITES.type));
+		assertEquals(0, rm.getNumberOfListItems(ListTypeEnum.TOEXPLORE.type));
+		rm.addToList(2, ListTypeEnum.FAVORITES.type, "recipe", true);
+		assertNotNull(rm.getFormattedResultListAt(0, ListTypeEnum.FAVORITES.type));
+		assertNotNull(rm.getFormattedResultListAt(0, ListTypeEnum.FAVORITES.type).get("prepTime"));
 	}
 	
 	@Test
@@ -144,22 +145,22 @@ public class TestResponseModel {
 
 		assertEquals(rm.getNumberOfRestaurants(), 5);
 		for(int i = 0 ; i < rm.getNumberOfRecipes() ; i++) {
-			rm.addToList(i, "favorites", "recipe", false);
-			rm.addToList(i, "donotshow", "recipe", false);
-			rm.addToList(i, "toexplore", "recipe", false);
+			rm.addToList(i, ListTypeEnum.FAVORITES.type, "recipe", false);
+			rm.addToList(i, ListTypeEnum.DONOTSHOW.type, "recipe", false);
+			rm.addToList(i, ListTypeEnum.TOEXPLORE.type, "recipe", false);
 		}
 		for(int i = 0 ; i < rm.getNumberOfRestaurants() ; i++) {
-			rm.addToList(i, "favorites", "restaurant", false);
-			rm.addToList(i, "donotshow", "restaurant", false);
-			rm.addToList(i, "toexplore", "restaurant", false);
+			rm.addToList(i, ListTypeEnum.FAVORITES.type, "restaurant", false);
+			rm.addToList(i, ListTypeEnum.DONOTSHOW.type, "restaurant", false);
+			rm.addToList(i, ListTypeEnum.TOEXPLORE.type, "restaurant", false);
 		}
-		assertEquals(0, rm.getNumberOfListItems("donotshow"));
-		assertEquals(0, rm.getNumberOfListItems("favorites"));
-		assertEquals(0, rm.getNumberOfListItems("toexplore"));
-		rm.addToList(2, "favorites", "restaurant", true);
+		assertEquals(0, rm.getNumberOfListItems(ListTypeEnum.DONOTSHOW.type));
+		assertEquals(0, rm.getNumberOfListItems(ListTypeEnum.FAVORITES.type));
+		assertEquals(0, rm.getNumberOfListItems(ListTypeEnum.TOEXPLORE.type));
+		rm.addToList(2, ListTypeEnum.FAVORITES.type, "restaurant", true);
 		
-		assertNotNull(rm.getFormattedResultListAt(0, "favorites"));
-		assertNotNull(rm.getFormattedResultListAt(0, "favorites").get("drivingTime"));
+		assertNotNull(rm.getFormattedResultListAt(0, ListTypeEnum.FAVORITES.type));
+		assertNotNull(rm.getFormattedResultListAt(0, ListTypeEnum.FAVORITES.type).get("drivingTime"));
 	}
 	
 	@Test
@@ -167,29 +168,29 @@ public class TestResponseModel {
 
 		assertEquals(rm.getNumberOfRestaurants(), 5);
 		for(int i = 0 ; i < rm.getNumberOfRecipes() ; i++) {
-			rm.addToList(i, "favorites", "recipe", false);
-			rm.addToList(i, "donotshow", "recipe", false);
-			rm.addToList(i, "toexplore", "recipe", false);
+			rm.addToList(i, ListTypeEnum.FAVORITES.type, "recipe", false);
+			rm.addToList(i, ListTypeEnum.DONOTSHOW.type, "recipe", false);
+			rm.addToList(i, ListTypeEnum.TOEXPLORE.type, "recipe", false);
 		}
 		for(int i = 0 ; i < rm.getNumberOfRestaurants() ; i++) {
-			rm.addToList(i, "favorites", "restaurant", false);
-			rm.addToList(i, "donotshow", "restaurant", false);
-			rm.addToList(i, "toexplore", "restaurant", false);
+			rm.addToList(i, ListTypeEnum.FAVORITES.type, "restaurant", false);
+			rm.addToList(i, ListTypeEnum.DONOTSHOW.type, "restaurant", false);
+			rm.addToList(i, ListTypeEnum.TOEXPLORE.type, "restaurant", false);
 		}
-		assertEquals(0, rm.getNumberOfListItems("donotshow"));
-		assertEquals(0, rm.getNumberOfListItems("favorites"));
-		assertEquals(0, rm.getNumberOfListItems("toexplore"));
+		assertEquals(0, rm.getNumberOfListItems(ListTypeEnum.DONOTSHOW.type));
+		assertEquals(0, rm.getNumberOfListItems(ListTypeEnum.FAVORITES.type));
+		assertEquals(0, rm.getNumberOfListItems(ListTypeEnum.TOEXPLORE.type));
 		
-		rm.addToList(2, "favorites", "restaurant", true);
-		rm.addToList(3, "favorites", "restaurant", true);
-		String name = rm.getFormattedResultListAt(0, "favorites").get("name");
-		rm.moveUpDownList(0, "favorites", "restaurant", 1, 2);
-		rm.addToList(1, "donotshow", "restaurant", true);
-		for(int i = 0 ; i < rm.getNumberOfListItems("favorites") ; i++) {
-			assertNotNull(rm.getFormattedResultListAt(i, "favorites"));
-			assertNull(rm.getFormattedResultListAt(i, "toexplore"));
-			if(rm.getFormattedResultListAt(i, "favorites").get("name").equals(name)) {
-				assertEquals("2", rm.getFormattedResultListAt(i, "favorites").get("place"));
+		rm.addToList(2, ListTypeEnum.FAVORITES.type, "restaurant", true);
+		rm.addToList(3, ListTypeEnum.FAVORITES.type, "restaurant", true);
+		String name = rm.getFormattedResultListAt(0, ListTypeEnum.FAVORITES.type).get("name");
+		rm.moveUpDownList(0, ListTypeEnum.FAVORITES.type, "restaurant", 1, 2);
+		rm.addToList(1, ListTypeEnum.DONOTSHOW.type, "restaurant", true);
+		for(int i = 0 ; i < rm.getNumberOfListItems(ListTypeEnum.FAVORITES.type) ; i++) {
+			assertNotNull(rm.getFormattedResultListAt(i, ListTypeEnum.FAVORITES.type));
+			assertNull(rm.getFormattedResultListAt(i, ListTypeEnum.TOEXPLORE.type));
+			if(rm.getFormattedResultListAt(i, ListTypeEnum.FAVORITES.type).get("name").equals(name)) {
+				assertEquals("2", rm.getFormattedResultListAt(i, ListTypeEnum.FAVORITES.type).get("place"));
 			}
 		}
 	}
@@ -199,29 +200,29 @@ public class TestResponseModel {
 
 		assertEquals(rm.getNumberOfRestaurants(), 5);
 		for(int i = 0 ; i < rm.getNumberOfRecipes() ; i++) {
-			rm.addToList(i, "favorites", "recipe", false);
-			rm.addToList(i, "donotshow", "recipe", false);
-			rm.addToList(i, "toexplore", "recipe", false);
+			rm.addToList(i, ListTypeEnum.FAVORITES.type, "recipe", false);
+			rm.addToList(i, ListTypeEnum.DONOTSHOW.type, "recipe", false);
+			rm.addToList(i, ListTypeEnum.TOEXPLORE.type, "recipe", false);
 		}
 		for(int i = 0 ; i < rm.getNumberOfRestaurants() ; i++) {
-			rm.addToList(i, "favorites", "restaurant", false);
-			rm.addToList(i, "donotshow", "restaurant", false);
-			rm.addToList(i, "toexplore", "restaurant", false);
+			rm.addToList(i, ListTypeEnum.FAVORITES.type, "restaurant", false);
+			rm.addToList(i, ListTypeEnum.DONOTSHOW.type, "restaurant", false);
+			rm.addToList(i, ListTypeEnum.TOEXPLORE.type, "restaurant", false);
 		}
-		assertEquals(0, rm.getNumberOfListItems("donotshow"));
-		assertEquals(0, rm.getNumberOfListItems("favorites"));
-		assertEquals(0, rm.getNumberOfListItems("toexplore"));
+		assertEquals(0, rm.getNumberOfListItems(ListTypeEnum.DONOTSHOW.type));
+		assertEquals(0, rm.getNumberOfListItems(ListTypeEnum.FAVORITES.type));
+		assertEquals(0, rm.getNumberOfListItems(ListTypeEnum.TOEXPLORE.type));
 		
-		rm.addToList(2, "favorites", "recipe", true);
-		rm.addToList(3, "favorites", "recipe", true);
-		String name = rm.getFormattedResultListAt(0, "favorites").get("name");
-		rm.moveUpDownList(0, "favorites", "recipe", 1, 2);
-		rm.addToList(1, "donotshow", "recipe", true);
-		for(int i = 0 ; i < rm.getNumberOfListItems("favorites") ; i++) {
-			assertNotNull(rm.getFormattedResultListAt(i, "favorites"));
-			assertNull(rm.getFormattedResultListAt(i, "toexplore"));
-			if(rm.getFormattedResultListAt(i, "favorites").get("name").equals(name)) {
-				assertEquals("2", rm.getFormattedResultListAt(i, "favorites").get("place"));
+		rm.addToList(2, ListTypeEnum.FAVORITES.type, "recipe", true);
+		rm.addToList(3, ListTypeEnum.FAVORITES.type, "recipe", true);
+		String name = rm.getFormattedResultListAt(0, ListTypeEnum.FAVORITES.type).get("name");
+		rm.moveUpDownList(0, ListTypeEnum.FAVORITES.type, "recipe", 1, 2);
+		rm.addToList(1, ListTypeEnum.DONOTSHOW.type, "recipe", true);
+		for(int i = 0 ; i < rm.getNumberOfListItems(ListTypeEnum.FAVORITES.type) ; i++) {
+			assertNotNull(rm.getFormattedResultListAt(i, ListTypeEnum.FAVORITES.type));
+			assertNull(rm.getFormattedResultListAt(i, ListTypeEnum.TOEXPLORE.type));
+			if(rm.getFormattedResultListAt(i, ListTypeEnum.FAVORITES.type).get("name").equals(name)) {
+				assertEquals("2", rm.getFormattedResultListAt(i, ListTypeEnum.FAVORITES.type).get("place"));
 			}
 		}	
 	}
@@ -233,19 +234,19 @@ public class TestResponseModel {
 		assertTrue(rm.getSearchResults());
 		assertEquals(rm.getNumberOfRestaurants(), 5);
 		for(int i = 0 ; i < rm.getNumberOfRecipes() ; i++) {
-			rm.addToList(i, "favorites", "recipe", false);
-			rm.addToList(i, "donotshow", "recipe", false);
-			rm.addToList(i, "toexplore", "recipe", false);
+			rm.addToList(i, ListTypeEnum.FAVORITES.type, "recipe", false);
+			rm.addToList(i, ListTypeEnum.DONOTSHOW.type, "recipe", false);
+			rm.addToList(i, ListTypeEnum.TOEXPLORE.type, "recipe", false);
 		}
 		for(int i = 0 ; i < rm.getNumberOfRestaurants() ; i++) {
-			rm.addToList(i, "favorites", "restaurant", false);
-			rm.addToList(i, "donotshow", "restaurant", false);
-			rm.addToList(i, "toexplore", "restaurant", false);
+			rm.addToList(i, ListTypeEnum.FAVORITES.type, "restaurant", false);
+			rm.addToList(i, ListTypeEnum.DONOTSHOW.type, "restaurant", false);
+			rm.addToList(i, ListTypeEnum.TOEXPLORE.type, "restaurant", false);
 		}
-		assertEquals(0, rm.getNumberOfListItems("donotshow"));
-		assertEquals(0, rm.getNumberOfListItems("favorites"));
-		assertEquals(0, rm.getNumberOfListItems("toexplore"));
-		assertNull(rm.getFormattedResultListAt(0, "favorites"));
+		assertEquals(0, rm.getNumberOfListItems(ListTypeEnum.DONOTSHOW.type));
+		assertEquals(0, rm.getNumberOfListItems(ListTypeEnum.FAVORITES.type));
+		assertEquals(0, rm.getNumberOfListItems(ListTypeEnum.TOEXPLORE.type));
+		assertNull(rm.getFormattedResultListAt(0, ListTypeEnum.FAVORITES.type));
 	}
 	
 	@Test
@@ -255,47 +256,47 @@ public class TestResponseModel {
 	
 	@Test
 	public void testRestaurantFavorites() {
-		rm.addToList(0, "favorites", "restaurant", true);
+		rm.addToList(0, ListTypeEnum.FAVORITES.type, "restaurant", true);
 		Map<String, String> modifiers = rm.getFormattedRestaurantResultsAt(0);
-		assertEquals("favorites", modifiers.get("modifier"));
+		assertEquals(ListTypeEnum.FAVORITES.type, modifiers.get("modifier"));
 	}
 	
 	@Test
 	public void testRestaurantToExplore() {
-		rm.addToList(0, "toexplore", "restaurant", true);
+		rm.addToList(0, ListTypeEnum.TOEXPLORE.type, "restaurant", true);
 		Map<String, String> modifiers = rm.getFormattedRestaurantResultsAt(0);
-		assertEquals("toexplore", modifiers.get("modifier"));
+		assertEquals(ListTypeEnum.TOEXPLORE.type, modifiers.get("modifier"));
 	}
 	
 	@Test
 	public void testRecipeDoNotShow() {
 		for(int i = 0 ; i < rm.getNumberOfRecipes() ; i++) {
-			rm.addToList(i, "favorites", "recipe", false);
-			rm.addToList(i, "donotshow", "recipe", false);
-			rm.addToList(i, "toexplore", "recipe", false);
+			rm.addToList(i, ListTypeEnum.FAVORITES.type, "recipe", false);
+			rm.addToList(i, ListTypeEnum.DONOTSHOW.type, "recipe", false);
+			rm.addToList(i, ListTypeEnum.TOEXPLORE.type, "recipe", false);
 		}
 		for(int i = 0 ; i < rm.getNumberOfRestaurants() ; i++) {
-			rm.addToList(i, "favorites", "restaurant", false);
-			rm.addToList(i, "donotshow", "restaurant", false);
-			rm.addToList(i, "toexplore", "restaurant", false);
+			rm.addToList(i, ListTypeEnum.FAVORITES.type, "restaurant", false);
+			rm.addToList(i, ListTypeEnum.DONOTSHOW.type, "restaurant", false);
+			rm.addToList(i, ListTypeEnum.TOEXPLORE.type, "restaurant", false);
 		}
-		rm.addToList(0, "donotshow", "recipe", true);
+		rm.addToList(0, ListTypeEnum.DONOTSHOW.type, "recipe", true);
 		Map<String, String> modifiers = rm.getFormattedRecipeResultsAt(0);
-		assertEquals("donotshow", modifiers.get("modifier"));
+		assertEquals(ListTypeEnum.DONOTSHOW.type, modifiers.get("modifier"));
 	}
 	
 	@Test
 	public void testRecipeFavorites() {
-		rm.addToList(0, "favorites", "recipe", true);
+		rm.addToList(0, ListTypeEnum.FAVORITES.type, "recipe", true);
 		Map<String, String> modifiers = rm.getFormattedRecipeResultsAt(0);
-		assertEquals("favorites", modifiers.get("modifier"));
+		assertEquals(ListTypeEnum.FAVORITES.type, modifiers.get("modifier"));
 	}
 	
 	@Test
 	public void testRecipeToExplore() {
-		rm.addToList(0, "toexplore", "recipe", true);
+		rm.addToList(0, ListTypeEnum.TOEXPLORE.type, "recipe", true);
 		Map<String, String> modifiers = rm.getFormattedRecipeResultsAt(0);
-		assertEquals("toexplore", modifiers.get("modifier"));
+		assertEquals(ListTypeEnum.TOEXPLORE.type, modifiers.get("modifier"));
 	}
 	
 	

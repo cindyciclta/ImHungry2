@@ -557,14 +557,23 @@ public class TestDatabaseModel{
 		DatabaseModel.insertUser(username, password.toCharArray());
 		int id = DatabaseModel.GetUserID(username);
 		
+		RestaurantModel rm4 = new RestaurantModel();
+		rm4.setName("blasdfsdfshss");
+		rm4.setInToExplore(true);
+		DatabaseModel.AddSearchTermToHistory(id, "pizzalossl", 10, 10);
+		int searchId = DatabaseModel.getSearchId("pizzalossl", 10, 10);
+		DatabaseModel.insertRestaurant(rm4, searchId);
+		DatabaseModel.insertRestaurantIntoList(searchId, rm4);
+		assertEquals(1, rm4.getOrder());
+		
 		RestaurantModel rm2 = new RestaurantModel();
 		rm2.setName("blasdfsdfsh");
 		rm2.setInToExplore(true);
 		DatabaseModel.AddSearchTermToHistory(id, "pizzalol", 10, 10);
-		int searchId = DatabaseModel.getSearchId("pizzalol", 10, 10);
+		searchId = DatabaseModel.getSearchId("pizzalol", 10, 10);
 		DatabaseModel.insertRestaurant(rm2, searchId);
 		DatabaseModel.insertRestaurantIntoList(searchId, rm2);
-		assertEquals(1, rm2.getOrder());
+		assertEquals(2, rm2.getOrder());
 		
 		
 		RestaurantModel rm = new RestaurantModel();
@@ -574,18 +583,25 @@ public class TestDatabaseModel{
 		searchId = DatabaseModel.getSearchId("pizza", 10, 10);
 		DatabaseModel.insertRestaurant(rm, searchId);
 		DatabaseModel.insertRestaurantIntoList(searchId, rm);
-		assertEquals(2, rm.getOrder());
+		assertEquals(3, rm.getOrder());
+		
+		RestaurantModel rm3 = new RestaurantModel();
+		rm3.setName("bjjhijijilah");
+		rm3.setInToExplore(true);
+		DatabaseModel.AddSearchTermToHistory(id, "pizdfdfza", 10, 10);
+		searchId = DatabaseModel.getSearchId("pizdfdfza", 10, 10);
+		DatabaseModel.insertRestaurant(rm3, searchId);
+		DatabaseModel.insertRestaurantIntoList(searchId, rm3);
+		assertEquals(4, rm3.getOrder());
 		
 		int itemId = DatabaseModel.getItemIdFromRestaurant(rm);
-		DatabaseModel.updatePlaceOnMoveUpDown(itemId, searchId, "toexplore", rm.getOrder(), 1, "restaurant");
+		DatabaseModel.updatePlaceOnMoveUpDown(itemId, searchId, "toexplore", rm.getOrder(), 2, "restaurant");
 		
 		List<RestaurantModel> recipes = DatabaseModel.getRestaurantsInList(searchId);
-		assertEquals(2, recipes.size());
-		for(int i = 0 ; i < recipes.size() ; i++) {
+		assertEquals(4, recipes.size());
+		for(int i = 0 ; i < 2 ; i++) {
 			if(recipes.get(i).getFormattedFieldsForResultsPage().get("name").equals("blah")) {
 				assertEquals(1, recipes.get(i).getOrder());
-			}else {
-				assertEquals(2, recipes.get(i).getOrder());
 			}
 		}
 		deleteUser(username);
@@ -607,7 +623,6 @@ public class TestDatabaseModel{
 		DatabaseModel.insertRestaurantIntoList(searchId, rm2);
 		assertEquals(1, rm2.getOrder());
 		
-		
 		RestaurantModel rm = new RestaurantModel();
 		rm.setName("blah");
 		rm.setInToExplore(true);
@@ -617,12 +632,21 @@ public class TestDatabaseModel{
 		DatabaseModel.insertRestaurantIntoList(searchId, rm);
 		assertEquals(2, rm.getOrder());
 		
+		RestaurantModel rm3 = new RestaurantModel();
+		rm3.setName("aaaablah");
+		rm3.setInToExplore(true);
+		DatabaseModel.AddSearchTermToHistory(id, "pizzaa", 10, 10);
+		searchId = DatabaseModel.getSearchId("pizzaa", 10, 10);
+		DatabaseModel.insertRestaurant(rm3, searchId);
+		DatabaseModel.insertRestaurantIntoList(searchId, rm3);
+		assertEquals(3, rm3.getOrder());
+		
 		int itemId = DatabaseModel.getItemIdFromRestaurant(rm2);
 		DatabaseModel.updatePlaceOnMoveUpDown(itemId, searchId, "toexplore", rm2.getOrder(), 2, "restaurant");
 		
 		List<RestaurantModel> recipes = DatabaseModel.getRestaurantsInList(searchId);
-		assertEquals(2, recipes.size());
-		for(int i = 0 ; i < recipes.size() ; i++) {
+		assertEquals(3, recipes.size());
+		for(int i = 0 ; i < 2 ; i++) {
 			if(recipes.get(i).getFormattedFieldsForResultsPage().get("name").equals("blah")) {
 				assertEquals(1, recipes.get(i).getOrder());
 			}else {
@@ -663,6 +687,48 @@ public class TestDatabaseModel{
 		List<RecipeModel> recipes = DatabaseModel.getRecipesInList(searchId);
 		assertEquals(1, recipes.size());
 		assertEquals(1, recipes.get(0).getOrder());
+		deleteUser(username);
+	}
+	
+	@Test
+	public void deleteInvalidId() throws Exception{
+		String username = "test";
+		String password = "test";
+		DatabaseModel.insertUser(username, password.toCharArray());
+		int id = DatabaseModel.GetUserID(username);
+		
+		RecipeModel rm = new RecipeModel();
+		rm.setName("blah");
+		rm.setInToExplore(true);
+		DatabaseModel.AddSearchTermToHistory(id, "pizza", 10, 10);
+		int search2 = DatabaseModel.getSearchId("pizza", 10, 10);
+		DatabaseModel.insertRecipe(rm, search2);
+		DatabaseModel.insertRecipeIntoList(search2, rm);
+		assertEquals(1, rm.getOrder());
+		
+		DatabaseModel.deleteRecipe(rm, -1);
+		assertEquals(1, DatabaseModel.getRecipesInList(search2).size());
+		deleteUser(username);
+	}
+	
+	@Test
+	public void deleteRestaurantInvalidId() throws Exception{
+		String username = "test";
+		String password = "test";
+		DatabaseModel.insertUser(username, password.toCharArray());
+		int id = DatabaseModel.GetUserID(username);
+		
+		RestaurantModel rm = new RestaurantModel();
+		rm.setName("blah");
+		rm.setInToExplore(true);
+		DatabaseModel.AddSearchTermToHistory(id, "pizza", 10, 10);
+		int search2 = DatabaseModel.getSearchId("pizza", 10, 10);
+		DatabaseModel.insertRestaurant(rm, search2);
+		DatabaseModel.insertRestaurantIntoList(search2, rm);
+		assertEquals(1, rm.getOrder());
+		
+		DatabaseModel.deleteRestaurant(rm, -1);
+		assertEquals(1, DatabaseModel.getRestaurantsInList(search2).size());
 		deleteUser(username);
 	}
 	

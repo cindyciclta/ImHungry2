@@ -11,6 +11,7 @@ import org.junit.After;
 import org.junit.Test;
 
 import models.IngredientModel;
+import models.ListTypeEnum;
 import models.RecipeModel;
 import models.RestaurantModel;
 
@@ -87,7 +88,7 @@ public class TestRecipeModel {
 		RecipeModel rm = new RecipeModel();
 		rm.setInDoNotShow(true);
 		Map<String, String> res = rm.getFormattedFieldsForResults();
-		assertEquals("donotshow", res.get("modifier"));
+		assertEquals(ListTypeEnum.DONOTSHOW.type, res.get("modifier"));
 	}
 	
 	@Test
@@ -95,7 +96,7 @@ public class TestRecipeModel {
 		RecipeModel rm = new RecipeModel();
 		rm.setInFavorites(true);
 		Map<String, String> res = rm.getFormattedFieldsForResults();
-		assertEquals("favorites", res.get("modifier"));
+		assertEquals(ListTypeEnum.FAVORITES.type, res.get("modifier"));
 	}
 	
 	@Test
@@ -103,7 +104,7 @@ public class TestRecipeModel {
 		RecipeModel rm = new RecipeModel();
 		rm.setInToExplore(true);
 		Map<String, String> res = rm.getFormattedFieldsForResults();
-		assertEquals("toexplore", res.get("modifier"));
+		assertEquals(ListTypeEnum.TOEXPLORE.type, res.get("modifier"));
 	}
 	
 	@Test

@@ -56,11 +56,11 @@ public class RecipeModel extends ListItemModel implements Comparable<RecipeModel
 		toReturn.put("cookTime", cookTime + "");
 		String modifier = "";
 		if(isInDoNotShow()) {
-			modifier = "donotshow";
+			modifier = ListTypeEnum.DONOTSHOW.type;
 		} else if(isInFavorites()) {
-			modifier = "favorites";
+			modifier = ListTypeEnum.FAVORITES.type;
 		} else if(isInToExplore()) {
-			modifier = "toexplore";
+			modifier = ListTypeEnum.TOEXPLORE.type;
 		}
 		toReturn.put("modifier", modifier);
 		return toReturn;

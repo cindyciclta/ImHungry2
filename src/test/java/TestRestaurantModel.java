@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import models.ListTypeEnum;
 import models.RestaurantModel;
 
 public class TestRestaurantModel {
@@ -87,7 +88,7 @@ public class TestRestaurantModel {
 		RestaurantModel rm = new RestaurantModel();
 		rm.setInDoNotShow(true);
 		Map<String, String> res = rm.getFormattedFieldsForResultsPage();
-		assertEquals("donotshow", res.get("modifier"));
+		assertEquals(ListTypeEnum.DONOTSHOW.type, res.get("modifier"));
 	}
 	
 	@Test
@@ -95,7 +96,7 @@ public class TestRestaurantModel {
 		RestaurantModel rm = new RestaurantModel();
 		rm.setInFavorites(true);
 		Map<String, String> res = rm.getFormattedFieldsForResultsPage();
-		assertEquals("favorites", res.get("modifier"));
+		assertEquals(ListTypeEnum.FAVORITES.type, res.get("modifier"));
 	}
 	
 	@Test
@@ -103,7 +104,7 @@ public class TestRestaurantModel {
 		RestaurantModel rm = new RestaurantModel();
 		rm.setInToExplore(true);
 		Map<String, String> res = rm.getFormattedFieldsForResultsPage();
-		assertEquals("toexplore", res.get("modifier"));
+		assertEquals(ListTypeEnum.TOEXPLORE.type, res.get("modifier"));
 	}
 	
 	@Test

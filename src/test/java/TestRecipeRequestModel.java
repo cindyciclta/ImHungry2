@@ -9,6 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import models.DatabaseModel;
+import models.ListTypeEnum;
 import models.MockRecipeRequestModel;
 import models.ResponseCodeModel;
 
@@ -127,7 +128,7 @@ public class TestRecipeRequestModel{
 	public void testMoveUpDown() {
 		assertTrue(cached.setDoNotShowResult(0, true));
 		assertTrue(cached.setDoNotShowResult(1, true));
-		assertTrue(cached.moveUpDownList(0, 1, 2, "donotshow"));
+		assertTrue(cached.moveUpDownList(0, 1, 2, ListTypeEnum.DONOTSHOW.type));
 		cached.sort();
 	}
 	
@@ -138,7 +139,7 @@ public class TestRecipeRequestModel{
 	
 	@Test
 	public void testMoveUpDownList() {
-		assertFalse(cached.moveUpDownList(-1, 1, 2, "favorites"));
+		assertFalse(cached.moveUpDownList(-1, 1, 2, ListTypeEnum.FAVORITES.type));
 	}
 	
 	

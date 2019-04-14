@@ -5,7 +5,7 @@ require 'rspec'
 
 
 Capybara.register_driver :chrome do |app|
-  Capybara::Selenium::Driver.new(app, :browser => :chrome, :driver_path=>"C:\\Users\\veda\\Downloads\\chromedriver.exe")
+  Capybara::Selenium::Driver.new(app, :browser => :chrome, :driver_path=>"C:\\Users\\Lazlo\\Downloads\\chromedriver.exe")
 end
 
 Capybara.register_driver :headless_chrome do |app|
@@ -19,4 +19,4 @@ Capybara.register_driver :headless_chrome do |app|
     desired_capabilities: capabilities
 end
 
-Capybara.default_driver = :headless_chrome
+Capybara.default_driver = :chrome

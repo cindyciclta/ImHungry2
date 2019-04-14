@@ -11,7 +11,6 @@ Test signing in with empty username does nothing
 Test signing in with empty password does nothing
 Test that signing out from results page leads to sign in page
 Test that signing out from search page leads to sign in page
-TODO? - Test that navigating directly to search page requires user to be signed in
 
 cucumber/features/Search/P2_SearchPage.feature:
 Test that there is a radius text box
@@ -23,7 +22,14 @@ Test using enter to search
 cucumber/features/Result/P2_ResultsPage.feature:
 Test that searching for 3 items does not cause pagination
 Test that searching for 15 items causes pagination
-Test when there's pagination, clicking on second page leads to results
+Test when there's pagination, there are no previous buttons for either column
+Test when there's pagination, clicking on second restaurant page leads to results
+Test when there's pagination, clicking on second recipe page leads to results
+Test when there's pagination, clicking on next restaurant page button page leads to second page
+Test when there's pagination, clicking on next recipe page button page leads to second page
+Test when on 2nd recipe page, clicking on previous recipe page button page leads to first
+Test when on 2nd restaurant page, clicking on previous restaurant page button page leads to first
+Test that the current page marker stays in the middle of the pagination display when navigating
 Test that there is table-hover on results (UI)
 Test that there is a search history text
 Test that the most recent search appears in search history

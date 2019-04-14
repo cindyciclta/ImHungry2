@@ -12,6 +12,13 @@ Scenario: Pagination single page
 	When I searched for item "cake" with "3" results and was redirected to the Results page
 	Then there should be no pagination
 	
+Scenario: Pagination multi-page does not have previous buttons on the first pages
+
+	When I searched for item "korean" with "15" results and was redirected to the Results page
+	Then there should be pagination
+	And there should be no previous recipe button
+	And there should be no previous restaurant button
+	
 Scenario: Pagination multi-page and visit second restaurant page
 
 	When I searched for item "pizza" with "15" results and was redirected to the Results page
@@ -25,6 +32,48 @@ Scenario: Pagination multi-page and visit second recipe page
 	Then there should be pagination
 	When I navigate to the second recipe page
 	Then I am on the "Results for burger" page
+	
+Scenario: Pagination multi-page and use the next recipe button
+
+	When I searched for item "indian" with "15" results and was redirected to the Results page
+	Then there should be pagination
+	When I press the next recipe button
+	Then I am on the "Results for indian" page
+
+Scenario: Pagination multi-page and use the next restaurant button
+
+	When I searched for item "thai" with "15" results and was redirected to the Results page
+	Then there should be pagination
+	When I press the next restaurant button
+	Then I am on the "Results for thai" page
+	
+Scenario: Pagination multi-page and use the previous recipe button
+
+	When I searched for item "indian" with "15" results and was redirected to the Results page
+	Then there should be pagination
+	When I navigate to the second recipe page
+	And I press the previous recipe button
+	Then I am on the "Results for indian" page
+	
+Scenario: Pagination multi-page and use the previous restaurant button
+
+	When I searched for item "thai" with "15" results and was redirected to the Results page
+	Then there should be pagination
+	When I navigate to the second restaurant page
+	And I press the previous restaurant button
+	Then I am on the "Results for thai" page
+	
+Scenario: Pagination page marker stays in the middle
+
+	When I searched for item "burger" with "35" results and was redirected to the Results page
+	Then there should be pagination
+	When I press the next restaurant button
+	And I press the next restaurant button
+	And I press the next restaurant button
+	Then there should be a restaurant page "2" link
+	And there should be a restaurant page "3" link
+	And there should be a restaurant page "5" link
+	And there should be a restaurant page "6" link
 
 Scenario: Test table hover on clickable results
 

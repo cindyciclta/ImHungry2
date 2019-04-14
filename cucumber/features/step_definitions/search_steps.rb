@@ -232,6 +232,30 @@ end
 
 # Results Page
 
+When(/^I press the previous recipe button$/) do
+  page.find('#reci-page-alt-prev', wait:50).click
+end
+
+When(/^I press the previous restaurant button$/) do
+  page.find('#rest-page-alt-prev', wait:50).click
+end
+
+When(/^I press the next recipe button$/) do
+  page.find('#reci-page-alt-next', wait:50).click
+end
+
+When(/^I press the next restaurant button$/) do
+  page.find('#rest-page-alt-next', wait:50).click
+end
+
+Then(/^there should be no previous recipe button$/) do
+  expect(page).not_to have_css('#reci-page-alt-prev', wait: 50)
+end
+
+Then(/^there should be no previous restaurant button$/) do
+  expect(page).not_to have_css('#rest-page-alt-prev', wait: 50)
+end
+
 Then(/^I should see the title "([^"]*)"$/) do |arg1|
   expect(page).to have_css('h1', text: arg1)
 end
@@ -314,6 +338,10 @@ When(/^I navigate to the second recipe page$/) do
   page.find('#reci-page-alt2').click
 end
 
+Then(/^there should be a restaurant page "([^"]*)" link$/) do |arg1|
+  expect(page).to have_css('#rest-page-alt'+arg1, wait: 50)
+end
+
 Then(/^there should be table-hover$/) do
   expect(page).to have_css('.table-hover')
 end
@@ -392,8 +420,8 @@ Then(/^there should be search history$/) do
 end
 
 Then(/^the search history should be empty or first search history should say "([^"]*)"$/) do |arg1|
-  if has_css?('#searchHist1', wait:50)
-    expect(page).to have_css('#searchHist1', text: arg1, wait:50)
+  if has_css?('#searchHist1', wait:20)
+    expect(page).to have_css('#searchHist1', text: arg1, wait:20)
   end
 end
 

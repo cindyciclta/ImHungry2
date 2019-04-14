@@ -81,7 +81,6 @@
 		}
 		
 		function moveToList(index, item, type){
-			console.log("blah");
 			var e = document.getElementById("managelistselect");
 			list = e.options[e.selectedIndex].value;
 			if(list != ""){
@@ -95,6 +94,14 @@
 		
 		function removeFromList(index, item, originalList, type){
 			var e = document.getElementById("managelistselect");
+			var xhr = new XMLHttpRequest();
+			var term ="<%= term %>";
+			var trimmed = term.replace(" ", "_");
+			xhr.open("GET", "/ImHungry/RedirectionController?action=removefromlist&term="+trimmed + "&index=" + index + "&list=" + originalList + "&item=" + item + "&type=" + type, true);
+			xhr.send();
+		}
+		
+		function moveUpdDownList(index, oldIndex, newIndex, list, type){
 			var xhr = new XMLHttpRequest();
 			var term ="<%= term %>";
 			var trimmed = term.replace(" ", "_");
@@ -168,7 +175,7 @@
 				                                      <div class="h-100 row justify-content-center align-items-center">
 				                                          <table>
 				                                              <tbody>
-				                                                 <tr style="background-color:inherit" onclick=<%="redirectToRecipe(\"" + "/ImHungry/RedirectionController?action=recipe&term="+ecodedValue +"&index=" + index + "&item=" + i + "\")"%>>
+				                                                 <tr style="background-color:inherit" onclick=<%="redirectToRecipe(\"" + "/ImHungry/RedirectionController?action=recipe&term="+ecodedValue +"&index=" + index + "&item=" + resultsFields.get("originalindex") + "\")"%>>
 								                                    <td>
 									                                    <table class="table text-white">
 							                                                <tbody>
@@ -334,11 +341,18 @@
       
       <!-- Movable list reordering javascript -->
       <script type="text/javascript">
-      	console.log('reordering entered')
 		var list = document.getElementById('movable-list');
 		var sortable = Sortable.create(list, {
 			handle: '.movable-list-handle',
-			animation: 150
+			animation: 150,
+			onEnd: function (/**Event*/evt) {
+				var itemEl = evt.item;  // dragged HTMLElement
+				evt.oldIndex;  // element's old index within old parent
+				evt.newIndex;  // element's new index within new parent
+				console.log(evt.newIndex + " " + evt.oldIndex);
+				
+				
+			}
 		});
       </script>
 	

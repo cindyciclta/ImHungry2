@@ -14,7 +14,7 @@ import java.util.Set;
 /**
  * Scrapes AllRecipes for information on the recipes
  */
-public class EdamamRequestModel implements ApiCallInterface<RecipeModel> {
+public abstract class EdamamRequestModel implements ApiCallInterface<RecipeModel> {
 	
 	public final String URL_LINK = "https://www.allrecipes.com/search/results/?wt=";
 	
@@ -24,8 +24,15 @@ public class EdamamRequestModel implements ApiCallInterface<RecipeModel> {
 	
 	protected int limit;
 	
+	protected List<RecipeModel> listItems = new ArrayList<>();
+	
 	public EdamamRequestModel() {
 		results = new ArrayList<>();
+	}
+	
+	@Override
+	public List<RecipeModel> getListItems(){
+		return listItems;
 	}
 	
 	public boolean checkParameters(String term, int limit) {
@@ -283,6 +290,8 @@ public class EdamamRequestModel implements ApiCallInterface<RecipeModel> {
 			return false;
 		}
 		results.get(i).setInFavorites(value);
+		boolean removed = !value && results.get(i).isInFavorites();
+		addOrRemoveValue(results.get(i), value, removed);
 		return true;
 	}
 
@@ -295,7 +304,15 @@ public class EdamamRequestModel implements ApiCallInterface<RecipeModel> {
 			return false;
 		}
 		results.get(i).setInToExplore(value);
+		boolean removed = !value && results.get(i).isInToExplore();
+		addOrRemoveValue(results.get(i), value, removed);
 		return true;
+	}
+	
+	private void addOrRemoveValue(RecipeModel recipe, boolean value, boolean removed) {
+		if(!listItems.contains(recipe) && value) {
+			listItems.add(recipe);
+		}
 	}
 
 	@Override
@@ -306,13 +323,41 @@ public class EdamamRequestModel implements ApiCallInterface<RecipeModel> {
 		if(i >= results.size()) {
 			return false;
 		}
+		boolean removed = !value && results.get(i).isInDoNotShow();
 		results.get(i).setInDoNotShow(value);
+		addOrRemoveValue(results.get(i), value, removed);
 		return true;
 	}
 
 	@Override
 	public void sort() {
 		Collections.sort(results);
+	}
+
+	@Override
+	public int getListSize() {
+		return listItems.size();
+	}
+
+	@Override
+	public Map<String, String> getFormattedResultsFieldsListAt(int i) {
+		
+		if(i < 0) {
+			return null;
+		}
+		
+		if(i >= listItems.size()) {
+			return null;
+		}
+		Map<String, String> list= listItems.get(i).getFormattedFieldsForResults();
+		for(int k = 0 ; k < results.size() ; k++) {
+			if(listItems.get(i).equals(results.get(k))) {
+				list.put("originalindex", Integer.toString(k));
+			}
+		}
+		list.put("place", Integer.toString(listItems.get(i).getOrder()));
+		list.put("restaurant_or_recipe", "recipe");
+		return list;
 	}
 	
 	public boolean setGroceryListResult(int i , boolean value) {

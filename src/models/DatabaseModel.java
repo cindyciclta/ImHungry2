@@ -15,7 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class DatabaseModel {
-	static final String SQL_PASSWORD = "NewPassword"; // SET YOUR MYSQL PASSWORD HERE TO GET DATABASE WORKING!!!!!!!
+	static final String SQL_PASSWORD = "root"; // SET YOUR MYSQL PASSWORD HERE TO GET DATABASE WORKING!!!!!!!
 	
 	public static int signInUser(String username, char[] password) throws Exception {
 		
@@ -394,16 +394,7 @@ public class DatabaseModel {
 		int userid = GetUserID(username);
 		Connection conn = getConnection();
 		
-		if(userid != -1) {
-			PreparedStatement ps = conn.prepareStatement("SELECT * from grocery_list where user_id=(?)");
-			ps.setInt(1, userid);
-			ResultSet rsGroceryList = ps.executeQuery();
-			
-			while(rsGroceryList.next()) {
-				gl.additem(rsGroceryList.getString("selected_item"));
-			}
-		}
-		return gl;
+		return getGroceryListFromUser(userid);
 	}
 	public static GroceryListModel getGroceryListFromUser(int userid) throws Exception{
 		GroceryListModel gl = new GroceryListModel();
@@ -452,7 +443,8 @@ public class DatabaseModel {
 		while(rs.next()) {
 			String restaurantQuery = "SELECT * from restaurants where item_id=(?)";
 			PreparedStatement prep = conn.prepareStatement(restaurantQuery, Statement.RETURN_GENERATED_KEYS);
-	    	prep.setInt (1, rs.getInt("item_id"));
+	    	int itemId = rs.getInt("item_id");
+			prep.setInt (1, itemId);
 	    	ResultSet restaurant = prep.executeQuery();
 	    	restaurant.next();
 	    	Gson g = new Gson();
@@ -464,19 +456,27 @@ public class DatabaseModel {
 	    	}else {
 	    		rm.setInFavorites(true);
 	    	}
+	    	
+	    	// Get order in list
+	    	restaurantQuery = "SELECT * from places where item_id=(?) and user_id=(?) and restaurant_or_recipe=(?)";
+			prep = conn.prepareStatement(restaurantQuery, Statement.RETURN_GENERATED_KEYS);
+			prep.setInt (1, itemId);
+			prep.setInt(2, userId);
+			prep.setString(3, "restaurant");
+			restaurant = prep.executeQuery();
+			restaurant.next();
+			
+			int place = restaurant.getInt("place");
+			rm.setOrder(place);
+		
 	    	restaurants.add(rm);
 		}
 		return restaurants;
 	}
 	
-	public static boolean insertRestaurantIntoList(int searchId, RestaurantModel rm) throws Exception{
-		boolean ret = true;
-		
-		// Get the user id
-		int userId = getUserIdFromSearchId(searchId);
-		
+	public static int getItemIdFromRestaurant(RestaurantModel rm) throws Exception{
 		// Get Item ID
-		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();;
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		String json = gson.toJson(rm);
 		Connection conn = getConnection();
 		String query = "SELECT item_id from restaurants where json_string = (?)";
@@ -486,7 +486,16 @@ public class DatabaseModel {
     	rs.next();
     	int item_id = rs.getInt("item_id");
     	conn.close();
-    	
+    	return item_id;
+	}
+	
+	public static boolean insertRestaurantIntoList(int searchId, RestaurantModel rm) throws Exception{
+		boolean ret = true;
+		
+		// Get the user id
+		int userId = getUserIdFromSearchId(searchId);
+		int item_id = getItemIdFromRestaurant(rm);
+		
     	// Get Number of Items in list
     	String name = "toexplore";
     	if(rm.isInFavorites()) {
@@ -494,22 +503,53 @@ public class DatabaseModel {
     	}else if(rm.isInDoNotShow()) {
     		name = "donotshow";
     	}
-    	
-    	int count = countItemsInRestaurant(name, userId);
-    	conn = getConnection();
-    	query = "INSERT INTO list_restaurants (item_id, user_id, name, place) values (?, ?, ?, ?)";
-    	preparedStmt = conn.prepareStatement(query);
+    	// Stop adding something that is already in list
+    	Connection conn = getConnection();
+    	String query = "SELECT * from list_restaurants where item_id=(?) and user_id=(?)";
+    	PreparedStatement preparedStmt = conn.prepareStatement(query);
     	preparedStmt.setInt(1, item_id);
     	preparedStmt.setInt(2, userId);
-    	preparedStmt.setString(3, name);
-    	preparedStmt.setInt(4, count+1);
-    	preparedStmt.executeUpdate();
+    	ResultSet exists =  preparedStmt.executeQuery();
+    	if(exists.next()) {
+    		query = "UPDATE list_restaurants SET name=(?) WHERE item_id=(?) and user_id=(?)";
+    		preparedStmt = conn.prepareStatement(query);
+    		preparedStmt.setString(1, name);
+        	preparedStmt.setInt(2, item_id);
+        	preparedStmt.setInt(3, userId);
+        	preparedStmt.executeUpdate();
+        	
+        	// TODO: Update place on move
+        	if(!name.equals(exists.getString("name"))) {
+        		int place = updatePlaceOnMoveList(item_id, userId, name, exists.getString("name"), "restaurant");
+        		rm.setOrder(place);
+        	}
+    	}else {
+    		int count = countItemsInList(name, userId);
+        	query = "INSERT INTO list_restaurants (item_id, user_id, name) values (?, ?, ?)";
+        	preparedStmt = conn.prepareStatement(query);
+        	preparedStmt.setInt(1, item_id);
+        	preparedStmt.setInt(2, userId);
+        	preparedStmt.setString(3, name);
+        	preparedStmt.executeUpdate();
+        	
+        	// add the place
+        	query = "INSERT INTO places (item_id, user_id, name, place, restaurant_or_recipe) values (?, ?, ?, ?, ?)";
+        	preparedStmt = conn.prepareStatement(query);
+        	preparedStmt.setInt(1, item_id);
+        	preparedStmt.setInt(2, userId);
+        	preparedStmt.setString(3, name);
+        	preparedStmt.setInt(4, count+1);
+        	preparedStmt.setString(5, "restaurant");
+        	preparedStmt.executeUpdate();
+        	rm.setOrder(count+1);
+    	}
+    	
     	conn.close();
 		return ret;
 	}
 	
-	private static int countItemsInRestaurant(String name, int userId) throws Exception{
-		String query = "SELECT count(*) from list_restaurants where user_id=(?) and name=(?)";
+	private static int countItemsInList(String name, int userId) throws Exception{
+		String query = "SELECT count(*) from places where user_id=(?) and name=(?)";
 		Connection conn = getConnection();
 		PreparedStatement preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
     	preparedStmt.setInt(1, userId);
@@ -520,7 +560,339 @@ public class DatabaseModel {
     	conn.close();
 		return rowCount;
 	}
+	
+	public static List<RecipeModel> getRecipesInList(int searchId) throws Exception{
+		int userId = DatabaseModel.getUserIdFromSearchId(searchId);
+		List<RecipeModel> recipes = new ArrayList<>();
+		Connection conn = getConnection();
+		String query = "SELECT * from list_recipes where user_id = (?)";
+		PreparedStatement preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+    	preparedStmt.setInt (1, userId);
+    	ResultSet rs = preparedStmt.executeQuery();
+		while(rs.next()) {
+			String restaurantQuery = "SELECT * from recipes where item_id=(?)";
+			PreparedStatement prep = conn.prepareStatement(restaurantQuery, Statement.RETURN_GENERATED_KEYS);
+			int itemId = rs.getInt("item_id");
+	    	prep.setInt (1, itemId);
+	    	ResultSet restaurant = prep.executeQuery();
+	    	restaurant.next();
+	    	Gson g = new Gson();
+	    	RecipeModel rm = g.fromJson(restaurant.getString("json_string"), RecipeModel.class);
+	    	if(rs.getString("name").equals("donotshow")) {
+	    		rm.setInDoNotShow(true);
+	    	}else if(rs.getString("name").equals("toexplore")) {
+	    		rm.setInToExplore(true);
+	    	}else {
+	    		rm.setInFavorites(true);
+	    	}
+	    	
+	    	// Get order in list
+	    	restaurantQuery = "SELECT * from places where item_id=(?) and user_id=(?) and restaurant_or_recipe=(?)";
+			prep = conn.prepareStatement(restaurantQuery, Statement.RETURN_GENERATED_KEYS);
+			prep.setInt (1, itemId);
+			prep.setInt(2, userId);
+			prep.setString(3, "recipe");
+			restaurant = prep.executeQuery();
+			restaurant.next();
+			
+			int place = restaurant.getInt("place");
+			rm.setOrder(place);
+			
+			
+	    	recipes.add(rm);
+		}
+		return recipes;
+	}
+	
+	public static int getItemIdFromRecipe(RecipeModel rm) throws Exception{
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		String json = gson.toJson(rm);
+		Connection conn = getConnection();
+		String query = "SELECT item_id from recipes where json_string = (?)";
+		PreparedStatement preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+    	preparedStmt.setString (1, json);
+    	ResultSet rs = preparedStmt.executeQuery();
+    	rs.next();
+    	int item_id = rs.getInt("item_id");
+    	conn.close();
+    	return item_id;
+	}
+	
+	public static boolean insertRecipeIntoList(int searchId, RecipeModel rm) throws Exception{
+		boolean ret = true;
+		
+		// Get the user id
+		int userId = getUserIdFromSearchId(searchId);
+		
+		// Get Item ID
+		int item_id = getItemIdFromRecipe(rm);
+		
+    	
+    	// Get Number of Items in list
+    	String name = "toexplore";
+    	if(rm.isInFavorites()) {
+    		name = "favorites";
+    	}else if(rm.isInDoNotShow()) {
+    		name = "donotshow";
+    	}
+    	
+    	// Stop adding something that is already in list
+    	Connection conn = getConnection();
+    	String query = "SELECT * from list_recipes where item_id=(?) and user_id=(?)";
+    	PreparedStatement preparedStmt = conn.prepareStatement(query);
+    	preparedStmt.setInt(1, item_id);
+    	preparedStmt.setInt(2, userId);
+    	ResultSet exists =  preparedStmt.executeQuery();
+    	if(exists.next()) {
+    		query = "UPDATE list_recipes SET name=(?) WHERE item_id=(?) and user_id=(?)";
+    		preparedStmt = conn.prepareStatement(query);
+    		preparedStmt.setString(1, name);
+        	preparedStmt.setInt(2, item_id);
+        	preparedStmt.setInt(3, userId);
+        	
+        	// TODO: Update place on move
+        	if(!name.equals(exists.getString("name"))) {
+        		int place = updatePlaceOnMoveList(item_id, userId, name, exists.getString("name"), "recipe");
+        		rm.setOrder(place);
+        	}
+        	
+        	conn.close();
+    	}else {
+    		int count = countItemsInList(name, userId);
+        	query = "INSERT INTO list_recipes (item_id, user_id, name) values (?, ?, ?)";
+        	preparedStmt = conn.prepareStatement(query);
+        	preparedStmt.setInt(1, item_id);
+        	preparedStmt.setInt(2, userId);
+        	preparedStmt.setString(3, name);
+        	preparedStmt.executeUpdate();
+        	preparedStmt.close();
+        	
+        	// add the place
+        	query = "INSERT INTO places (item_id, user_id, name, place, restaurant_or_recipe) values (?, ?, ?, ?, ?)";
+        	preparedStmt = conn.prepareStatement(query);
+        	preparedStmt.setInt(1, item_id);
+        	preparedStmt.setInt(2, userId);
+        	preparedStmt.setString(3, name);
+        	preparedStmt.setInt(4, count+1);
+        	preparedStmt.setString(5, "recipe");
+        	preparedStmt.executeUpdate();
+        	rm.setOrder(count+1);
+    	}
+    	
+    	preparedStmt.close();
+    	conn.close();
+		return ret;
+	}
+	
+	public static int updatePlaceOnMoveList(int itemId, int userId, String newName, String oldName, String restaurant) throws Exception{
+		boolean ret = true;
+		int oldPlace = -1;
+		
+		Connection conn = getConnection();
+		String query = "SELECT * from places where user_id=(?) and name=(?) and item_id=(?)";
+		PreparedStatement preparedStmt = conn.prepareStatement(query);
+		preparedStmt.setInt(1, userId);
+    	preparedStmt.setString(2, oldName);
+    	preparedStmt.setInt(3, itemId);
+    	ResultSet rs = preparedStmt.executeQuery();
+    	rs.next();
+    	oldPlace = rs.getInt("place");
+		
+		// Up everything after the number on the old list by 1
+		ret = updatePlaceOnDelete(userId, oldName, oldPlace, restaurant);
+		
+		// Add to the end of the new list
+		int count = countItemsInList(newName, userId);
+		String update = "UPDATE places SET place=(?) , name=(?) where user_id=(?) and name=(?) and item_id=(?) and restaurant_or_recipe=(?)";
+		preparedStmt = conn.prepareStatement(update);
+		preparedStmt.setInt(1, count+1);
+		preparedStmt.setString(2, newName);
+    	preparedStmt.setInt(3, userId);
+    	preparedStmt.setString(4, oldName);
+    	preparedStmt.setInt(5, itemId);
+    	preparedStmt.setString(6, restaurant);
+    	preparedStmt.executeUpdate();
+		
+    	conn.close();
+		return count+1;
+	}
+	
+	
+	private static boolean updatePlaceOnDelete(int userId, String oldName, int oldPlace, String restaurant) throws Exception{
+		boolean ret = true;
+		
+		// Up everything after the number on the old list by 1
+		String query = "SELECT * from places where user_id=(?) and name=(?)";
+		Connection conn = getConnection();
+		PreparedStatement preparedStmt = conn.prepareStatement(query);
+    	preparedStmt.setInt(1, userId);
+    	preparedStmt.setString(2, oldName);
+    	ResultSet rs = preparedStmt.executeQuery();
+    	while(rs.next()) {
+    		if(rs.getInt("place") > oldPlace) {
+    			int place = rs.getInt("place") - 1;
+    			
+    			String update = "UPDATE places SET place=(?) where user_id=(?) and name=(?) and item_id=(?) and restaurant_or_recipe=(?)";
+    			preparedStmt = conn.prepareStatement(update);
+    			preparedStmt.setInt(1, place);
+    	    	preparedStmt.setInt(2, userId);
+    	    	preparedStmt.setString(3, oldName);
+    	    	preparedStmt.setInt(4, rs.getInt("item_id"));
+    	    	preparedStmt.setString(5, restaurant);
+    	    	preparedStmt.executeUpdate();
+    		}
+    	}
+		conn.close();
+		return ret;
+	}
+	
+	public static boolean deleteRecipe(RecipeModel rm, int searchId) throws Exception {
+		int userId = getUserIdFromSearchId(searchId);
+		int itemId = getItemIdFromRecipe(rm);
+		
+		Connection conn = getConnection();
+		String query = "SELECT * from list_recipes where user_id=(?) and item_id=(?)";
+		PreparedStatement preparedStmt = conn.prepareStatement(query);
+    	preparedStmt.setInt(1, userId);
+    	preparedStmt.setInt(2, itemId);
+    	ResultSet rsNext = preparedStmt.executeQuery();
+		
+    	if(rsNext.next()) {
+    		// Delete from list
+    		query = "DELETE from list_recipes where user_id=(?) and item_id=(?)";
+    		preparedStmt = conn.prepareStatement(query);
+        	preparedStmt.setInt(1, userId);
+        	preparedStmt.setInt(2, itemId);
+        	preparedStmt.executeUpdate();
+    		
+    		// Get old name and place
+    		query = "SELECT * from places where user_id=(?) and item_id=(?) and restaurant_or_recipe=(?)";
+    		preparedStmt = conn.prepareStatement(query);
+        	preparedStmt.setInt(1, userId);
+        	preparedStmt.setInt(2, itemId);
+        	preparedStmt.setString(3, "recipe");
+        	ResultSet rs = preparedStmt.executeQuery();
+    		rs.next();
+    		int place = rs.getInt("place");
+    		String name = rs.getString("name");
+    		
+    		query = "DELETE from places where user_id=(?) and item_id=(?) and restaurant_or_recipe=(?)";
+    		preparedStmt = conn.prepareStatement(query);
+        	preparedStmt.setInt(1, userId);
+        	preparedStmt.setInt(2, itemId);
+        	preparedStmt.setString(3, "recipe");
+        	preparedStmt.executeUpdate();
+        	
+    		updatePlaceOnDelete(userId, name, place, "recipe");
+    	}
+		
+		
+		conn.close();
+		return true;
+	}
+	
+	public static boolean deleteRestaurant(RestaurantModel rm, int searchId) throws Exception {
+		int userId = getUserIdFromSearchId(searchId);
+		int itemId = getItemIdFromRestaurant(rm);
+		
+		String query = "SELECT * from list_restaurants where user_id=(?) and item_id=(?)";
+		Connection conn = getConnection();
+		PreparedStatement preparedStmt = conn.prepareStatement(query);
+    	preparedStmt.setInt(1, userId);
+    	preparedStmt.setInt(2, itemId);
+    	ResultSet rs = preparedStmt.executeQuery();
+    	
+    	if(rs.next()) {
+    		// Delete from list
+    		query = "DELETE from list_restaurants where user_id=(?) and item_id=(?)";
+    		preparedStmt = conn.prepareStatement(query);
+        	preparedStmt.setInt(1, userId);
+        	preparedStmt.setInt(2, itemId);
+        	preparedStmt.executeUpdate();
+    		
+    		// Get old name and place
+    		query = "SELECT * from places where user_id=(?) and item_id=(?) and restaurant_or_recipe=(?)";
+    		preparedStmt = conn.prepareStatement(query);
+        	preparedStmt.setInt(1, userId);
+        	preparedStmt.setInt(2, itemId);
+        	preparedStmt.setString(3, "restaurant");
+        	rs = preparedStmt.executeQuery();
+    		rs.next();
+    		int place = rs.getInt("place");
+    		String name = rs.getString("name");
 
+    		
+    		query = "DELETE from places where user_id=(?) and item_id=(?) and restaurant_or_recipe=(?)";
+    		preparedStmt = conn.prepareStatement(query);
+        	preparedStmt.setInt(1, userId);
+        	preparedStmt.setInt(2, itemId);
+        	preparedStmt.setString(3, "restaurant");
+        	preparedStmt.executeUpdate();
+        	updatePlaceOnDelete(userId, name, place, "restaurant");
+    	}
+    	conn.close();
+		return true;
+	}
 	
-	
+	public static boolean updatePlaceOnMoveUpDown(int itemId, int searchId, String name, int oldPlace, int newPlace,
+			String restaurant) throws Exception{
+		
+		int userId = getUserIdFromSearchId(searchId);
+		boolean ret = true;
+		
+		String query = "SELECT * from places where user_id=(?) and name=(?) and restaurant_or_recipe=(?)";
+		Connection conn = getConnection();
+		PreparedStatement preparedStmt = conn.prepareStatement(query);
+		preparedStmt.setInt(1, userId);
+    	preparedStmt.setString(2, name);
+    	preparedStmt.setString(3, restaurant);
+    	ResultSet rs = preparedStmt.executeQuery();
+		
+		// Move Up
+		if(newPlace < oldPlace) {
+			// down the places of all items in between [newPlace, oldPlace)
+			while(rs.next()) {
+				int place = rs.getInt("place");
+				if(place < oldPlace && place >= newPlace) {
+					query = "UPDATE places set place = (?) where item_id = (?) and name = (?) and user_id = (?) and restaurant_or_recipe = (?)";
+					preparedStmt = conn.prepareStatement(query);
+					preparedStmt.setInt(1, place+1);
+					preparedStmt.setInt(2, rs.getInt("item_id"));
+			    	preparedStmt.setString(3, name);
+			    	preparedStmt.setInt(4, userId);
+			    	preparedStmt.setString(5, restaurant);
+			    	preparedStmt.executeUpdate();
+				}
+			}
+			
+		}else {
+			// up all the places of the items in between (oldPlace, newPlace]
+			while(rs.next()) {
+				int place = rs.getInt("place");
+				if(place > oldPlace && place <= newPlace) {
+					query = "UPDATE places set place = (?) where item_id = (?) and name = (?) and user_id = (?) and restaurant_or_recipe = (?)";
+					preparedStmt = conn.prepareStatement(query);
+					preparedStmt.setInt(1, place-1);
+					preparedStmt.setInt(2, rs.getInt("item_id"));
+			    	preparedStmt.setString(3, name);
+			    	preparedStmt.setInt(4, userId);
+			    	preparedStmt.setString(5, restaurant);
+			    	preparedStmt.executeUpdate();
+				}
+			}
+		}
+		
+		// update the place of the item
+		query = "UPDATE places set place = (?) where item_id = (?) and name = (?) and user_id = (?) and restaurant_or_recipe = (?)";
+		preparedStmt = conn.prepareStatement(query);
+		preparedStmt.setInt(1, newPlace);
+		preparedStmt.setInt(2, itemId);
+    	preparedStmt.setString(3, name);
+    	preparedStmt.setInt(4, userId);
+    	preparedStmt.setString(5, restaurant);
+    	preparedStmt.executeUpdate();
+		conn.close();
+		return ret;
+	}
 }
+

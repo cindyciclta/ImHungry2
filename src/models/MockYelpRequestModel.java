@@ -12,6 +12,7 @@ import java.util.Map;
 public class MockYelpRequestModel extends YelpRequestModel{
 
 	private int searchId;
+	
 	public MockYelpRequestModel(int searchId) {
 		this.searchId = searchId;
 	}
@@ -50,69 +51,101 @@ public class MockYelpRequestModel extends YelpRequestModel{
  				for(RestaurantModel model : this.results) {
  					DatabaseModel.insertRestaurant(model, searchId);
  				}
- 				
  			}
- 			List<RestaurantModel> listItems = DatabaseModel.getRestaurantsInList(searchId);
+ 			recreateList();
  			
- 		    // Recorrelate against the list
- 			for(int i = 0 ; i < results.size() ; i++) {
- 				for(RestaurantModel item : listItems) {
- 					if(item.equals(results.get(i))) {
- 						results.get(i).setInFavorites(item.isInFavorites());
- 						results.get(i).setInDoNotShow(item.isInDoNotShow());
- 						results.get(i).setInToExplore(item.isInToExplore());
- 					}
- 				}
- 			}
  		}catch(Exception e) {
  			
  		}
 		
-			
 		return responseResult;	
+	}
+	
+	private void recreateList() throws Exception{
+		List<RestaurantModel> listItems = DatabaseModel.getRestaurantsInList(searchId);
+		this.listItems.clear();
+			
+			// add to listItems
+			for(RestaurantModel item : listItems) {
+				this.listItems.add(item);
+			}
+			
+		    // Recorrelate against the list
+			for(RestaurantModel item : listItems) {
+				for(int i = 0 ; i < results.size() ; i++) {
+					if(item.equals(results.get(i))) {
+						results.get(i).setInFavorites(item.isInFavorites());
+						results.get(i).setInDoNotShow(item.isInDoNotShow());
+						results.get(i).setInToExplore(item.isInToExplore());
+					}
+				}
+			}
 	}
 	
 	@Override
 	public boolean setFavoriteResult(int i, boolean value) {
 		boolean ret = super.setFavoriteResult(i,  value);
-		try {
-			if(!ret) {
-				throw new Exception();
-			}
-			ret = DatabaseModel.insertRestaurantIntoList(searchId, results.get(i));
-		}catch(Exception e) {
+		if(!ret) {
+			return false;
 		}
-		return ret;
+		return updateList(i);
 	}
 	
 	@Override
 	public boolean setToExploreResult(int i, boolean value) {
 		boolean ret = super.setToExploreResult(i,  value);
-		try {
-			if(!ret) {
-				throw new Exception();
-			}
-			ret = DatabaseModel.insertRestaurantIntoList(searchId, results.get(i));
-		}catch(Exception e) {
-			
+		if(!ret) {
+			return false;
 		}
-		return ret;
+		return updateList(i);
 	}
 	
 	@Override
 	public boolean setDoNotShowResult(int i, boolean value) {
 		boolean ret = super.setDoNotShowResult(i,  value);
-
+		if(!ret) {
+			return false;
+		}
+		return updateList(i); 
+	}
+	
+	public boolean updateList(int i) {
+		boolean ret = true;
 		try {
-			if(!ret) {
+			if(i < 0) {
+				ret = false;
+				throw new Exception();
+				
+			}
+			if(!results.get(i).isInToExplore() && !results.get(i).isInFavorites() 
+					&& !results.get(i).isInDoNotShow()) {
+				ret = DatabaseModel.deleteRestaurant(results.get(i), searchId);
+			}else {
+				ret = DatabaseModel.insertRestaurantIntoList(searchId, results.get(i));
+			}
+			recreateList();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return ret;
+	}
+
+	@Override
+	public boolean moveUpDownList(int i, int oldPlace, int newPlace, String list) {
+		boolean ret = true;
+		try {
+			if(i < 0) {
+				ret = false;
 				throw new Exception();
 			}
-			ret = DatabaseModel.insertRestaurantIntoList(searchId, results.get(i));
+			int itemId = DatabaseModel.getItemIdFromRestaurant(listItems.get(i));
+			DatabaseModel.updatePlaceOnMoveUpDown(itemId, searchId, list, oldPlace, newPlace,
+					"restaurant");
+			recreateList();
 		}catch(Exception e) {
-			
+			e.printStackTrace();
+			return false;
 		}
-			
-		
 		return ret;
 	}
 }

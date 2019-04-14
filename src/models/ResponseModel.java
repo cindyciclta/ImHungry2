@@ -12,8 +12,8 @@ public class ResponseModel {
 	private int radius;
 	
 	private String term;
-	private ApiCallInterface<RestaurantModel> restaurants  = new YelpRequestModel();
-	private ApiCallInterface<RecipeModel> recipes = new EdamamRequestModel();
+	private ApiCallInterface<RestaurantModel> restaurants  = new MockYelpRequestModel(-1);
+	private ApiCallInterface<RecipeModel> recipes = new MockRecipeRequestModel(-1);
 	
 	public ResponseModel(int userId) {
 		this.userId = userId;
@@ -55,13 +55,57 @@ public class ResponseModel {
 	public Map<String, String> getFormattedRestaurantResultsAt(int i) {
 		return restaurants.getFormattedResultsFieldsAt(i);
 	}
+
 	
 	public int getNumberOfRecipes() {
 		return recipes.getResultsSize();
 	}
-	
 	public int getNumberOfRestaurants() {
 		return restaurants.getResultsSize();
+	}
+	
+	public int getNumberOfListItems(String list) {
+		
+		int count = 0;
+		for(int k = 0 ; k < restaurants.getListSize() ; k++) {
+			String place = restaurants.getFormattedResultsFieldsListAt(k).get("modifier");
+			if(place.equals(list)) {
+				count += 1;
+			}
+		}
+		
+		for(int k = 0 ; k < recipes.getListSize() ; k++) {
+			if(recipes.getFormattedResultsFieldsListAt(k).get("modifier").equals(
+					list) ) {
+				count += 1;
+			}
+		}
+		
+		
+		return count;
+	}
+	
+	public Map<String, String> getFormattedResultListAt(int i, String list){
+		Map<String, String> ret = null;
+		for(int k = 0 ; k < restaurants.getListSize() ; k++) {
+			String place = restaurants.getFormattedResultsFieldsListAt(k).get("place");
+			String modifier = restaurants.getFormattedResultsFieldsListAt(k).get("modifier");
+			if(place.equals(
+					Integer.toString(i+1)) && modifier.equals(list)) 
+					 {
+				ret = restaurants.getFormattedResultsFieldsListAt(k);
+			}
+		}
+		
+		for(int k = 0 ; k < recipes.getListSize() ; k++) {
+			String modifier = recipes.getFormattedResultsFieldsListAt(k).get("modifier");
+			if(recipes.getFormattedResultsFieldsListAt(k).get("place").equals(
+					Integer.toString(i+1) ) && modifier.equals(list)) {
+				ret = recipes.getFormattedResultsFieldsListAt(k);
+			}
+		}
+		
+		return ret;
 	}
 	
 	public boolean checkParameters(String term, int limit) {
@@ -123,34 +167,43 @@ public class ResponseModel {
 	}
 	
 	public boolean addToList(int i, String list, String type, boolean value) {
+		boolean ret = true;
 		if(type.equals("restaurant")) {
 			if(list.equals("donotshow")) {
-				return restaurants.setDoNotShowResult(i, value);
+				ret = restaurants.setDoNotShowResult(i, value);
 			} else if(list.equals("favorites")) {
-				return restaurants.setFavoriteResult(i, value);
+				ret = restaurants.setFavoriteResult(i, value);
 			} else {
-				return restaurants.setToExploreResult(i, value);
+				ret = restaurants.setToExploreResult(i, value);
 			}
 		}else {
 			if(list.equals("donotshow")) {
-				return recipes.setDoNotShowResult(i, value);
+				ret = recipes.setDoNotShowResult(i, value);
 			} else if(list.equals("favorites")) {
-				return recipes.setFavoriteResult(i, value);
-			} else if(list.equals("toexplore")){
-				return recipes.setToExploreResult(i, value);
+				ret = recipes.setFavoriteResult(i, value);
+			} else{
+				ret = recipes.setToExploreResult(i, value);
 			}
 		}
-		return true;
+		return ret;
 	}
+	
 	public boolean addToGroceryList(int i, int userid, String ingredientindex) throws Exception {
 		
 		List<IngredientModel> list = recipes.getIngredients(i);
 		int k = Integer.parseInt(ingredientindex);
 		IngredientModel ingredient = list.get(k);
-		System.out.println(ingredient.getIngredientName());
 		//add to database
 		DatabaseModel.InsertIntoGroceryList(userid, ingredient.getIngredientName());
-
+		return true;
+	}
+	
+	public boolean moveUpDownList(int i, String list, String type, int oldPlace, int newPlace ) {
+		if(type.equals("restaurant")) {
+			restaurants.moveUpDownList(i, oldPlace, newPlace, list);
+		}else {
+			recipes.moveUpDownList(i, oldPlace, newPlace, list);
+		}
 		return true;
 	}
 }

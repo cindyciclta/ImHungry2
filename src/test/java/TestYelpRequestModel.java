@@ -120,6 +120,13 @@ public class TestYelpRequestModel {
 	
 	@Test
 	public void testSetDoNotShow() {
+		assertTrue(cached.setDoNotShowResult(0, true));
+		for(int i = 0 ; i < cached.getResultsSize() ; i++) {
+			cached.setDoNotShowResult(i, false);
+			cached.setToExploreResult(i, false);
+			cached.setFavoriteResult(i, false);
+		}
+		
 		cached.checkParameters("coffee", 5, 1000);
 		assertEquals(ResponseCodeModel.OK, cached.completeTask());
 		assertEquals(5, cached.getResultsSize());
@@ -127,6 +134,27 @@ public class TestYelpRequestModel {
 		assertFalse(cached.setDoNotShowResult(-1, true));
 		assertFalse(cached.setDoNotShowResult(100, true));
 		cached.sort();
+	}
+	
+	@Test
+	public void testMoveUpDown() {
+		cached.checkParameters("coffee", 5, 1000);
+		assertEquals(ResponseCodeModel.OK, cached.completeTask());
+		assertEquals(5, cached.getResultsSize());
+		assertTrue(cached.setDoNotShowResult(0, true));
+		assertTrue(cached.setDoNotShowResult(1, true));
+		assertTrue(cached.moveUpDownList(0, 1, 2, "donotshow"));
+		cached.sort();
+	}
+	
+	@Test
+	public void testUpdateList() {
+		assertFalse(cached.updateList(-1));
+	}
+	
+	@Test
+	public void testMoveUpDownList() {
+		assertFalse(cached.moveUpDownList(-1, 1, 2, "favorites"));
 	}
 	
 	@Test

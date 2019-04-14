@@ -10,8 +10,7 @@ import java.util.Map;
  * ApiCallInterface
  */
 public interface ApiCallInterface<T> {
-	
-	// Deviation no results
+
 	public ResponseCodeModel completeTask();
 	
 	public int getResultsSize();
@@ -25,8 +24,15 @@ public interface ApiCallInterface<T> {
 	public boolean setDoNotShowResult(int i, boolean value);
 	public boolean setGroceryListResult(int i, boolean value);
 	
+	public boolean moveUpDownList(int i, int oldPlace, int newPlace, String list);
+	
+	public int getListSize();
+	public Map<String, String> getFormattedResultsFieldsListAt(int i);
+	
 	public void sort();
 
 	public List<IngredientModel> getIngredients(int i);
+	
+	public List<T> getListItems();
 
 }

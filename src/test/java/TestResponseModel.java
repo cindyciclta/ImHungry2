@@ -63,6 +63,17 @@ public class TestResponseModel {
 	
 	@Test
 	public void testSort() {
+		for(int i = 0 ; i < rm.getNumberOfRecipes() ; i++) {
+			rm.addToList(i, "favorites", "recipe", false);
+			rm.addToList(i, "donotshow", "recipe", false);
+			rm.addToList(i, "toexplore", "recipe", false);
+		}
+		for(int i = 0 ; i < rm.getNumberOfRestaurants() ; i++) {
+			rm.addToList(i, "favorites", "restaurant", false);
+			rm.addToList(i, "donotshow", "restaurant", false);
+			rm.addToList(i, "toexplore", "restaurant", false);
+		}
+		
 		rm.sort();
 
 		// check sorting
@@ -83,6 +94,166 @@ public class TestResponseModel {
 	}
 	
 	@Test
+	public void getNumberOfListItems() {
+		ResponseModel rm = new ResponseModel(id);
+		rm.checkParameters("chicken", 5, 1000);
+		assertTrue(rm.getSearchResults());
+		assertEquals(rm.getNumberOfRestaurants(), 5);
+		for(int i = 0 ; i < rm.getNumberOfRecipes() ; i++) {
+			rm.addToList(i, "favorites", "recipe", false);
+			rm.addToList(i, "donotshow", "recipe", false);
+			rm.addToList(i, "toexplore", "recipe", false);
+		}
+		for(int i = 0 ; i < rm.getNumberOfRestaurants() ; i++) {
+			rm.addToList(i, "favorites", "restaurant", false);
+			rm.addToList(i, "donotshow", "restaurant", false);
+			rm.addToList(i, "toexplore", "restaurant", false);
+		}
+		assertEquals(0, rm.getNumberOfListItems("donotshow"));
+		assertEquals(0, rm.getNumberOfListItems("favorites"));
+		assertEquals(0, rm.getNumberOfListItems("toexplore"));
+	}
+	
+	@Test
+	public void getFormattedListRecipe() {
+		ResponseModel rm = new ResponseModel(id);
+		rm.checkParameters("chicken", 5, 1000);
+		assertTrue(rm.getSearchResults());
+		assertEquals(rm.getNumberOfRestaurants(), 5);
+		for(int i = 0 ; i < rm.getNumberOfRecipes() ; i++) {
+			rm.addToList(i, "favorites", "recipe", false);
+			rm.addToList(i, "donotshow", "recipe", false);
+			rm.addToList(i, "toexplore", "recipe", false);
+		}
+		for(int i = 0 ; i < rm.getNumberOfRestaurants() ; i++) {
+			rm.addToList(i, "favorites", "restaurant", false);
+			rm.addToList(i, "donotshow", "restaurant", false);
+			rm.addToList(i, "toexplore", "restaurant", false);
+		}
+		
+		assertEquals(0, rm.getNumberOfListItems("donotshow"));
+		assertEquals(0, rm.getNumberOfListItems("favorites"));
+		assertEquals(0, rm.getNumberOfListItems("toexplore"));
+		rm.addToList(2, "favorites", "recipe", true);
+		assertNotNull(rm.getFormattedResultListAt(0, "favorites"));
+		assertNotNull(rm.getFormattedResultListAt(0, "favorites").get("prepTime"));
+	}
+	
+	@Test
+	public void testFormattedListRestaurant() throws Exception{
+
+		assertEquals(rm.getNumberOfRestaurants(), 5);
+		for(int i = 0 ; i < rm.getNumberOfRecipes() ; i++) {
+			rm.addToList(i, "favorites", "recipe", false);
+			rm.addToList(i, "donotshow", "recipe", false);
+			rm.addToList(i, "toexplore", "recipe", false);
+		}
+		for(int i = 0 ; i < rm.getNumberOfRestaurants() ; i++) {
+			rm.addToList(i, "favorites", "restaurant", false);
+			rm.addToList(i, "donotshow", "restaurant", false);
+			rm.addToList(i, "toexplore", "restaurant", false);
+		}
+		assertEquals(0, rm.getNumberOfListItems("donotshow"));
+		assertEquals(0, rm.getNumberOfListItems("favorites"));
+		assertEquals(0, rm.getNumberOfListItems("toexplore"));
+		rm.addToList(2, "favorites", "restaurant", true);
+		
+		assertNotNull(rm.getFormattedResultListAt(0, "favorites"));
+		assertNotNull(rm.getFormattedResultListAt(0, "favorites").get("drivingTime"));
+	}
+	
+	@Test
+	public void testMoveUpDownListRestaurant() throws Exception{
+
+		assertEquals(rm.getNumberOfRestaurants(), 5);
+		for(int i = 0 ; i < rm.getNumberOfRecipes() ; i++) {
+			rm.addToList(i, "favorites", "recipe", false);
+			rm.addToList(i, "donotshow", "recipe", false);
+			rm.addToList(i, "toexplore", "recipe", false);
+		}
+		for(int i = 0 ; i < rm.getNumberOfRestaurants() ; i++) {
+			rm.addToList(i, "favorites", "restaurant", false);
+			rm.addToList(i, "donotshow", "restaurant", false);
+			rm.addToList(i, "toexplore", "restaurant", false);
+		}
+		assertEquals(0, rm.getNumberOfListItems("donotshow"));
+		assertEquals(0, rm.getNumberOfListItems("favorites"));
+		assertEquals(0, rm.getNumberOfListItems("toexplore"));
+		
+		rm.addToList(2, "favorites", "restaurant", true);
+		rm.addToList(3, "favorites", "restaurant", true);
+		String name = rm.getFormattedResultListAt(0, "favorites").get("name");
+		rm.moveUpDownList(0, "favorites", "restaurant", 1, 2);
+		rm.addToList(1, "donotshow", "restaurant", true);
+		for(int i = 0 ; i < rm.getNumberOfListItems("favorites") ; i++) {
+			assertNotNull(rm.getFormattedResultListAt(i, "favorites"));
+			assertNull(rm.getFormattedResultListAt(i, "toexplore"));
+			if(rm.getFormattedResultListAt(i, "favorites").get("name").equals(name)) {
+				assertEquals("2", rm.getFormattedResultListAt(i, "favorites").get("place"));
+			}
+		}
+	}
+	
+	@Test
+	public void testMoveUpDownListRecipe() throws Exception{
+
+		assertEquals(rm.getNumberOfRestaurants(), 5);
+		for(int i = 0 ; i < rm.getNumberOfRecipes() ; i++) {
+			rm.addToList(i, "favorites", "recipe", false);
+			rm.addToList(i, "donotshow", "recipe", false);
+			rm.addToList(i, "toexplore", "recipe", false);
+		}
+		for(int i = 0 ; i < rm.getNumberOfRestaurants() ; i++) {
+			rm.addToList(i, "favorites", "restaurant", false);
+			rm.addToList(i, "donotshow", "restaurant", false);
+			rm.addToList(i, "toexplore", "restaurant", false);
+		}
+		assertEquals(0, rm.getNumberOfListItems("donotshow"));
+		assertEquals(0, rm.getNumberOfListItems("favorites"));
+		assertEquals(0, rm.getNumberOfListItems("toexplore"));
+		
+		rm.addToList(2, "favorites", "recipe", true);
+		rm.addToList(3, "favorites", "recipe", true);
+		String name = rm.getFormattedResultListAt(0, "favorites").get("name");
+		rm.moveUpDownList(0, "favorites", "recipe", 1, 2);
+		rm.addToList(1, "donotshow", "recipe", true);
+		for(int i = 0 ; i < rm.getNumberOfListItems("favorites") ; i++) {
+			assertNotNull(rm.getFormattedResultListAt(i, "favorites"));
+			assertNull(rm.getFormattedResultListAt(i, "toexplore"));
+			if(rm.getFormattedResultListAt(i, "favorites").get("name").equals(name)) {
+				assertEquals("2", rm.getFormattedResultListAt(i, "favorites").get("place"));
+			}
+		}	
+	}
+	
+	@Test
+	public void getFormattedListNull() {
+		ResponseModel rm = new ResponseModel(id);
+		rm.checkParameters("chicken", 5, 1000);
+		assertTrue(rm.getSearchResults());
+		assertEquals(rm.getNumberOfRestaurants(), 5);
+		for(int i = 0 ; i < rm.getNumberOfRecipes() ; i++) {
+			rm.addToList(i, "favorites", "recipe", false);
+			rm.addToList(i, "donotshow", "recipe", false);
+			rm.addToList(i, "toexplore", "recipe", false);
+		}
+		for(int i = 0 ; i < rm.getNumberOfRestaurants() ; i++) {
+			rm.addToList(i, "favorites", "restaurant", false);
+			rm.addToList(i, "donotshow", "restaurant", false);
+			rm.addToList(i, "toexplore", "restaurant", false);
+		}
+		assertEquals(0, rm.getNumberOfListItems("donotshow"));
+		assertEquals(0, rm.getNumberOfListItems("favorites"));
+		assertEquals(0, rm.getNumberOfListItems("toexplore"));
+		assertNull(rm.getFormattedResultListAt(0, "favorites"));
+	}
+	
+	@Test
+	public void testAddToGroceries() throws Exception{
+		assertTrue(rm.addToGroceryList(0, id, "0"));
+	}
+	
+	@Test
 	public void testRestaurantFavorites() {
 		rm.addToList(0, "favorites", "restaurant", true);
 		Map<String, String> modifiers = rm.getFormattedRestaurantResultsAt(0);
@@ -98,6 +269,16 @@ public class TestResponseModel {
 	
 	@Test
 	public void testRecipeDoNotShow() {
+		for(int i = 0 ; i < rm.getNumberOfRecipes() ; i++) {
+			rm.addToList(i, "favorites", "recipe", false);
+			rm.addToList(i, "donotshow", "recipe", false);
+			rm.addToList(i, "toexplore", "recipe", false);
+		}
+		for(int i = 0 ; i < rm.getNumberOfRestaurants() ; i++) {
+			rm.addToList(i, "favorites", "restaurant", false);
+			rm.addToList(i, "donotshow", "restaurant", false);
+			rm.addToList(i, "toexplore", "restaurant", false);
+		}
 		rm.addToList(0, "donotshow", "recipe", true);
 		Map<String, String> modifiers = rm.getFormattedRecipeResultsAt(0);
 		assertEquals("donotshow", modifiers.get("modifier"));

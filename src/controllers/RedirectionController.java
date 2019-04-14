@@ -42,17 +42,18 @@ public class RedirectionController extends HttpServlet {
 		
 
 		request.setAttribute("term", term);
-		System.out.println("whehehehreh "+ action);
 		if(action == null || action.isEmpty() || index == null || index.isEmpty()) {
 			dispatch = request.getRequestDispatcher("SearchPageView.jsp");
 		} else if (action.equals("addtogrocery")) {
 			String ingredientindex = request.getParameter("ingredientindex");
 			int userid = tokens.get(token);
 			String item = request.getParameter("item");
-			System.out.println("item "+item);
 			int itemint = Integer.parseInt(item);
 			int indexint = Integer.parseInt(index);
 			try {
+				if(indexint < 0) {
+					throw new Exception();
+				}
 				responses.get(indexint).addToGroceryList(itemint, userid, ingredientindex);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -71,6 +72,7 @@ public class RedirectionController extends HttpServlet {
 			} else {
 				request.setAttribute("title", "To Explore");
 			}
+			request.setAttribute("list", list);
 			request.setAttribute("response", responses.get(Integer.parseInt(index)));
 			request.setAttribute("index", Integer.parseInt(index));
 			
@@ -80,7 +82,6 @@ public class RedirectionController extends HttpServlet {
 			googleimagemodel.APIImageSearch(term);
 			ArrayList<String> urllist = (ArrayList<String>) collagemodel.getList();
 			JSONArray jsArray = new JSONArray (urllist);
-			System.out.println("usjdof "+ urllist.size() );
 			request.setAttribute("length", urllist.size());
 			request.setAttribute("jsonarray", jsArray);
 			request.setAttribute("token", token);
@@ -109,10 +110,11 @@ public class RedirectionController extends HttpServlet {
 			
 		} else if(action.equals("results")) { //If it is redirecting to the results page,  set the attributes accordingly
 			dispatch = request.getRequestDispatcher("ResultsPageView.jsp");
-			ResponseModel rm = responses.get(Integer.parseInt(index));
+			int indexInt = Integer.parseInt(index);
+			ResponseModel rm = responses.get(indexInt);
 			rm.sort();
 			request.setAttribute("response", rm);
-			int indexInt = Integer.parseInt(index);
+			
 			request.setAttribute("index", indexInt);
 			Integer id = RedirectionController.tokens.get(token);
 			
@@ -131,7 +133,6 @@ public class RedirectionController extends HttpServlet {
 				}
 				searchHistory = DatabaseModel.GetSearchHistory(id);
 			} catch (Exception e1) {
-				System.out.println("Search history exception: " + e1.getLocalizedMessage());
 			}
 			
 			request.setAttribute("searches", searchHistory);
@@ -169,7 +170,19 @@ public class RedirectionController extends HttpServlet {
 			String type = request.getParameter("type");
 			responses.get(indexInt).addToList(itemInt, list, type, false);
 
-		} 
+		}else if(action.equals("moveplaceinlist")) {
+			int indexInt = Integer.parseInt(index);
+			String item = request.getParameter("item");
+			int itemInt = Integer.parseInt(item);
+			
+			String list = request.getParameter("list");
+			String type = request.getParameter("type");
+			int oldPlace = Integer.parseInt(request.getParameter("oldplace"));
+			int newPlace = Integer.parseInt(request.getParameter("newplace"));
+			responses.get(indexInt).moveUpDownList(itemInt, list, type, oldPlace, newPlace);
+		}
+		
+		
 		if (dispatch != null) {
 			dispatch.forward(request, response);	
 		}

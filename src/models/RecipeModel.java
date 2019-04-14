@@ -8,6 +8,7 @@ import com.google.gson.annotations.Expose;
  * Stores recipe information
  */
 public class RecipeModel extends ListItemModel implements Comparable<RecipeModel>{
+	
 	@Expose
 	private String name; // Deviation from plan
 	@Expose
@@ -164,5 +165,32 @@ public class RecipeModel extends ListItemModel implements Comparable<RecipeModel
 		}
 		return 1;
 	}
+	
+	@Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        if (!RecipeModel.class.isAssignableFrom(obj.getClass())) {
+            return false;
+        }
+
+        final RecipeModel other = (RecipeModel) obj;
+        if(this.name == null || other.name == null) {
+        	return false;
+        }
+        if(!this.name.equalsIgnoreCase(other.name)) {
+        	return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = (int)(53 * this.prepTime + 10000 * this.cookTime + 13412312);
+        return hash;
+    }
 	
 }

@@ -105,6 +105,8 @@
 	<%
 		ResponseModel rm = ((ResponseModel)request.getAttribute("response"));
 		String title = (String)request.getAttribute("title");
+		String lst = (String)request.getAttribute("list");
+		
 		int index = (int)request.getAttribute("index");
 	%>
 
@@ -124,10 +126,11 @@
                                </thead>
                                <tbody>
                                    <%
+                                   
 									int count = 0;
-									for(int i = 0 ; i < rm.getNumberOfRecipes() ; i++){
+									for(int i = 0 ; i < rm.getNumberOfListItems(lst) ; i++){
 										count += 1;
-										Map<String, String> resultsFields = rm.getFormattedRecipeResultsAt(i);
+										Map<String, String> resultsFields = rm.getFormattedResultListAt(i, lst);
 										
 										// Skip do not show results
 										if(title.equals("Do Not Show") && !resultsFields.get("modifier").equals("donotshow")){
@@ -139,141 +142,126 @@
 										if(title.equals("To Explore") && !resultsFields.get("modifier").equals("toexplore")){
 											continue;
 										}
+										
+										if(resultsFields.get("restaurant_or_recipe").equals("recipe")){
 									%>
-										<tr>
-			                              <td>
-			                                  <div class="container h-100">
-			                                      <div class="h-100 row justify-content-center align-items-center">
-			                                          <table>
-			                                              <tbody>
-			                                                  <tr style="background-color:inherit" onclick=<%="redirectToRecipe(\"" + "/ImHungry/RedirectionController?action=recipe&term="+ecodedValue +"&index=" + index + "&item=" + i + "\")"%>>
-							                                    <td>
-								                                    <table class="table text-white">
-						                                                <tbody>
-						                                                    <tr style="background-color: inherit;">
-						                                                        <td>name: <%=resultsFields.get("name")%></td>
-						                                                        <td>stars: <%=resultsFields.get("stars")%></td>
-						                                                    </tr>
-						                                                    <tr style="background-color: inherit;">
-						                                                        <td>prep: <%=resultsFields.get("prepTime")%></td>
-						                                                        <td>cook: <%=resultsFields.get("cookTime")%></td>
-						                                                    </tr>
-						                                                </tbody>
-						                                            </table>
-							                                    </td>
-							                                </tr>
-							                            </tbody>
-							                        </table>
-								                  </div>
-								              </div>
-								            </td>
-								            <td>
-								                <div class="container">
-								                    <div class="buttons">
-								                        <table>
-								                            <tbody>
-								                                <tr style="background-color:inherit">
+											<tr>
+				                              <td>
+				                                  <div class="container h-100">
+				                                      <div class="h-100 row justify-content-center align-items-center">
+				                                          <table>
+				                                              <tbody>
+				                                                 <tr style="background-color:inherit" onclick=<%="redirectToRecipe(\"" + "/ImHungry/RedirectionController?action=recipe&term="+ecodedValue +"&index=" + index + "&item=" + i + "\")"%>>
 								                                    <td>
-								                                        <button type="button" class="btn btn-default btn-sm"
-								                                        	onclick=<%= "removeFromList(" + index + "," + i + "," + "\"" + resultsFields.get("modifier") + "\"" + ",\"recipe\")"%>>
-								                                            <i style="color:white" class="fas fa-times"></i>
-								                                        </button>
-								                                    </td>
-								                                </tr>
-								                                <tr style="background-color:inherit">
-								                                    <td>
-								                                        <button type="button" class="btn btn-default btn-sm"
-								                                        	onclick=<%= "moveToList(" + index + "," + i + ",\"recipe\")"%> >
-								                                            <i style="color:white" class="fas fa-sign-out-alt"></i>
-								                                        </button>
-								                                    </td>
-								                                </tr>
-								                            </tbody>
-								                        </table>
-								                    </div>
-								                </div>
-								            </td>
-								        </tr>
-									<%
-									}
-									%>
-									
-									<%
-									
-									for(int i = 0 ; i < rm.getNumberOfRestaurants() ; i++){
-										count += 1; 
-										Map<String, String> resultsFields = rm.getFormattedRestaurantResultsAt(i);
-					
-										// Skip do not show results
-										if(title.equals("Do Not Show") && !resultsFields.get("modifier").equals("donotshow")){
-											continue;
-										}
-										if(title.equals("Favorites") && !resultsFields.get("modifier").equals("favorites")){
-											continue;
-										}
-										if(title.equals("To Explore") && !resultsFields.get("modifier").equals("toexplore")){
-											continue;
-										}
-									 %>
-										 <tr>
-	                                       <td>
-	                                           <div class="container h-100">
-	                                               <div class="h-100 row justify-content-center align-items-center">
-	                                                   <table class="table-striped table-borderless">
-	                                                       <tbody>
-	                                                           <tr style="background-color:inherit" onclick=<%="redirectToRestaurant(\"" + "/ImHungry/RedirectionController?action=restaurant&term="+term +"&index=" + index + "&item=" + i + "\")"%>>
-	                                                               <td class="col">
-							                                            <table class="table text-white">
+									                                    <table class="table text-white">
 							                                                <tbody>
 							                                                    <tr style="background-color: inherit;">
 							                                                        <td>name: <%=resultsFields.get("name")%></td>
 							                                                        <td>stars: <%=resultsFields.get("stars")%></td>
 							                                                    </tr>
 							                                                    <tr style="background-color: inherit;">
-							                                                        <td>minutes: <%=resultsFields.get("drivingTime")%></td>
-							                                                        <td>address: <%=resultsFields.get("address")%></td>
+							                                                        <td>prep: <%=resultsFields.get("prepTime")%></td>
+							                                                        <td>cook: <%=resultsFields.get("cookTime")%></td>
 							                                                    </tr>
 							                                                </tbody>
 							                                            </table>
-							                                        </td>
-							                                        <td class="col">
-							                                        	<%=resultsFields.get("priceRange")%>
-							                                        </td>
-	                                                           </tr>
-	                                                       </tbody>
-	                                                   </table>
-	                                               </div>
-	                                           </div>
-	                                       </td>
-	                                       <td>
-	                                           <div class="container">
-	                                               <div class="buttons">
-	                                                   <table>
-	                                                       <tbody>
-	                                                           <tr style="background-color:inherit">
-	                                                               <td>
-	                                                                   <button type="button" class="btn btn-default btn-sm"
-	                                                                  		onclick=<%= "removeFromList("+ index + "," + i + "," + "\"" + resultsFields.get("modifier") + "\"" + ",\"restaurant\")"%>>
-	                                                                       <i style="color:white" class="fas fa-times"></i>
-	                                                                   </button>
-	                                                               </td>
-	                                                           </tr>
-	                                                           <tr style="background-color:inherit">
-	                                                               <td>
-	                                                                   <button type="button" class="btn btn-default btn-sm"
-	                                                                  		onclick=<%= "moveToList(" + index + "," + i + ",\"restaurant\")"%>>
-	                                                                       <i style="color:white" class="fas fa-sign-out-alt"></i>
-	                                                                   </button>
-	                                                               </td>
-	                                                           </tr>
-	                                                       </tbody>
-	                                                   </table>
-	                                               </div>
-	                                           </div>
-	                                       </td>
-	                                   </tr>
+								                                    </td>
+								                                </tr>
+								                            </tbody>
+								                        </table>
+									                  </div>
+									              </div>
+									            </td>
+									            <td>
+									                <div class="container">
+									                    <div class="buttons">
+									                        <table>
+									                            <tbody>
+									                                <tr style="background-color:inherit">
+									                                    <td>
+									                                        <button type="button" class="btn btn-default btn-sm"
+									                                        	onclick=<%= "removeFromList(" + index + "," + resultsFields.get("originalindex") + "," + "\"" + resultsFields.get("modifier") + "\"" + ",\"recipe\")"%>>
+									                                            <i style="color:white" class="fas fa-times"></i>
+									                                        </button>
+									                                    </td>
+									                                </tr>
+									                                <tr style="background-color:inherit">
+									                                    <td>
+									                                        <button type="button" class="btn btn-default btn-sm"
+									                                        	onclick=<%= "moveToList(" + index + "," + resultsFields.get("originalindex") + ",\"recipe\")"%> >
+									                                            <i style="color:white" class="fas fa-sign-out-alt"></i>
+									                                        </button>
+									                                    </td>
+									                                </tr>
+									                            </tbody>
+									                        </table>
+									                    </div>
+									                </div>
+									            </td>
+									        </tr>
+									<%
+									}else{
+									 %>
+											 <tr>
+		                                       <td>
+		                                           <div class="container h-100">
+		                                               <div class="h-100 row justify-content-center align-items-center">
+		                                                   <table class="table-striped table-borderless">
+		                                                       <tbody>
+		                                                           <tr style="background-color:inherit" onclick=<%="redirectToRestaurant(\"" + "/ImHungry/RedirectionController?action=restaurant&term="+term +"&index=" + index + "&item=" + i + "\")"%>>
+		                                                               <td class="col">
+								                                            <table class="table text-white">
+								                                                <tbody>
+								                                                    <tr style="background-color: inherit;">
+								                                                        <td>name: <%=resultsFields.get("name")%></td>
+								                                                        <td>stars: <%=resultsFields.get("stars")%></td>
+								                                                    </tr>
+								                                                    <tr style="background-color: inherit;">
+								                                                        <td>minutes: <%=resultsFields.get("drivingTime")%></td>
+								                                                        <td>address: <%=resultsFields.get("address")%></td>
+								                                                    </tr>
+								                                                </tbody>
+								                                            </table>
+								                                        </td>
+								                                        <td class="col">
+								                                        	<%=resultsFields.get("priceRange")%>
+								                                        </td>
+		                                                           </tr>
+		                                                       </tbody>
+		                                                   </table>
+		                                               </div>
+		                                           </div>
+		                                       </td>
+		                                       <td>
+		                                           <div class="container">
+		                                               <div class="buttons">
+		                                                   <table>
+		                                                       <tbody>
+		                                                           <tr style="background-color:inherit">
+		                                                               <td>
+		                                                                   <button type="button" class="btn btn-default btn-sm"
+		                                                                  		onclick=<%= "removeFromList("+ index + "," + resultsFields.get("originalindex") + "," + "\"" + resultsFields.get("modifier") + "\"" + ",\"restaurant\")"%>>
+		                                                                       <i style="color:white" class="fas fa-times"></i>
+		                                                                   </button>
+		                                                               </td>
+		                                                           </tr>
+		                                                           <tr style="background-color:inherit">
+		                                                               <td>
+		                                                                   <button type="button" class="btn btn-default btn-sm"
+		                                                                  		onclick=<%= "moveToList(" + index + "," + resultsFields.get("originalindex") + ",\"restaurant\")"%>>
+		                                                                       <i style="color:white" class="fas fa-sign-out-alt"></i>
+		                                                                   </button>
+		                                                               </td>
+		                                                           </tr>
+		                                                       </tbody>
+		                                                   </table>
+		                                               </div>
+		                                           </div>
+		                                       </td>
+		                                   </tr>
 									 <%
 										}
+									}
 									 %>
                                </tbody>
                            </table>

@@ -49,6 +49,7 @@ public class TestRedirectionController extends Mockito{
 		rm.checkParameters("chicken", 2);
 		assertTrue(rm.getSearchResults());
 		RedirectionController.addResponse(rm);
+		RedirectionController.tokens.put("fakeToken", id);
 	}
 	
 	@AfterClass
@@ -165,12 +166,29 @@ public class TestRedirectionController extends Mockito{
         when(request.getRequestDispatcher("ResultsPageView.jsp")).thenReturn(rd);
         when(request.getParameter("term")).thenReturn( "chicken" );
         when(request.getParameter("length")).thenReturn( "10" );
+        when(request.getParameter("token")).thenReturn( "fakeToken" );
         when(request.getSession()).thenReturn(sess);
         when(request.getParameter("jsonarray")).thenReturn( "jsarray" );
         RedirectionController r = new RedirectionController();
         RedirectionController.responses.put(0,rm);
         r.service(request, response);
         verify(rd).forward(request, response);
+    }
+	
+	@Test
+    public void testResultsInvalid() throws Exception {
+        when(request.getParameter("action")).thenReturn( "results" );
+        when(request.getParameter("index")).thenReturn( "0" );
+        when(request.getRequestDispatcher("ResultsPageView.jsp")).thenReturn(rd);
+        when(request.getParameter("term")).thenReturn( "chicken" );
+        when(request.getParameter("length")).thenReturn( "10" );
+        when(request.getParameter("token")).thenReturn( "error" );
+        when(request.getSession()).thenReturn(sess);
+        when(request.getParameter("jsonarray")).thenReturn( "jsarray" );
+        RedirectionController r = new RedirectionController();
+        RedirectionController.responses.put(0,rm);
+        RedirectionController.tokens.put("error", -1);
+        r.service(request, response);
     }
 	
 	@Test
@@ -186,6 +204,43 @@ public class TestRedirectionController extends Mockito{
         when(request.getParameter("index")).thenReturn( "1" );
         when(request.getParameter("item")).thenReturn( "0" );
         when(request.getParameter("list")).thenReturn( "donotshow" );
+        when(request.getParameter("type")).thenReturn( "restaurant" );
+        when(request.getParameter("term")).thenReturn( "chicken" );
+        new RedirectionController().service(request, response);
+    }
+	
+	@Test
+    public void testMoveList() throws Exception {
+        when(request.getParameter("action")).thenReturn( "moveplaceinlist" );
+        when(request.getParameter("index")).thenReturn( "1" );
+        when(request.getParameter("item")).thenReturn( "0" );
+        when(request.getParameter("oldplace")).thenReturn( "1" );
+        when(request.getParameter("newplace")).thenReturn( "2" );
+        when(request.getParameter("list")).thenReturn( "donotshow" );
+        when(request.getParameter("type")).thenReturn( "restaurant" );
+        when(request.getParameter("term")).thenReturn( "chicken" );
+        new RedirectionController().service(request, response);
+    }
+	
+	@Test
+    public void testAddGrocery() throws Exception {
+        when(request.getParameter("action")).thenReturn( "addtogrocery" );
+        when(request.getParameter("index")).thenReturn( "0" );
+        when(request.getParameter("token")).thenReturn( "fakeToken" );
+        when(request.getParameter("item")).thenReturn( "0" );
+        when(request.getParameter("ingredientindex")).thenReturn( "0" );
+        when(request.getParameter("type")).thenReturn( "restaurant" );
+        when(request.getParameter("term")).thenReturn( "chicken" );
+        new RedirectionController().service(request, response);
+    }
+	
+	@Test
+    public void testAddGroceryInvalid() throws Exception {
+        when(request.getParameter("action")).thenReturn( "addtogrocery" );
+        when(request.getParameter("index")).thenReturn( "-1" );
+        when(request.getParameter("token")).thenReturn( "fakeToken" );
+        when(request.getParameter("item")).thenReturn( "0" );
+        when(request.getParameter("ingredientindex")).thenReturn( "-1" );
         when(request.getParameter("type")).thenReturn( "restaurant" );
         when(request.getParameter("term")).thenReturn( "chicken" );
         new RedirectionController().service(request, response);

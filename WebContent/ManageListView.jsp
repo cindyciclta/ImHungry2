@@ -10,6 +10,8 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+	<!-- jsDelivr :: Sortable :: Latest (https://www.jsdelivr.com/package/npm/sortablejs) -->
+	<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 	<style>
 	    #wrapper {
 	        margin-top: 20px !important;
@@ -124,7 +126,7 @@
                            <table class="table-dark table-hover table-striped table-borderless">
                                <thead>
                                </thead>
-                               <tbody>
+                               <tbody id="movable-list">
                                    <%
                                    
 									int count = 0;
@@ -146,6 +148,21 @@
 										if(resultsFields.get("restaurant_or_recipe").equals("recipe")){
 									%>
 											<tr>
+											  <td>
+								                <div class="container">
+								                    <div>
+								                        <table>
+								                            <tbody>
+								                                <tr style="background-color:inherit">
+								                                    <td>
+								                                      <i class="fas fa-arrows-alt movable-list-handle"></i>
+								                                    </td>
+								                                </tr>
+								                            </tbody>
+								                        </table>
+								                    </div>
+								                </div>
+								              </td>
 				                              <td>
 				                                  <div class="container h-100">
 				                                      <div class="h-100 row justify-content-center align-items-center">
@@ -203,6 +220,21 @@
 									}else{
 									 %>
 											 <tr>
+											   <td>
+								                <div class="container">
+								                    <div class="movable-list-handle">
+								                        <table>
+								                            <tbody>
+								                                <tr style="background-color:inherit">
+								                                    <td>
+								                                      <i class="fas fa-arrows-alt movable-list-handle"></i>
+								                                    </td>
+								                                </tr>
+								                            </tbody>
+								                        </table>
+								                    </div>
+								                </div>
+								              </td>
 		                                       <td>
 		                                           <div class="container h-100">
 		                                               <div class="h-100 row justify-content-center align-items-center">
@@ -299,6 +331,16 @@
            </div>
        	</div>
       </div>
+      
+      <!-- Movable list reordering javascript -->
+      <script type="text/javascript">
+      	console.log('reordering entered')
+		var list = document.getElementById('movable-list');
+		var sortable = Sortable.create(list, {
+			handle: '.movable-list-handle',
+			animation: 150
+		});
+      </script>
 	
 	<!--Mouse glitter stuff-->
 	<script type="text/javascript" src="js/jquery.1.11.1.js"></script>

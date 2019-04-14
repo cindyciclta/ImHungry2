@@ -203,7 +203,7 @@ public class ResponseModel {
 		List<IngredientModel> list = recipes.getIngredients(i);
 		int k = Integer.parseInt(ingredientindex);
 		IngredientModel ingredient = list.get(k);
-		//add to database
+		//add to database now
 		DatabaseModel.InsertIntoGroceryList(userid, ingredient.getIngredientName());
 		return true;
 	}

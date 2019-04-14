@@ -208,6 +208,41 @@ public class ResponseModel {
 		return true;
 	}
 	
+	public GroceryListModel getGroceryList(int userId){
+		System.out.println("user ID : " + userId);
+		GroceryListModel groceryList = null;
+		try {
+			if(userId < 0) {
+				throw new Exception();
+			}
+			groceryList = DatabaseModel.getGroceryListFromUser(userId);
+		}catch(Exception e) {
+			
+		}
+		return groceryList;
+	}
+	
+	public boolean deleteFromGroceryList(int userId, String groceryItem) {
+		try {
+			if(groceryItem == null) {
+				throw new Exception();
+			}
+			
+			String[] words = groceryItem.split("-");
+			groceryItem = "";
+			for(String word : words) {
+				groceryItem += word + " ";
+			}
+			groceryItem = groceryItem.trim();
+			
+			DatabaseModel.deleteFromGroceryList(userId, groceryItem);
+			return true;
+		}catch(Exception e) {
+			
+		}
+		return false;
+	}
+	
 	public boolean moveUpDownList(int i, String list, String type, int oldPlace, int newPlace ) {
 		if(type.equals("restaurant")) {
 			restaurants.moveUpDownList(i, oldPlace, newPlace, list);

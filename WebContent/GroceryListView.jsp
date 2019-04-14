@@ -1,12 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@page import="models.ResponseModel"%>   
+<%@page import="models.ResponseModel"%> 
+<%@page import="models.GroceryListModel"%>  
 <%@page import="java.util.Map"%> 
 
 <%@page import="java.net.URLEncoder"%>
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Manage Lists - I'm Hungry</title>
+	<title>Grocery List - I'm Hungry</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
@@ -60,58 +61,42 @@
 	String ecodedValue = URLEncoder.encode(term, "UTF-8");
 	%>
 	<script>
-	
-		var list = "";
-	
-		function redirectToRecipe(link){
-			window.location = link;
-		}
-		
-		function redirectToRestaurant(link){
-			window.location = link;
-		}
 		
 		function redirectToManageList(index){
-			var e = document.getElementById("managelistselect");
-			list = e.options[e.selectedIndex].value;
-			if(list != ""){
-				var term ="<%= term %>";
-				var trimmed = term.replace(" ", "_");
-				window.location.replace("/ImHungry/RedirectionController?action=managelist&term="+trimmed + "&index=" + index + "&list=" + list);
-			}
-		}
-		
-		function moveToList(index, item, type){
-			var e = document.getElementById("managelistselect");
-			list = e.options[e.selectedIndex].value;
-			if(list != ""){
-				var xhr = new XMLHttpRequest();
-				var term ="<%= term %>";
-				var trimmed = term.replace(" ", "_");
-				xhr.open("GET", "/ImHungry/RedirectionController?action=movetolist&term="+trimmed+ "&index=" + index + "&list=" + list + "&item=" + item + "&type=" + type, true);
-				xhr.send();
-			}
-		}
-		
-		function removeFromList(index, item, originalList, type){
-			var e = document.getElementById("managelistselect");
-			var xhr = new XMLHttpRequest();
 			var term ="<%= term %>";
 			var trimmed = term.replace(" ", "_");
-			xhr.open("GET", "/ImHungry/RedirectionController?action=removefromlist&term="+trimmed + "&index=" + index + "&list=" + originalList + "&item=" + item + "&type=" + type, true);
-			xhr.send();
+			var list = "";
+			var e = document.getElementById("managelistselect");
+			list = e.options[e.selectedIndex].value;
+			
+			
+			if(list !== ""){
+				
+				if(list === "grocery"){
+					var token = <%="\"" + token + "\""%>;
+					var link = "/ImHungry/RedirectionController?action=managegrocerylist" +"&index=" + index + "&token=" + token + "&term=" + trimmed;
+					window.location = link;
+				}else{
+					var link = "/ImHungry/RedirectionController?action=managelist" +"&index=" + index + "&list=" + list + "&term=" + trimmed;
+					window.location = link;
+				}
+			}
 		}
 		
-		function moveUpDownList(index, oldIndex, newIndex, type){
-			
+		function removeFromList(index, item){
+			var xhr = new XMLHttpRequest();
+			var term ="<%= term %>";
+			var token = <%= "\"" + token + "\""%>;
+			var trimmed = term.replace(" ", "_");
+			xhr.open("GET", "/ImHungry/RedirectionController?action=deletegrocery&term="+item + "&index=" + index + "&token=" + token + "&item=" + item , true);
+			xhr.send();
 		}
 		
 	</script>
 
 	<%
 		ResponseModel rm = ((ResponseModel)request.getAttribute("response"));
-		String title = (String)request.getAttribute("title");
-		String lst = (String)request.getAttribute("list");
+		GroceryListModel g = ((GroceryListModel)request.getAttribute("groceries"));
 		
 		int index = (int)request.getAttribute("index");
 	%>
@@ -121,7 +106,7 @@
            <div class="col-md-8">
                    <div class="col-md-12 m-5">
                        <div class="container">
-                           <h1 class="display-4"><%=title%></h1>
+                           <h1 class="display-4"><%="Grocery List"%></h1>
                        </div>
                    </div>
                <div class="row">
@@ -133,25 +118,10 @@
                                <tbody id="movable-list">
                                    <%
                                    
-									int count = 0;
-									for(int i = 0 ; i < rm.getNumberOfListItems(lst) ; i++){
-										count += 1;
-										Map<String, String> resultsFields = rm.getFormattedResultListAt(i, lst);
-										
-										// Skip do not show results
-										if(title.equals("Do Not Show") && !resultsFields.get("modifier").equals("donotshow")){
-											continue;
-										}
-										if(title.equals("Favorites") && !resultsFields.get("modifier").equals("favorites")){
-											continue;
-										}
-										if(title.equals("To Explore") && !resultsFields.get("modifier").equals("toexplore")){
-											continue;
-										}
-										
-										if(resultsFields.get("restaurant_or_recipe").equals("recipe")){
+									for(int i = 0 ; i < g.getSize() ; i++){
+									
 									%>
-											<tr id=<%="recipe-" + resultsFields.get("originalindex") %>>
+											<tr>
 											  <td>
 								                <div class="container">
 								                    <div>
@@ -172,17 +142,12 @@
 				                                      <div class="h-100 row justify-content-center align-items-center">
 				                                          <table>
 				                                              <tbody>
-				                                                 <tr style="background-color:inherit" onclick=<%="redirectToRecipe(\"" + "/ImHungry/RedirectionController?action=recipe&term="+ecodedValue +"&index=" + index + "&item=" + resultsFields.get("originalindex") + "\")"%>>
+				                                                 <tr style="background-color:inherit">
 								                                    <td>
 									                                    <table class="table text-white">
 							                                                <tbody>
 							                                                    <tr style="background-color: inherit;">
-							                                                        <td>name: <%=resultsFields.get("name")%></td>
-							                                                        <td>stars: <%=resultsFields.get("stars")%></td>
-							                                                    </tr>
-							                                                    <tr style="background-color: inherit;">
-							                                                        <td>prep: <%=resultsFields.get("prepTime")%></td>
-							                                                        <td>cook: <%=resultsFields.get("cookTime")%></td>
+							                                                        <td><%=g.getItem(i)%></td>
 							                                                    </tr>
 							                                                </tbody>
 							                                            </table>
@@ -201,16 +166,16 @@
 									                                <tr style="background-color:inherit">
 									                                    <td>
 									                                        <button type="button" class="btn btn-default btn-sm"
-									                                        	onclick=<%= "removeFromList(" + index + "," + resultsFields.get("originalindex") + "," + "\"" + resultsFields.get("modifier") + "\"" + ",\"recipe\")"%>>
+									                                        <%
+									                                        String itemNow = g.getItem(i);
+									                                        String[] items = itemNow.split(" ");
+									                                        itemNow = "";
+									                                        for(String item1 : items){
+									                                        	itemNow += item1 + "-";	
+									                                        }
+									                                        %>
+									                                        	onclick=<%= "removeFromList(" + index + "," + "\"" + itemNow + "\"" + ")"%>>
 									                                            <i style="color:white" class="fas fa-times"></i>
-									                                        </button>
-									                                    </td>
-									                                </tr>
-									                                <tr style="background-color:inherit">
-									                                    <td>
-									                                        <button type="button" class="btn btn-default btn-sm"
-									                                        	onclick=<%= "moveToList(" + index + "," + resultsFields.get("originalindex") + ",\"recipe\")"%> >
-									                                            <i style="color:white" class="fas fa-sign-out-alt"></i>
 									                                        </button>
 									                                    </td>
 									                                </tr>
@@ -221,82 +186,7 @@
 									            </td>
 									        </tr>
 									<%
-									}else{
-									 %>
-											 <tr id=<%="restaurant-" + resultsFields.get("originalindex") %>>
-											   <td>
-								                <div class="container">
-								                    <div class="movable-list-handle">
-								                        <table>
-								                            <tbody>
-								                                <tr style="background-color:inherit">
-								                                    <td>
-								                                      <i class="fas fa-arrows-alt movable-list-handle"></i>
-								                                    </td>
-								                                </tr>
-								                            </tbody>
-								                        </table>
-								                    </div>
-								                </div>
-								              </td>
-		                                       <td>
-		                                           <div class="container h-100">
-		                                               <div class="h-100 row justify-content-center align-items-center">
-		                                                   <table class="table-striped table-borderless">
-		                                                       <tbody>
-		                                                           <tr style="background-color:inherit" onclick=<%="redirectToRestaurant(\"" + "/ImHungry/RedirectionController?action=restaurant&term="+term +"&index=" + index + "&item=" + i + "\")"%>>
-		                                                               <td class="col">
-								                                            <table class="table text-white">
-								                                                <tbody>
-								                                                    <tr style="background-color: inherit;">
-								                                                        <td>name: <%=resultsFields.get("name")%></td>
-								                                                        <td>stars: <%=resultsFields.get("stars")%></td>
-								                                                    </tr>
-								                                                    <tr style="background-color: inherit;">
-								                                                        <td>minutes: <%=resultsFields.get("drivingTime")%></td>
-								                                                        <td>address: <%=resultsFields.get("address")%></td>
-								                                                    </tr>
-								                                                </tbody>
-								                                            </table>
-								                                        </td>
-								                                        <td class="col">
-								                                        	<%=resultsFields.get("priceRange")%>
-								                                        </td>
-		                                                           </tr>
-		                                                       </tbody>
-		                                                   </table>
-		                                               </div>
-		                                           </div>
-		                                       </td>
-		                                       <td>
-		                                           <div class="container">
-		                                               <div class="buttons">
-		                                                   <table>
-		                                                       <tbody>
-		                                                           <tr style="background-color:inherit">
-		                                                               <td>
-		                                                                   <button type="button" class="btn btn-default btn-sm"
-		                                                                  		onclick=<%= "removeFromList("+ index + "," + resultsFields.get("originalindex") + "," + "\"" + resultsFields.get("modifier") + "\"" + ",\"restaurant\")"%>>
-		                                                                       <i style="color:white" class="fas fa-times"></i>
-		                                                                   </button>
-		                                                               </td>
-		                                                           </tr>
-		                                                           <tr style="background-color:inherit">
-		                                                               <td>
-		                                                                   <button type="button" class="btn btn-default btn-sm"
-		                                                                  		onclick=<%= "moveToList(" + index + "," + resultsFields.get("originalindex") + ",\"restaurant\")"%>>
-		                                                                       <i style="color:white" class="fas fa-sign-out-alt"></i>
-		                                                                   </button>
-		                                                               </td>
-		                                                           </tr>
-		                                                       </tbody>
-		                                                   </table>
-		                                               </div>
-		                                           </div>
-		                                       </td>
-		                                   </tr>
-									 <%
-										}
+									
 									}
 									 %>
                                </tbody>
@@ -319,6 +209,7 @@
                                <option value="favorites">Favorites</option>
                                <option value="toexplore">To Explore</option>
                                <option value="donotshow">Do Not Show</option>
+                               <option value="grocery">Groceries</option>
                            </select>
                        </div>
                    </li>
@@ -326,10 +217,10 @@
                        <input class="btn btn-secondary" onclick=<%="redirectToManageList("+ index + ")"%> type="button" value="Manage Lists">
                    </li>
                    <li class="nav-item">
-                       <a class="btn btn-secondary" onclick=<%= "redirectToRecipe(\"" + "/ImHungry/ResultsPageController?action=search&term="+ term + "&index=" + index + "\")" %>>Back to Search</a>
+                       <a class="btn btn-secondary" onclick=<%= "redirectToRecipe(\"" + "/ImHungry/ResultsPageController?action=search&term="+ term + "&index=" + index + "&token=" + token + "\")" %>>Back to Search</a>
                    </li>
                    <li class="nav-item my-3">
-                       <a class="btn btn-secondary" onclick=<%= "redirectToRecipe(\"" + "/ImHungry/RedirectionController?action=results&term="+ term +"&index=" + index + "\")" %>>Back to Results</a>
+                       <a class="btn btn-secondary" onclick=<%= "redirectToRecipe(\"" + "/ImHungry/RedirectionController?action=results&term="+ term +"&index=" + index + "&token=" + token + "\")" %>>Back to Results</a>
                    </li>
                </ul>
            </div>
@@ -338,27 +229,11 @@
       
       <!-- Movable list reordering javascript -->
       <script type="text/javascript">
+      	console.log('reordering entered')
 		var list = document.getElementById('movable-list');
 		var sortable = Sortable.create(list, {
 			handle: '.movable-list-handle',
-			animation: 150,
-			onEnd: function (/**Event*/evt) {
-				var itemEl = evt.item;  // dragged HTMLElement
-				var itemId = itemEl.id;
-				var array = itemId.split("-");
-				var oldIndex = evt.oldIndex + 1;  // element's old index within old parent
-				var newIndex = evt.newIndex + 1;  // element's new index within new parent
-				var type = array[0];
-				var item = array[1];
-				console.log(item);
-				var list = <%="\"" + (String)request.getAttribute("list") + "\""%>;
-				var xhr = new XMLHttpRequest();
-				var term ="<%= term %>";
-				var index = <%=index%>;
-				var trimmed = term.replace(" ", "_");
-				xhr.open("GET", "/ImHungry/RedirectionController?action=moveplaceinlist&term="+trimmed + "&index=" + index + "&list=" + list + "&item=" + item + "&type=" + type +"&oldplace=" + oldIndex + "&newplace=" + newIndex);
-				xhr.send();
-			}
+			animation: 150
 		});
       </script>
 	

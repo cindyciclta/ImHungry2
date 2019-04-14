@@ -206,12 +206,21 @@
 			var trimmed = term.replace(" ", "_");
 			window.location = link+"&term=" +trimmed;
 		}
+		
 		function redirectManageList(index){
 			var list = "";
 			var e = document.getElementById("managelistselect");
 			list = e.options[e.selectedIndex].value;
-			if(list != ""){
-				redirectToResult("/ImHungry/RedirectionController?action=managelist" +"&index=" + index + "&list=" + list);
+			
+			
+			if(list !== ""){
+				
+				if(list === "grocery"){
+					var token = <%="\"" + token + "\""%>;
+					redirectToResult("/ImHungry/RedirectionController?action=managegrocerylist" +"&index=" + index + "&token=" + token);
+				}else{
+					redirectToResult("/ImHungry/RedirectionController?action=managelist" +"&index=" + index + "&list=" + list);
+				}
 			}
 		}
 	
@@ -458,6 +467,7 @@
                                         <option value="favorites">Favorites</option>
                                         <option value="toexplore">To Explore</option>
                                         <option value="donotshow">Do Not Show</option>
+                                        <option value="grocery">Groceries</option>
                                     </select>
                                 </div>
                             </li>

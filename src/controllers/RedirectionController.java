@@ -41,6 +41,8 @@ public class RedirectionController extends HttpServlet {
 		String token = request.getParameter("token");
 		RequestDispatcher dispatch = null;
 		
+		System.out.println(action);
+		
 
 		request.setAttribute("term", term);
 		if(action == null || action.isEmpty() || index == null || index.isEmpty()) {
@@ -182,6 +184,23 @@ public class RedirectionController extends HttpServlet {
 			int newPlace = Integer.parseInt(request.getParameter("newplace"));
 			System.out.println(oldPlace + " " + newPlace);
 			responses.get(indexInt).moveUpDownList(itemInt, list, type, oldPlace, newPlace);
+		}else if(action.contentEquals("managegrocerylist")) {
+			dispatch = request.getRequestDispatcher("GroceryListView.jsp");
+			
+			request.setAttribute("response", responses.get(Integer.parseInt(index)));
+			request.setAttribute("index", Integer.parseInt(index));
+			token = request.getParameter("token");
+			request.setAttribute("token", token);
+			request.setAttribute("term", term);
+			int userId = RedirectionController.tokens.get(token);
+			request.setAttribute("groceries", responses.get(Integer.parseInt(index)).getGroceryList(userId));
+
+		}else if(action.contentEquals("deletegrocery")) {
+			int indexInt = Integer.parseInt(index);
+			String item = request.getParameter("item");
+			int userId = RedirectionController.tokens.get(token);
+			
+			responses.get(indexInt).deleteFromGroceryList(userId, item);
 		}
 		
 		

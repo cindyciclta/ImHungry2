@@ -91,6 +91,8 @@ public class TestDatabaseModel{
 		preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 	    preparedStmt.setString (1, username);
 	    preparedStmt.executeUpdate();
+	    
+	    DatabaseModel.closeConnection();
 	}
 	
 	@Test

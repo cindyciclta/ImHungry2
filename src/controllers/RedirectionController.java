@@ -61,7 +61,6 @@ public class RedirectionController extends HttpServlet {
 			}
 
 		} else if(action.equals("managelist")) { //If it is redirecting to the manage list page, set the attributes accordingly
-			System.out.println("managing list section");
 			String list = request.getParameter("list");
 			dispatch = request.getRequestDispatcher("ManageListView.jsp");
 			request.removeAttribute("title");

@@ -36,7 +36,6 @@ public class MockRecipeRequestModel extends EdamamRequestModel{
  		List<RecipeModel> result = ExistRequest(term, limit);
  		try {
  			if (result.size() > 0) {
- 				System.out.println("Using cached recipes");
  		 		this.results = result;
  			}else {
  				super.checkParameters(term, limit);

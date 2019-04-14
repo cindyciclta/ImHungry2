@@ -17,6 +17,8 @@ import com.google.gson.GsonBuilder;
 public class DatabaseModel {
 	static final String SQL_PASSWORD = "root"; // SET YOUR MYSQL PASSWORD HERE TO GET DATABASE WORKING!!!!!!!
 	
+	private static Connection conn;
+	
 	public static int signInUser(String username, char[] password) throws Exception {
 		
 		// Get from SQL
@@ -35,14 +37,23 @@ public class DatabaseModel {
 		if(rs.next()) {
 			returnVal = rs.getInt("user_id");
 		}
-		close(conn, preparedStmt, rs);
 		return returnVal;
 	}
+	
 	public static Connection getConnection() throws ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.cj.jdbc.Driver");
 		//replace 68.183.168.73 with localhost to use local DB
-		return DriverManager.getConnection("jdbc:mysql://localhost:3306/ImHungry?user=root&password=" + SQL_PASSWORD + "&useSSL=false&allowPublicKeyRetrieval=true");
+		if(conn == null) {
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/ImHungry?user=root&password=" + SQL_PASSWORD + "&useSSL=false&allowPublicKeyRetrieval=true");
+		}
+		return conn;
 	}
+	
+	public static void closeConnection() throws SQLException {
+		conn.close();
+		conn = null;
+	}
+	
 	public static boolean userExists(String username) throws Exception {
 		// Get from SQL
 		Connection conn = null;
@@ -59,7 +70,6 @@ public class DatabaseModel {
 	    	if(rs.next()) {
 	    		returnVal = true;
 	    	}
-		close(conn, preparedStmt, rs);
 		return returnVal;
 	}
 	public static boolean insertUser(String username, char[] password) throws Exception {
@@ -82,15 +92,9 @@ public class DatabaseModel {
 			preparedStmt.setString(1, username);
 			preparedStmt.setString(2, String.valueOf(password)); 
 			int affectedRows = preparedStmt.executeUpdate();
-			
-			close(conn, preparedStmt, null);	
+				
 		}
 		return returnVal;
-	}
-	
-	private static void close(Connection conn, PreparedStatement st, ResultSet rs) throws Exception {
-		// Result sets, statements do not need to be closed, as they are ended by the connectionProxy closing
-		conn.close();
 	}
 	
 	
@@ -121,8 +125,9 @@ public class DatabaseModel {
 		
 		rs.next();
 		added_id = rs.getInt(1);
-		conn.close();
+		
 		return added_id;
+		
 	}
 	
 	// Gets in user-insensitive manner
@@ -142,7 +147,6 @@ public class DatabaseModel {
 		if(rs.next()) {
 			id = rs.getInt("search_id");
 		}
-		conn.close();
 		return id;
 	}
 	
@@ -162,7 +166,7 @@ public class DatabaseModel {
 		if(rs.next()) {
 			id = rs.getInt("search_id");
 		}
-		conn.close();
+		 
 		return id;
 	}
 	
@@ -187,7 +191,7 @@ public class DatabaseModel {
 				id = rs.getInt("search_id");
 			}
 		}
-		conn.close();
+		 
 		return id;
 	}
 	
@@ -205,7 +209,7 @@ public class DatabaseModel {
 			ps.executeUpdate();
 		}
 		if (ps != null ) {ps.close();}
-		conn.close();
+		 
 		
 		return true;
 	}
@@ -223,7 +227,6 @@ public class DatabaseModel {
     	if(rs.next()) {
     		return rs.getInt("user_id");
     	}
-		close(conn, preparedStmt, rs);
 		return -1;
 	}
 	public static Vector<SearchTermModel> GetSearchHistory(int userid) throws Exception {
@@ -254,7 +257,7 @@ public class DatabaseModel {
 		}
 		removeAdjacentDuplicates(results);
 		Collections.reverse(results);
-		conn.close();
+		 
 		rs.close();
 		st.close();
 		return results;
@@ -278,7 +281,6 @@ public class DatabaseModel {
 	public static boolean insertRestaurant(RestaurantModel restaurant, int searchId) throws Exception{
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 		String json = gson.toJson(restaurant);
-		System.out.println(json);
 		String sql = "INSERT INTO restaurants (search_id, json_string) VALUES (?, ?)";
 		Connection conn = getConnection();
 		PreparedStatement ps = conn.prepareStatement(sql);
@@ -288,15 +290,13 @@ public class DatabaseModel {
 		
 		ps.executeUpdate();
 		
-		conn.close();
+		 
 		return true;
 	}
 	
 	public static boolean insertRecipe(RecipeModel recipe, int searchId) throws Exception{
 		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-		System.out.println("testing recipe " + recipe.getIngredients().size());
 		String json = gson.toJson(recipe);
-		System.out.println(json);
 		String sql = "INSERT INTO recipes (search_id, json_string) VALUES (?, ?)";
 		Connection conn = getConnection();
 		PreparedStatement ps = conn.prepareStatement(sql);
@@ -306,7 +306,7 @@ public class DatabaseModel {
 		
 		ps.executeUpdate();
 		
-		conn.close();
+		 
 		return true;
 	}
 	
@@ -366,7 +366,7 @@ public class DatabaseModel {
 			
 			ps.executeUpdate();
 			
-			conn.close();
+			 
 		}
 		return true;
 	}
@@ -383,7 +383,7 @@ public class DatabaseModel {
 			
 			ps.executeUpdate();
 			
-			conn.close();
+			 
 		}
 		return true;
 	}
@@ -428,7 +428,7 @@ public class DatabaseModel {
     	ResultSet rs = preparedStmt.executeQuery();
 		rs.next();
 		userId = rs.getInt("user_id");
-		conn.close();
+		 
 		return userId;
 	}
 	
@@ -485,7 +485,7 @@ public class DatabaseModel {
     	ResultSet rs = preparedStmt.executeQuery();
     	rs.next();
     	int item_id = rs.getInt("item_id");
-    	conn.close();
+    	 
     	return item_id;
 	}
 	
@@ -544,7 +544,7 @@ public class DatabaseModel {
         	rm.setOrder(count+1);
     	}
     	
-    	conn.close();
+    	 
 		return ret;
 	}
 	
@@ -557,7 +557,7 @@ public class DatabaseModel {
     	ResultSet rs = preparedStmt.executeQuery();
     	rs.next();
     	int rowCount = rs.getInt(1);
-    	conn.close();
+    	 
 		return rowCount;
 	}
 	
@@ -614,7 +614,7 @@ public class DatabaseModel {
     	ResultSet rs = preparedStmt.executeQuery();
     	rs.next();
     	int item_id = rs.getInt("item_id");
-    	conn.close();
+    	 
     	return item_id;
 	}
 	
@@ -656,7 +656,7 @@ public class DatabaseModel {
         		rm.setOrder(place);
         	}
         	
-        	conn.close();
+        	 
     	}else {
     		int count = countItemsInList(name, userId);
         	query = "INSERT INTO list_recipes (item_id, user_id, name) values (?, ?, ?)";
@@ -680,7 +680,7 @@ public class DatabaseModel {
     	}
     	
     	preparedStmt.close();
-    	conn.close();
+    	 
 		return ret;
 	}
 	
@@ -713,7 +713,7 @@ public class DatabaseModel {
     	preparedStmt.setString(6, restaurant);
     	preparedStmt.executeUpdate();
 		
-    	conn.close();
+    	 
 		return count+1;
 	}
 	
@@ -742,7 +742,7 @@ public class DatabaseModel {
     	    	preparedStmt.executeUpdate();
     		}
     	}
-		conn.close();
+		 
 		return ret;
 	}
 	
@@ -787,7 +787,7 @@ public class DatabaseModel {
     	}
 		
 		
-		conn.close();
+		 
 		return true;
 	}
 	
@@ -830,7 +830,7 @@ public class DatabaseModel {
         	preparedStmt.executeUpdate();
         	updatePlaceOnDelete(userId, name, place, "restaurant");
     	}
-    	conn.close();
+    	 
 		return true;
 	}
 	
@@ -891,7 +891,7 @@ public class DatabaseModel {
     	preparedStmt.setInt(4, userId);
     	preparedStmt.setString(5, restaurant);
     	preparedStmt.executeUpdate();
-		conn.close();
+		 
 		return ret;
 	}
 }

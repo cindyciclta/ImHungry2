@@ -15,7 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class DatabaseModel {
-	static final String SQL_PASSWORD = "root"; // SET YOUR MYSQL PASSWORD HERE TO GET DATABASE WORKING!!!!!!!
+	static final String SQL_PASSWORD = "NewPassword"; // SET YOUR MYSQL PASSWORD HERE TO GET DATABASE WORKING!!!!!!!
 	
 	private static Connection conn;
 	
@@ -373,6 +373,20 @@ public class DatabaseModel {
 		ps.setString(1, groceryitem);
 		ps.setInt(2, userid);
 		ps.setInt(3, 1); //ordering fix later
+		
+		ps.executeUpdate();
+		return true;
+	}
+	
+	public static boolean deleteFromGroceryList(int userId, String groceryItem)  throws Exception{
+		
+		String sql = "DELETE from grocery_list where selected_item = (?) and user_id = (?)";
+		
+		Connection conn = getConnection();
+		PreparedStatement ps = conn.prepareStatement(sql);
+		
+		ps.setString(1, groceryItem);
+		ps.setInt(2, userId);
 		
 		ps.executeUpdate();
 		return true;

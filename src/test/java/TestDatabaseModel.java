@@ -372,6 +372,20 @@ public class TestDatabaseModel{
 	}
 	
 	@Test
+	public void deleteGroceryList() throws Exception{
+		String username = "test";
+		String password = "test";
+		DatabaseModel.insertUser(username, password.toCharArray());
+		DatabaseModel.InsertIntoGroceryList(username, "apple");
+		GroceryListModel gl = DatabaseModel.getGroceryListFromUser(username);
+		int id = DatabaseModel.GetUserID(username);
+		DatabaseModel.deleteFromGroceryList(id, "apple");
+		gl = DatabaseModel.getGroceryListFromUser(username);
+		assertEquals(0, gl.getSize());
+		deleteUser(username);
+	}
+	
+	@Test
 	public void InsertGroceryIdListValid() throws Exception{
 		String username = "test";
 		String password = "test";

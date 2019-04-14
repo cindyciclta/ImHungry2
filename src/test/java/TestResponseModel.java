@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import models.DatabaseModel;
 import models.EdamamRequestModel;
+import models.GroceryListModel;
 import models.ListTypeEnum;
 import models.ResponseModel;
 
@@ -252,6 +253,27 @@ public class TestResponseModel {
 	@Test
 	public void testAddToGroceries() throws Exception{
 		assertTrue(rm.addToGroceryList(0, id, "0"));
+	}
+	
+	@Test
+	public void testAddToGroceriesGetGroceries() throws Exception{
+		assertTrue(rm.addToGroceryList(0, id, "0"));
+		assertEquals(1, rm.getGroceryList(id).getSize());
+		GroceryListModel gl = rm.getGroceryList(id);
+		rm.deleteFromGroceryList(id, gl.getItem(0));
+		
+		assertEquals(0, rm.getGroceryList(id).getSize());
+	}
+	
+	@Test
+	public void testAddToGroceriesGetGroceriesInvalid() throws Exception{
+		assertTrue(rm.addToGroceryList(0, id, "0"));
+		assertNull(rm.getGroceryList(-1));
+	}
+	
+	@Test
+	public void testAddToGroceriesDeleteGroceriesInvalid() throws Exception{
+		assertFalse(rm.deleteFromGroceryList(id, null));
 	}
 	
 	@Test

@@ -89,7 +89,7 @@ public class TestGoogleImageRequestModel extends Mockito{
 	@Test
 	public void testCollageGetSize() throws Exception{
 		int size = collage.getActualSize();
-		assertEquals(0, size);
+		assertEquals(10, size);
 	}
 	
 	@Test

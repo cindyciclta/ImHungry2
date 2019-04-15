@@ -35,8 +35,7 @@ public class GoogleImageRequestModel {
 		imagesearch.trim();
 		String trimmed = imagesearch.replaceAll("\\_", "+");
 		//The URL to Google Image API - API key and Custom Control key included, Add the imageSearch at the end.
-		URL url = new URL("https://www.googleapis.com/customsearch/v1?key=AIzaSyAqAClJ63YQN5UtnDUNED9c2qZf6op5yow" + 
-				"&cx=018271258977134758236:ifnf_dla9yk&q=" + trimmed + "&searchType=image");
+		URL url = new URL("https://www.googleapis.com/customsearch/v1?key=AIzaSyBwlwwsByIHA84SdaPQNn5HuSlX_uKUZwg&cx=002772984330479616657:p8dlc5dnlgi&q=" + trimmed + "&searchType=image");
 		HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
 	    con.setRequestProperty("User-Agent", "Chrome");
 		con.addRequestProperty("Referer", "localhost:8080");

@@ -111,7 +111,7 @@ public class TestRedirectionController extends Mockito{
 	@Test
     public void testManageListDoNotShow() throws Exception {
         when(request.getParameter("action")).thenReturn( "managelist" );
-        when(request.getParameter("index")).thenReturn( "0" );
+        when(request.getParameter("index")).thenReturn( "1" );
         when(request.getParameter("list")).thenReturn( ListTypeEnum.DONOTSHOW.type );
         when(request.getRequestDispatcher("ManageListView.jsp")).thenReturn(rd);
         new RedirectionController().service(request, response);
@@ -121,7 +121,7 @@ public class TestRedirectionController extends Mockito{
 	@Test
     public void testManageListFavorites() throws Exception {
         when(request.getParameter("action")).thenReturn( "managelist" );
-        when(request.getParameter("index")).thenReturn( "0" );
+        when(request.getParameter("index")).thenReturn( "1" );
         when(request.getParameter("list")).thenReturn( ListTypeEnum.FAVORITES.type );
         when(request.getParameter("length")).thenReturn( "10" );
         when(request.getParameter("jsonarray")).thenReturn( "jsarray" );
@@ -133,7 +133,7 @@ public class TestRedirectionController extends Mockito{
 	@Test
     public void testManageListToExplore() throws Exception {
         when(request.getParameter("action")).thenReturn( "managelist" );
-        when(request.getParameter("index")).thenReturn( "0" );
+        when(request.getParameter("index")).thenReturn( "1" );
         when(request.getParameter("list")).thenReturn( ListTypeEnum.TOEXPLORE.type );
         when(request.getRequestDispatcher("ManageListView.jsp")).thenReturn(rd);
         new RedirectionController().service(request, response);

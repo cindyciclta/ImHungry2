@@ -64,13 +64,22 @@ Then(/^the first restaurant in the list should be "([^"]*)"$/) do |arg1|
 end
 
 When(/^I drag the second recipe to the first recipe$/) do
-  second_recipe_handle = page.find('#recipe-1-handle', wait:30)
-  first_recipe_handle = page.find('#recipe-0-handle', wait:30)
-  second_recipe_handle.drag_to(first_recipe_handle)
+  #second_recipe_handle = page.find('#recipe-1-handle', wait:30)
+  #first_recipe_handle = page.find('#recipe-0-handle', wait:30)
+  #second_recipe_handle.drag_to(first_recipe_handle)
+  page.find('#button-recipe-1', match: :first).click
 end
 
 Then(/^there should be "([^"]*)" as the first recipe$/) do |arg1|
   expect(page.find('#reci-result0', wait:40)).to have_content(arg1, wait:40)
+end
+
+Then(/^there should be "([^"]*)" as the first recipe name$/) do |arg1|
+  expect(page.find('#name-recipe-1', wait:40)).to have_content(arg1, wait:40)
+end
+
+Then(/^there should be "([^"]*)" as the second recipe name$/) do |arg1|
+  expect(page.find('#name-recipe-2', wait:40)).to have_content(arg1, wait:40)
 end
 
 Then(/^I am on the "([^"]*)" page for "([^"]*)"$/) do |arg1, arg2|

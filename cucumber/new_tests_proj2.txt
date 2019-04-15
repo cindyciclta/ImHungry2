@@ -32,9 +32,9 @@ PAGINATION:
 	Test when there's pagination, clicking on second restaurant page leads to results
 	Test when there's pagination, clicking on second recipe page leads to results
 	Test when there's pagination, clicking on next restaurant page button page leads to second page
-	Test when there's pagination, clicking on next recipe page button page leads to second page
-	Test when on 2nd recipe page, clicking on previous recipe page button page leads to first
-	Test when on 2nd restaurant page, clicking on previous restaurant page button page leads to first
+	Test when there's pagination, clicking on next recipe page button leads to second page
+	Test when on 2nd recipe page, clicking on previous recipe page button leads to first page
+	Test when on 2nd restaurant page, clicking on previous restaurant page button leads to first
 	Test that the current page marker stays in the middle of the pagination display when navigating
 UI:
 	Test that there is table-hover on results (UI)
@@ -69,7 +69,7 @@ LIST REORDERING (defective test):
 //	Test that do-not-show list items remain re-ordered after signing out and back in
 GROCERY LIST:
 	Test navigating to new grocery list page
-	Test adding recipe's ingredients to grocery list
+	Test adding recipe ingredients to grocery list
 	Test that ingredients added to the grocery list from multiple recipes appear in grocery list
 	Test that grocery list is persistent after signing out and back in
 	Test removing items from the grocery list updates display

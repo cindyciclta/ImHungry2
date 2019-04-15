@@ -18,7 +18,7 @@ Scenario: Check negative radius value
 	
 Scenario: Check bad radius value
 
-	When I searched for item "Chinesehjsafhasjdfhasjdfhjs" with "1" radius
+	When I searched for item "Chihhjlhjklhjklhjkhjkhkjlhj;js" with "1" radius
 	Then the page should have an error message
 	
 Scenario: Remain on search page if radius is too small

@@ -65,6 +65,12 @@
 		term = "";
 	}
 	String ecodedValue = URLEncoder.encode(term, "UTF-8");
+	int index = -1;
+	try{
+		index = (int)request.getAttribute("index");	
+	}catch(Exception e){
+		
+	}
 	%>
 	<script>
 		var tokenCheck = <%=tokenCheck%>;
@@ -106,6 +112,17 @@
 			}
 		}
 		
+		function moveUpDownList(oldIndex, newIndex, item, type){
+			var tokenCheck = <%=tokenCheck%>;
+			var list = <%="\"" + (String)request.getAttribute("list") + "\""%>;
+			var xhr = new XMLHttpRequest();
+			var term ="<%= term %>";
+			var index = <%=index%>;
+			var trimmed = term.replace(" ", "_");
+			xhr.open("GET", "/ImHungry/RedirectionController?action=moveplaceinlist&term="+trimmed + "&index=" + index + "&list=" + list + "&item=" + item + "&type=" + type +"&oldplace=" + oldIndex + "&newplace=" + newIndex + "&token=" + tokenCheck);
+			xhr.send();
+		}
+		
 		function removeFromList(index, item, originalList, type){
 			var tokenCheck = <%=tokenCheck%>;
 			var e = document.getElementById("managelistselect");
@@ -123,12 +140,7 @@
 		String title = (String)request.getAttribute("title");
 		String lst = (String)request.getAttribute("list");
 		
-		int index = -1;
-		try{
-			index = (int)request.getAttribute("index");	
-		}catch(Exception e){
-			
-		}
+		
 		
 			
 		
@@ -206,7 +218,7 @@
 									                                    <table class="table text-white">
 							                                                <tbody>
 							                                                    <tr style="background-color: inherit;">
-							                                                        <td>name: <%=resultsFields.get("name")%></td>
+							                                                        <td id=<%="name-recipe-" + resultsFields.get("place") %>>name: <%=resultsFields.get("name")%></td>
 							                                                        <td>stars: <%=resultsFields.get("stars")%></td>
 							                                                    </tr>
 							                                                    <tr style="background-color: inherit;">
@@ -243,6 +255,21 @@
 									                                        </button>
 									                                    </td>
 									                                </tr>
+									                                <%
+	                                                               int field = Integer.parseInt(resultsFields.get("place")) - 1;
+									                               if(field > 0){
+	                                                               %>
+									                                 <tr style="background-color:inherit">
+			                                                               <td>
+			                                                               
+			                                                                   <button type="button" class="btn btn-default btn-sm" id=<%="\"" + "button-recipe-" + resultsFields.get("originalindex") + "\""%>
+			                                                                  		onclick=<%= "moveUpDownList(" + (field + 1) + "," + field + "," + resultsFields.get("originalindex") + ",\"recipe\")"%>>
+			                                                                       <i style="color:white" class="fas fa-arrow-up"></i>
+			                                                                   </button>
+			                                                               </td>
+		                                                           </tr>
+		                                                           <%
+		                                                           }%>
 									                            </tbody>
 									                        </table>
 									                    </div>
@@ -318,14 +345,21 @@
 		                                                                   </button>
 		                                                               </td>
 		                                                           </tr>
-		                                                           <tr style="background-color:inherit">
-		                                                               <td>
-		                                                                   <button type="button" class="btn btn-default btn-sm"
-		                                                                  		onclick=<%= "moveToList(" + index + "," + resultsFields.get("originalindex") + ",\"restaurant\")"%>>
-		                                                                       <i style="color:white" class="fas fa-arrow-up"></i>
-		                                                                   </button>
-		                                                               </td>
+		                                                            <%
+	                                                               int field = Integer.parseInt(resultsFields.get("place")) - 1;
+									                               if(field > 0){
+	                                                               %>
+									                                 <tr style="background-color:inherit">
+			                                                               <td>
+			                                                               
+			                                                                   <button type="button" class="btn btn-default btn-sm" id=<%="\"" + "button-restaurant-" + resultsFields.get("originalindex") + "\""%>
+			                                                                  		onclick=<%= "moveUpDownList(" + (field + 1) + "," + field + "," + resultsFields.get("originalindex") + ",\"restaurant\")"%>>
+			                                                                       <i style="color:white" class="fas fa-arrow-up"></i>
+			                                                                   </button>
+			                                                               </td>
 		                                                           </tr>
+		                                                           <%
+		                                                           }%>
 		                                                       </tbody>
 		                                                   </table>
 		                                               </div>
@@ -383,17 +417,12 @@
 				var itemEl = evt.item;  // dragged HTMLElement
 				var itemId = itemEl.id;
 				var array = itemId.split("-");
-				var oldIndex = evt.oldIndex + 1;  // element's old index within old parent
-				var newIndex = evt.newIndex + 1;  // element's new index within new parent
+				var oldIndex = evt.oldIndex;  // element's old index within old parent
+				var newIndex = evt.newIndex;  // element's new index within new parent
 				var type = array[0];
 				var item = array[1];
-				var list = <%="\"" + (String)request.getAttribute("list") + "\""%>;
-				var xhr = new XMLHttpRequest();
-				var term ="<%= term %>";
-				var index = <%=index%>;
-				var trimmed = term.replace(" ", "_");
-				xhr.open("GET", "/ImHungry/RedirectionController?action=moveplaceinlist&term="+trimmed + "&index=" + index + "&list=" + list + "&item=" + item + "&type=" + type +"&oldplace=" + oldIndex + "&newplace=" + newIndex + "&token=" + tokenCheck);
-				xhr.send();
+				console.log(newIndex + " " + oldIndex);
+				moveUpDownList(oldIndex, newIndex, item, type);
 			}
 		});
       </script>

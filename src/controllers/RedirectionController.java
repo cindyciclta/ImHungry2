@@ -74,6 +74,7 @@ public class RedirectionController extends HttpServlet {
 			} else {
 				request.setAttribute("title", "To Explore");
 			}
+			RedirectionController.responses.get(Integer.parseInt(index)).sort();
 			request.setAttribute("list", list);
 			request.setAttribute("response", responses.get(Integer.parseInt(index)));
 			request.setAttribute("index", Integer.parseInt(index));

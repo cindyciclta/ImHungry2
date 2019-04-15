@@ -118,7 +118,7 @@
     <Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"
                maxThreads="150" SSLEnabled="true"
       compression ="on" scheme="https" secure="true"
-      keystoreFile = "/usr/local/tomcat/keys/clienttrust.jks"
+      keystoreFile = "/usr/local/tomcat/keys/client.jks"
       keystorePass = "changeit"
       SSLVerifyClient = "none" SSLProtocol = "TLSv1.2"
 

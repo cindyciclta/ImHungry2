@@ -8,6 +8,7 @@
 <%@page import="java.net.URLEncoder"%>
 <%@page import="java.util.Vector"%>
 <%@page import="models.SearchTermModel"%>
+<%@page import="models.ResponseModel"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -86,23 +87,53 @@
 	<title>Results Page - I'm Hungry</title>
 </head>
 <body>
+	<%
+		String token = (String)request.getAttribute("token");
+		if(token == null){
+			response.sendRedirect("/ImHungry/SignInView.jsp");
+		}
+		String tokenCheck = "\"" + token + "\"";
+	%>
+	<script>
+		
+		var tokenCheck = <%=tokenCheck%>;
+		if(tokenCheck === "ERROR"){
+			window.location = '/ImHungry/SignInView.jsp';
+		}
+	</script>
+	
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
+	
+	
+	
 	<%
 	ResponseModel rm = ((ResponseModel)request.getAttribute("response"));
-	String title = rm.getSearchTerm();
-	int index = (int)request.getAttribute("index");
+	String rest_pg = "";
+	String reci_pg = "";
+	JSONArray jsArray = new JSONArray();
+	int length = 0;
+	String term = "";
+	int index = -1;
+	int lim = -1;
+	int rad = -1;
+	if(rm != null){
+		String title = rm.getSearchTerm();
+		index = (int)request.getAttribute("index");
+		
+		jsArray = (JSONArray) request.getAttribute("jsonarray");
+		length = (int) request.getAttribute("length");
+		term = (String) request.getAttribute("term");
+		rest_pg = (String) request.getAttribute("rest_page");
+		reci_pg = (String) request.getAttribute("reci_page");
+		lim = Integer.parseInt((String)request.getSession().getAttribute("limit"));
+		rad = Integer.parseInt((String)request.getSession().getAttribute("radius"));
+	}else{
+		rm = new ResponseModel(-1);	
+	}
 	
-	JSONArray jsArray = (JSONArray) request.getAttribute("jsonarray");
-	int length = (int) request.getAttribute("length");
-	String term = (String) request.getAttribute("term");
-	String token = (String)request.getAttribute("token");
-	String rest_pg = (String) request.getAttribute("rest_page");
-	String reci_pg = (String) request.getAttribute("reci_page");
-	int lim = Integer.parseInt((String)request.getSession().getAttribute("limit"));
-	int rad = Integer.parseInt((String)request.getSession().getAttribute("radius"));
+	
 	int reci_pgnum;
 	int rest_pgnum;
 	try {
@@ -115,6 +146,7 @@
 	%>
 	
 	<script>
+		
 		$( document ).ready(function() {
 	        console.log( "ready!" );
 	        var js = <%= jsArray %>;
@@ -214,12 +246,11 @@
 			
 			
 			if(list !== ""){
-				
+				var token = <%="\"" + token + "\""%>;
 				if(list === "grocery"){
-					var token = <%="\"" + token + "\""%>;
 					redirectToResult("/ImHungry/RedirectionController?action=managegrocerylist" +"&index=" + index + "&token=" + token);
 				}else{
-					redirectToResult("/ImHungry/RedirectionController?action=managelist" +"&index=" + index + "&list=" + list);
+					redirectToResult("/ImHungry/RedirectionController?action=managelist" +"&index=" + index + "&list=" + list  + "&token=" + token);
 				}
 			}
 		}
@@ -250,8 +281,7 @@
                                 	<%
                     				System.out.println("restaurant page number=" + rest_pgnum);
 		                    		int rest_upperbound = 0;
-                    				System.out.println("number of restaurants " + rm.getNumberOfRestaurants());
-		                            if ((5 * (rest_pgnum - 1) + 5) < rm.getNumberOfRestaurants()) {
+                    				if ((5 * (rest_pgnum - 1) + 5) < rm.getNumberOfRestaurants()) {
 		                            	rest_upperbound = (5 * (rest_pgnum - 1) + 5);
 		                            } else {
 		                            	rest_upperbound = rm.getNumberOfRestaurants();
@@ -496,6 +526,9 @@
 				<tbody>
 					<%
 					Vector<SearchTermModel> searches = (Vector<SearchTermModel>)request.getAttribute("searches");
+					if(searches == null){
+						searches = new Vector<SearchTermModel>();
+					}
 					%>
 					<tr>
 						<%

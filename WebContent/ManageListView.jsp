@@ -57,9 +57,20 @@
    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 	<% String term = (String) request.getAttribute("term");
 	String token = (String)request.getAttribute("token");
+	if(token == null){
+		token = "ERROR";
+	}
+	String tokenCheck = "\"" + token + "\"";
+	if(term == null){
+		term = "";
+	}
 	String ecodedValue = URLEncoder.encode(term, "UTF-8");
 	%>
 	<script>
+		var tokenCheck = <%=tokenCheck%>;
+		if(tokenCheck === "ERROR"){
+			window.location = '/ImHungry/SignInView.jsp';
+		}
 	
 		var list = "";
 	
@@ -72,38 +83,37 @@
 		}
 		
 		function redirectToManageList(index){
+			var tokenCheck = <%=tokenCheck%>;
 			var e = document.getElementById("managelistselect");
 			list = e.options[e.selectedIndex].value;
 			if(list != ""){
 				var term ="<%= term %>";
 				var trimmed = term.replace(" ", "_");
-				window.location.replace("/ImHungry/RedirectionController?action=managelist&term="+trimmed + "&index=" + index + "&list=" + list);
+				window.location.replace("/ImHungry/RedirectionController?action=managelist&term="+trimmed + "&index=" + index + "&list=" + list + "&token=" + tokenCheck);
 			}
 		}
 		
 		function moveToList(index, item, type){
+			var tokenCheck = <%=tokenCheck%>;
 			var e = document.getElementById("managelistselect");
 			list = e.options[e.selectedIndex].value;
 			if(list != ""){
 				var xhr = new XMLHttpRequest();
 				var term ="<%= term %>";
 				var trimmed = term.replace(" ", "_");
-				xhr.open("GET", "/ImHungry/RedirectionController?action=movetolist&term="+trimmed+ "&index=" + index + "&list=" + list + "&item=" + item + "&type=" + type, true);
+				xhr.open("GET", "/ImHungry/RedirectionController?action=movetolist&term="+trimmed+ "&index=" + index + "&list=" + list + "&item=" + item + "&type=" + type + "&token=" + tokenCheck, true);
 				xhr.send();
 			}
 		}
 		
 		function removeFromList(index, item, originalList, type){
+			var tokenCheck = <%=tokenCheck%>;
 			var e = document.getElementById("managelistselect");
 			var xhr = new XMLHttpRequest();
 			var term ="<%= term %>";
 			var trimmed = term.replace(" ", "_");
-			xhr.open("GET", "/ImHungry/RedirectionController?action=removefromlist&term="+trimmed + "&index=" + index + "&list=" + originalList + "&item=" + item + "&type=" + type, true);
+			xhr.open("GET", "/ImHungry/RedirectionController?action=removefromlist&term="+trimmed + "&index=" + index + "&list=" + originalList + "&item=" + item + "&type=" + type + "&token=" + tokenCheck, true);
 			xhr.send();
-		}
-		
-		function moveUpDownList(index, oldIndex, newIndex, type){
-			
 		}
 		
 	</script>
@@ -113,7 +123,24 @@
 		String title = (String)request.getAttribute("title");
 		String lst = (String)request.getAttribute("list");
 		
-		int index = (int)request.getAttribute("index");
+		int index = -1;
+		try{
+			index = (int)request.getAttribute("index");	
+		}catch(Exception e){
+			
+		}
+		
+			
+		
+		if(rm == null){
+			rm = new ResponseModel(-1);
+		}
+		if(title == null){
+			title = "";
+		}
+		if(lst == null){
+			lst = "";
+		}
 	%>
 
    <div id="wrapper" class="container">
@@ -326,10 +353,10 @@
                        <input class="btn btn-secondary" onclick=<%="redirectToManageList("+ index + ")"%> type="button" value="Manage Lists">
                    </li>
                    <li class="nav-item">
-                       <a class="btn btn-secondary" onclick=<%= "redirectToRecipe(\"" + "/ImHungry/ResultsPageController?action=search&term="+ term + "&index=" + index + "\")" %>>Back to Search</a>
+                       <a class="btn btn-secondary" onclick=<%= "redirectToRecipe(\"" + "/ImHungry/ResultsPageController?action=search&term="+ term + "&index=" + index +  "&token=" + token + "\")" %>>Back to Search</a>
                    </li>
                    <li class="nav-item my-3">
-                       <a class="btn btn-secondary" onclick=<%= "redirectToRecipe(\"" + "/ImHungry/RedirectionController?action=results&term="+ term +"&index=" + index + "\")" %>>Back to Results</a>
+                       <a class="btn btn-secondary" onclick=<%= "redirectToRecipe(\"" + "/ImHungry/RedirectionController?action=results&term="+ term +"&index=" + index + "&token=" + token + "\")" %>>Back to Results</a>
                    </li>
                </ul>
            </div>
@@ -356,7 +383,7 @@
 				var term ="<%= term %>";
 				var index = <%=index%>;
 				var trimmed = term.replace(" ", "_");
-				xhr.open("GET", "/ImHungry/RedirectionController?action=moveplaceinlist&term="+trimmed + "&index=" + index + "&list=" + list + "&item=" + item + "&type=" + type +"&oldplace=" + oldIndex + "&newplace=" + newIndex);
+				xhr.open("GET", "/ImHungry/RedirectionController?action=moveplaceinlist&term="+trimmed + "&index=" + index + "&list=" + list + "&item=" + item + "&type=" + type +"&oldplace=" + oldIndex + "&newplace=" + newIndex + "&token=" + tokenCheck);
 				xhr.send();
 			}
 		});

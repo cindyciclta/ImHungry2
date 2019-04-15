@@ -75,13 +75,12 @@
 			
 			
 			if(list !== ""){
-				
+				var token = <%="\"" + token + "\""%>;
 				if(list === "grocery"){
-					var token = <%="\"" + token + "\""%>;
-					var link = "/ImHungry/RedirectionController?action=managegrocerylist" +"&index=" + index + "&token=" + token + "&term=" + trimmed;
+					var link = "/ImHungry/RedirectionController?action=managegrocerylist" +"&index=" + index + "&token=" + token + "&term=" + trimmed + "&token=" + token;
 					window.location = link;
 				}else{
-					var link = "/ImHungry/RedirectionController?action=managelist" +"&index=" + index + "&list=" + list + "&term=" + trimmed;
+					var link = "/ImHungry/RedirectionController?action=managelist" +"&index=" + index + "&list=" + list + "&term=" + trimmed + "&token=" + token;
 					window.location = link;
 				}
 			}

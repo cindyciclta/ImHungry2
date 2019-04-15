@@ -41,7 +41,7 @@ public class RedirectionController extends HttpServlet {
 		String token = request.getParameter("token");
 		RequestDispatcher dispatch = null;
 		
-		System.out.println(action);
+		System.out.println(token);
 		
 
 		request.setAttribute("term", term);

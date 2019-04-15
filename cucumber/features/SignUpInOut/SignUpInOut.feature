@@ -78,3 +78,5 @@ Scenario: Test that going directly to the search/result page without signing in 
 	Then I should be on the sign in page
 	When I go directly to the results page jsp
 	Then I should be on the sign in page
+	When I go directly to the manage list jsp
+	Then I should be on the sign in page

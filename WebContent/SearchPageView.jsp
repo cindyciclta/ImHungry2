@@ -83,7 +83,22 @@ h1 {
 
 
 <body>
+	<%
+		String token = (String)request.getAttribute("token");
+		if(token == null){
+			token = "ERROR";
+		}
+		String tokenCheck = "\"" + token + "\"";
+	%>
 	<script>
+		
+		var tokenCheck = <%=tokenCheck%>;
+		if(tokenCheck === "ERROR"){
+			window.location = '/ImHungry/SignInView.jsp';
+		}	
+		
+		
+	
 		function redirectToResults(){
 			
 			document.getElementById("emojiImage").src = "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/155/grinning-face_1f600.png";
@@ -135,9 +150,7 @@ h1 {
 			  		</div>
 			  </div>
 
-<%
-	String token = (String)request.getAttribute("token");
-%>
+
 
 <script>
 	function redirectToResults(){

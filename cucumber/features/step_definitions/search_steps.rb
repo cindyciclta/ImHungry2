@@ -413,6 +413,10 @@ When(/^I go directly to the results page jsp$/) do
   visit "http://localhost:8080/ImHungry/ResultsPageView.jsp"
 end
 
+When(/^I go directly to the manage list jsp$/) do
+  visit "http://localhost:8080/ImHungry/ManageListView.jsp"
+end
+
 When(/^I go directly to the results page controller$/) do
   visit "http://localhost:8080/ImHungry/ResultsPageController"
 end

@@ -50,6 +50,15 @@ public class TestSignInController extends Mockito{
     }
 	
 	@Test
+    public void testSignInValidEmpty() throws Exception {
+        when(request.getParameter("username")).thenReturn( username );
+        when(request.getParameter("password")).thenReturn( "" );
+        when(request.getRequestDispatcher("SignInView.jsp")).thenReturn(rd);
+        new SignInController().service(request, response);
+        verify(rd).forward(request, response);
+    }
+	
+	@Test
     public void testSignInNoExist() throws Exception {
         when(request.getParameter("username")).thenReturn( "aaaah" );
         when(request.getParameter("password")).thenReturn( password );
@@ -61,6 +70,33 @@ public class TestSignInController extends Mockito{
 	@Test
     public void testSignInError() throws Exception {
         when(request.getParameter("username")).thenReturn( "" );
+        when(request.getParameter("password")).thenReturn( "" );
+        when(request.getRequestDispatcher("SignInView.jsp")).thenReturn(rd);
+        new SignInController().service(request, response);
+        verify(rd).forward(request, response);
+    }
+	
+	@Test
+    public void testSignInErrorEmpty() throws Exception {
+        when(request.getParameter("username")).thenReturn( "" );
+        when(request.getParameter("password")).thenReturn( "sdf" );
+        when(request.getRequestDispatcher("SignInView.jsp")).thenReturn(rd);
+        new SignInController().service(request, response);
+        verify(rd).forward(request, response);
+    }
+	
+	@Test
+    public void testSignInErrorEmpty2() throws Exception {
+        when(request.getParameter("username")).thenReturn( "sdf" );
+        when(request.getParameter("password")).thenReturn( "" );
+        when(request.getRequestDispatcher("SignInView.jsp")).thenReturn(rd);
+        new SignInController().service(request, response);
+        verify(rd).forward(request, response);
+    }
+	
+	@Test
+    public void testSignInErrorNull() throws Exception {
+        when(request.getParameter("username")).thenReturn( null );
         when(request.getParameter("password")).thenReturn( "" );
         when(request.getRequestDispatcher("SignInView.jsp")).thenReturn(rd);
         new SignInController().service(request, response);

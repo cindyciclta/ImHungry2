@@ -288,7 +288,7 @@
 		                            }
                                     if (rm.getNumberOfRestaurants() == 0) {
                                         %>
-                                        <h3>No Results</h3>
+                                        <h3>Error: No Results Found for Small Radius</h3>
                                         <%
                                     }
                                 	for (int i = 5 * (rest_pgnum - 1) ; i < rest_upperbound ; i++) {
@@ -398,6 +398,11 @@
                                 	reci_upperbound = (5 * (reci_pgnum - 1) + 5);
                                 } else {
                                 	reci_upperbound = rm.getNumberOfRecipes();
+                                }
+                                if (rm.getNumberOfRecipes() == 0) {
+                                    %>
+                                    <h3 id="small-radius-error">Error: No Results Found for Small Radius</h3>
+                                    <%
                                 }
                                 for (int i = 5 * (reci_pgnum - 1) ; i < reci_upperbound ; i++) {
 									Map<String, String> resultsFields = rm.getFormattedRecipeResultsAt(i);

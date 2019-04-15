@@ -43,6 +43,7 @@ public class TestResultsPageController extends Mockito{
 		assertTrue(DatabaseModel.insertUser(username, password.toCharArray()));
 		id = DatabaseModel.GetUserID(username);
 		RedirectionController.tokens.put("fakeToken", id);
+		RedirectionController.tokens.put("badToken", -1);
 	
 	}
 	
@@ -78,6 +79,25 @@ public class TestResultsPageController extends Mockito{
 	@Test
     public void testInvalidActionEmpty() throws Exception {
         when(request.getParameter("action")).thenReturn( "" );
+        when(request.getParameter("token")).thenReturn( "fakeToken" );
+        when(request.getRequestDispatcher("SearchPageController")).thenReturn(rd);
+        new ResultsPageController().service(request, response);
+        verify(rd).forward(request, response);
+    }
+	
+	@Test
+    public void testInvalidActionSearch() throws Exception {
+        when(request.getParameter("action")).thenReturn( "search" );
+        when(request.getParameter("token")).thenReturn( "fakeToken" );
+        when(request.getRequestDispatcher("SearchPageController")).thenReturn(rd);
+        new ResultsPageController().service(request, response);
+        verify(rd).forward(request, response);
+    }
+	
+	@Test
+    public void testInvalidActionIndexEmpty() throws Exception {
+        when(request.getParameter("action")).thenReturn( "" );
+        when(request.getParameter("index")).thenReturn( "" );
         when(request.getParameter("token")).thenReturn( "fakeToken" );
         when(request.getRequestDispatcher("SearchPageController")).thenReturn(rd);
         new ResultsPageController().service(request, response);
@@ -153,6 +173,20 @@ public class TestResultsPageController extends Mockito{
         when(request.getParameter("action")).thenReturn( "results" );
         when(request.getParameter("term")).thenReturn( "chicken" );
         when(request.getParameter("token")).thenReturn( "fakeToken" );
+        when(request.getSession()).thenReturn(sess);
+        when(request.getParameter("limit")).thenReturn( "5" );
+        when(request.getParameter("radius")).thenReturn( "1000" );
+        when(request.getRequestDispatcher("ResultsPageView.jsp")).thenReturn(rd);
+        when(request.getRequestDispatcher("SearchPageView.jsp")).thenReturn(rd);
+        new ResultsPageController().service(request, response);
+        verify(rd).forward(request, response);
+    }
+	
+	@Test
+    public void testSearchBadToken() throws Exception {
+        when(request.getParameter("action")).thenReturn( "results" );
+        when(request.getParameter("term")).thenReturn( "chicken" );
+        when(request.getParameter("token")).thenReturn( "badToken" );
         when(request.getSession()).thenReturn(sess);
         when(request.getParameter("limit")).thenReturn( "5" );
         when(request.getParameter("radius")).thenReturn( "1000" );

@@ -1,0 +1,28 @@
+New tests for project 2 (located at the bottom of respective feature file):
+
+cucumber/features/SignUp/SignUp.feature:
+Test that the sign up link works
+Test signing up with duplicate account does nothing
+Test signing up with password != passwordConfirmation does nothing
+Test signing up with empty username does nothing
+Test signing up with empty password does nothing
+Test signing in with incorrect password does nothing
+Test signing in with empty username does nothing
+Test signing in with empty password does nothing
+Test that signing out from results page leads to sign in page
+-TODO test signing out from search page
+
+cucumber/features/Search/P2_SearchPage.feature:
+Test that there is a radius text box
+Test default 1000 radius
+Test Small radius value
+Test negative radius
+Test using enter to search
+-TODO tests for search history
+
+cucumber/features/Result/P2_ResultsPage.feature:
+Test that putting tiny radius gives no restaurant results
+Test that searching for 3 items does not cause pagination
+Test that searching for 15 items causes pagination
+Test when there's pagination, clicking on second page leads to results
+Test that there is table-hover on results (UI)

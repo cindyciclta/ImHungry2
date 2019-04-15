@@ -22,6 +22,29 @@ import models.SearchTermModel;
 public class ResultsPageController extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
+	
+	private boolean checkErrorIndex(String index) {
+		if(index == null) {
+			return false;
+		}
+		if(index.isEmpty()) {
+			return false;
+		}
+		return true;
+	}
+	
+	private boolean checkErrorAction(String action) {
+		if(action == null) {
+			return true;
+		}
+		if(action.isEmpty()) {
+			return true;
+		}
+		if(action.equals("search")) {
+			return true;
+		}
+		return false;
+	}
 
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
@@ -29,8 +52,8 @@ public class ResultsPageController extends HttpServlet {
 		String index = request.getParameter("index");
 		RequestDispatcher dispatch;
 		
-		if(action == null || action.isEmpty() || action.equals("search")) {
-			if(index != null && !index.isEmpty()) {
+		if(checkErrorAction(action)) {
+			if(checkErrorIndex(index)) {
 				RedirectionController.removeResponse(Integer.parseInt(index));
 			}
 			
@@ -61,11 +84,13 @@ public class ResultsPageController extends HttpServlet {
 				CollageGenerationModel collagemodel = new CollageGenerationModel();
 				GoogleImageRequestModel googleimagemodel = new GoogleImageRequestModel(collagemodel);
 				googleimagemodel.APIImageSearch(term);
+				boolean badReq = rm.checkParameters(term, limitInteger, Integer.parseInt(radius));
 				
-				if(!rm.checkParameters(term, limitInteger, Integer.parseInt(radius)) || !rm.getSearchResults()) {
+				if(!badReq) {
 					dispatch = request.getRequestDispatcher("SearchPageView.jsp");
 					request.setAttribute("token", token);
 				} else {
+					rm.getSearchResults();
 					dispatch = request.getRequestDispatcher("ResultsPageView.jsp");
 					int indexInt = RedirectionController.addResponse(rm);
 					

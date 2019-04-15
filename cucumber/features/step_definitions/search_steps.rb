@@ -195,6 +195,10 @@ Then(/^I should be on the sign up page$/) do
   expect(page).to have_css('#passwordConf')
 end
 
+Then(/^the page should have an error message$/) do
+  expect(page).to have_css('#small-radius-error')
+end
+
 Then(/^I should not see any restaurants$/) do
   expect(page).not_to have_content('minutes of driving')
 end

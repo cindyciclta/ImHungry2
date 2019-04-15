@@ -26,10 +26,13 @@ public class SignInController extends HttpServlet {
 	    int id = -1;
 	    
 	    try {
+	    	if(username == null) {
+	    		throw new Exception();
+	    	}
 	    	id = DatabaseModel.signInUser(username, password.toCharArray());
 	    	
 	    	// Check if valid
-		    if(id != -1 && !username.trim().equals("") && !password.trim().equals("")) {
+		    if(id != -1) {
 		    	String token = "";
 	    		for(int i = 0 ; i < 10 ; i++) {
 	    			token += String.valueOf((int)(Math.random() * 9  + 1));

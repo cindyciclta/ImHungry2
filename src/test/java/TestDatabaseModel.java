@@ -373,6 +373,17 @@ public class TestDatabaseModel{
 	}
 	
 	@Test
+	public void InsertGroceryListInvalid() throws Exception{
+		String username = "test";
+		String password = "test";
+		DatabaseModel.insertUser(username, password.toCharArray());
+		DatabaseModel.InsertIntoGroceryList("sdf", "apple");
+		GroceryListModel gl = DatabaseModel.getGroceryListFromUser(username);
+		assertEquals(0, gl.getSize());
+		deleteUser(username);
+	}
+	
+	@Test
 	public void deleteGroceryList() throws Exception{
 		String username = "test";
 		String password = "test";

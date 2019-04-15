@@ -91,6 +91,13 @@ Scenario: Check most recent search in search history
 	And I clicks the "Return to Search" button
 	And I type "cake" and I press enter
 	Then there should be "soup" in the first search history
+	
+Scenario: Check that mini collages appear in search history
+
+	When I searched for item "fries" with "4" results and was redirected to the Results page
+	And I clicks the "Return to Search" button
+	And I type "oatmeal" and I press enter
+	Then there should be a mini collage in the search history
 
 Scenario: Check two most recent searches in search history
 

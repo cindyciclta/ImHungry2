@@ -58,3 +58,23 @@ Scenario: Sign out from search page
 	When I am on the search page
 	And I click the sign out button
 	Then I should be on the sign in page
+	
+Scenario: Test that https is a substring of the url
+
+	When I am on the search page
+	Then the url should contain "https"
+	When I searched for item "water" with "1" results and was redirected to the Results page
+	Then the url should contain "https"
+	
+Scenario: Test that going directly to the search/result page without signing in leads to sign in page
+
+	When I am on the search page
+	And I click the sign out button
+	And I go directly to the search page controller
+	Then I should be on the sign in page
+	When I go directly to the results page controller
+	Then I should be on the sign in page
+	When I go directly to the search page jsp
+	Then I should be on the sign in page
+	When I go directly to the results page jsp
+	Then I should be on the sign in page

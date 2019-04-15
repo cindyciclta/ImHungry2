@@ -159,7 +159,7 @@
 								                            <tbody>
 								                                <tr style="background-color:inherit">
 								                                    <td>
-								                                      <i class="fas fa-arrows-alt movable-list-handle"></i>
+								                                      <i id=<%="recipe-"+resultsFields.get("originalindex")+"-handle"%> class="fas fa-arrows-alt movable-list-handle"></i>
 								                                    </td>
 								                                </tr>
 								                            </tbody>
@@ -231,7 +231,7 @@
 								                            <tbody>
 								                                <tr style="background-color:inherit">
 								                                    <td>
-								                                      <i class="fas fa-arrows-alt movable-list-handle"></i>
+								                                      <i id=<%="restaurant-"+resultsFields.get("originalindex")+"-handle"%> class="fas fa-arrows-alt movable-list-handle"></i>
 								                                    </td>
 								                                </tr>
 								                            </tbody>

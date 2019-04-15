@@ -1,16 +1,19 @@
 New tests for project 2 (located at the bottom of respective feature file):
 
 cucumber/features/SignUpInOut/SignUpInOut.feature:
-Test that the sign up link works
-Test signing up with duplicate account does nothing
-Test signing up with password != passwordConfirmation does nothing
-Test signing up with empty username does nothing
-Test signing up with empty password does nothing
-Test signing in with incorrect password does nothing
-Test signing in with empty username does nothing
-Test signing in with empty password does nothing
-Test that signing out from results page leads to sign in page
-Test that signing out from search page leads to sign in page
+SECURITY:
+	Test that the sign up link works
+	Test signing up with duplicate account does nothing
+	Test signing up with password != passwordConfirmation does nothing
+	Test signing up with empty username does nothing
+	Test signing up with empty password does nothing
+	Test signing in with incorrect password does nothing
+	Test signing in with empty username does nothing
+	Test signing in with empty password does nothing
+	Test that signing out from results page leads to sign in page
+	Test that signing out from search page leads to sign in page
+	Test that https is a substring of the url
+	Test that going directly to the search/result page without signing in leads to sign in page
 
 cucumber/features/Search/P2_SearchPage.feature:
 RADIUS INPUT:
@@ -38,11 +41,11 @@ UI:
 SEARCH HISTORY:
 	Test that there is a search history text
 	Test that the most recent search appears in search history
+	Test that mini collages appear in search history
 	Test that two most recent searches appear in search history in order
 	Test that consecutive duplicate searches only show up once in search history
 	Test that clicking on search history link leads to result page for that search
 	Test that search history is only saved for the target user account
-TODO Test that mini collages appear in search history
 
 cucumber/features/ManageList/P2_ManageList.feature
 LIST PERSISTENCE:
@@ -60,5 +63,14 @@ LIST PERSISTENCE:
 		Test that persistent list item in do-not-show list continues to be filtered out from search results
 		Test that persistent list item in do-not-show can be clicked on to view info page
 		Test that list item stays removed from persistent do-not-show list after signing out and back in
-
-TODO list reordering and grocery list testing
+LIST REORDERING (defective test):
+	Test that favorites list items remain re-ordered after signing out and back in
+//	Test that to-explore list items remain re-ordered after signing out and back in
+//	Test that do-not-show list items remain re-ordered after signing out and back in
+GROCERY LIST:
+	Test navigating to new grocery list page
+	Test adding recipe's ingredients to grocery list
+	Test that ingredients added to the grocery list from multiple recipes appear in grocery list
+	Test that grocery list is persistent after signing out and back in
+	Test removing items from the grocery list updates display
+	Test that removal of grocery list items is persistent after signing out and back in

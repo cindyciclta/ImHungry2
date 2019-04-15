@@ -158,6 +158,8 @@
                                <thead>
                                </thead>
                                <tbody id="movable-list">
+                               		<tr id="firstElem">
+                               		</tr>
                                    <%
                                    
 									int count = 0;
@@ -316,6 +318,14 @@
 		                                                                   </button>
 		                                                               </td>
 		                                                           </tr>
+		                                                           <tr style="background-color:inherit">
+		                                                               <td>
+		                                                                   <button type="button" class="btn btn-default btn-sm"
+		                                                                  		onclick=<%= "moveToList(" + index + "," + resultsFields.get("originalindex") + ",\"restaurant\")"%>>
+		                                                                       <i style="color:white" class="fas fa-arrow-up"></i>
+		                                                                   </button>
+		                                                               </td>
+		                                                           </tr>
 		                                                       </tbody>
 		                                                   </table>
 		                                               </div>
@@ -350,7 +360,7 @@
                        </div>
                    </li>
                    <li class="nav-item mb-3">
-                       <input class="btn btn-secondary" onclick=<%="redirectToManageList("+ index + ")"%> type="button" value="Manage Lists">
+                       <input id="manage_lists_btn" class="btn btn-secondary" onclick=<%="redirectToManageList("+ index + ")"%> type="button" value="Manage Lists">
                    </li>
                    <li class="nav-item">
                        <a class="btn btn-secondary" onclick=<%= "redirectToRecipe(\"" + "/ImHungry/ResultsPageController?action=search&term="+ term + "&index=" + index +  "&token=" + token + "\")" %>>Back to Search</a>
@@ -377,7 +387,6 @@
 				var newIndex = evt.newIndex + 1;  // element's new index within new parent
 				var type = array[0];
 				var item = array[1];
-				console.log(item);
 				var list = <%="\"" + (String)request.getAttribute("list") + "\""%>;
 				var xhr = new XMLHttpRequest();
 				var term ="<%= term %>";

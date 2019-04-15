@@ -33,7 +33,9 @@ Scenario: Test list persistence for Favorites list
 	And I selected "Favorites" from the drop down
 	And I manage the list
 	And I remove "Golden Rum Cake"
-	Then I do not see "Super Lemon Ice Cream"
+	And I selected "Favorites" from the drop down
+	And I manage the list
+	Then I do not see "Golden Rum Cake"
 	
 	When I clicks the "Back to Results" button
 	And I click the sign out button
@@ -68,6 +70,8 @@ Scenario: Test list persistence for To Explore list
 	And I selected "To Explore" from the drop down
 	And I manage the list
 	And I remove "Broken Spanish"
+	And I selected "To Explore" from the drop down
+	And I manage the list
 	Then I do not see "Broken Spanish"
 	
 	When I clicks the "Back to Results" button
@@ -103,6 +107,8 @@ Scenario: Test list persistence for Do Not Show list
 	And I selected "Do Not Show" from the drop down
 	And I manage the list
 	And I remove "Super Lemon Ice Cream"
+	And I selected "Do Not Show" from the drop down
+	And I manage the list
 	Then I do not see "Super Lemon Ice Cream"
 	
 	When I clicks the "Back to Results" button
@@ -123,8 +129,8 @@ Scenario: Test persistent list re-ordering for Favorites list
 	When I selected "Favorites" from the drop down
 	And I add it to the list
 	And I clicks the "Back to Results" button
-	And I clicked the link for "Colori Kitchen"
-	Then I am on the "Colori Kitchen" page
+	And I clicked the link for "Pasta Roma"
+	Then I am on the "Pasta Roma" page
 	
 	When I selected "Favorites" from the drop down
 	And I add it to the list
@@ -138,11 +144,15 @@ Scenario: Test persistent list re-ordering for Favorites list
 	And I selected "Favorites" from the drop down
 	And I manage the list
 	Then the first recipe in the list should be "Creamy Cajun Chicken Pasta"
-	And the first restaurant in the list should be "Colori Kitchen"
+	And the first restaurant in the list should be "Pasta Roma"
 	And the second recipe in the list should be "Pasta Pomodoro"
 	
 	#THIS COMMAND FAILS
 	When I drag the second recipe to the first recipe
+	
+	And I clicks the "Back to Results" button
+	And I selected "Favorites" from the drop down
+	And I manage the list
 	
 	Then the first recipe in the list should be "Pasta Pomodoro"
 	And the second recipe in the list should be "Creamy Cajun Chicken Pasta"
@@ -154,7 +164,7 @@ Scenario: Test persistent list re-ordering for Do Not Show list
 Scenario: Test navigating to grocery list page
 
 	When I searched for item "burger" with "3" results and was redirected to the Results page
-	And selected "Groceries" from the drop down
+	And I selected "Groceries" from the drop down
 	And I manage the list
 	Then I am on the "Grocery List" page
 
@@ -213,6 +223,8 @@ Scenario: Test grocery list features
 	And I remove "cilantro"
 	And I remove "sour cream"
 	And I remove "vanilla extract"
+	And I selected "Groceries" from the drop down
+	And I manage the list
 	Then I should not see "chicken" on the page
 	And I should not see "red onion" on the page
 	And I should not see "cilantro" on the page
@@ -225,7 +237,7 @@ Scenario: Test grocery list features
 	When I clicks the "Back to Search" button
 	And I click the sign out button
 	And I searched for item "taco" with "4" results and was redirected to the Results page
-	And I selected "groceries" from the drop down
+	And I selected "Groceries" from the drop down
 	And I manage the list
 	Then I am on the "Grocery List" page
 	And I should not see "red onion" on the page

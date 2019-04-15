@@ -22,7 +22,7 @@ before_install:
   - bundle install
   - cd ..
   - docker build -t imhungry - < Dockerfile
-  - docker run -d -p "8080":"8080" imhungry
+  - docker run -d -p "8080":"8080" -p "8443":"8443" imhungry
   - mysql -u root < database.sql
   
 before_script:

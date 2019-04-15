@@ -62,23 +62,28 @@ public class MockRecipeRequestModel extends EdamamRequestModel{
 	
 	@Override
 	public void recreateList() throws Exception{
+		recreateListWithoutSorting();
+		Collections.sort(this.results);
+	}
+	
+	@Override
+	public void recreateListWithoutSorting() throws Exception{
 		this.listItems.clear();
 		List<RecipeModel> listItems = DatabaseModel.getRecipesInList(searchId);
 			
-			// add to listItems
-			for(RecipeModel item : listItems) {
-				this.listItems.add(item);
-			}
-			
-		    // Recorrelate against the list
-			for(RecipeModel item : listItems) {
-				for(int i = 0 ; i < results.size() ; i++) {
-					if(item.equals(results.get(i))) {
-						results.get(i).setListItem(item);
-					}
+		// add to listItems
+		for(RecipeModel item : listItems) {
+			this.listItems.add(item);
+		}
+		
+	    // Recorrelate against the list
+		for(RecipeModel item : listItems) {
+			for(int i = 0 ; i < results.size() ; i++) {
+				if(item.equals(results.get(i))) {
+					results.get(i).setListItem(item);
 				}
 			}
-			Collections.sort(this.results);
+		}
 	}
 	
 	@Override

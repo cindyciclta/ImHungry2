@@ -189,8 +189,8 @@ public class ResponseModel {
 				}
 			}
 			
-			recipes.recreateList();
-			restaurants.recreateList();
+			recipes.recreateListWithoutSorting();
+			restaurants.recreateListWithoutSorting();
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

@@ -34,5 +34,5 @@ public interface ApiCallInterface<T> {
 	public List<T> getListItems();
 	
 	public void recreateList() throws Exception;
-
+	public void recreateListWithoutSorting() throws Exception;
 }

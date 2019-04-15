@@ -244,7 +244,7 @@
 		                                               <div class="h-100 row justify-content-center align-items-center">
 		                                                   <table class="table-striped table-borderless">
 		                                                       <tbody>
-		                                                           <tr style="background-color:inherit" onclick=<%="redirectToRestaurant(\"" + "/ImHungry/RedirectionController?action=restaurant&term="+term +"&index=" + index + "&item=" + i + "\")"%>>
+		                                                           <tr style="background-color:inherit" onclick=<%="redirectToRestaurant(\"" + "/ImHungry/RedirectionController?action=restaurant&term="+term +"&index=" + index + "&item=" + resultsFields.get("originalindex") + "\")"%>>
 		                                                               <td class="col">
 								                                            <table class="table text-white">
 								                                                <tbody>

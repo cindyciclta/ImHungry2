@@ -65,6 +65,12 @@ public class MockYelpRequestModel extends YelpRequestModel{
 	
 	@Override
 	public void recreateList() throws Exception{
+		recreateListWithoutSorting();
+		Collections.sort(this.results);
+	}
+	
+	@Override
+	public void recreateListWithoutSorting() throws Exception{
 		List<RestaurantModel> listItems = DatabaseModel.getRestaurantsInList(searchId);
 		this.listItems.clear();
 			
@@ -81,7 +87,6 @@ public class MockYelpRequestModel extends YelpRequestModel{
 					}
 				}
 			}
-			Collections.sort(this.results);
 	}
 	
 	public boolean updateList(int i) {

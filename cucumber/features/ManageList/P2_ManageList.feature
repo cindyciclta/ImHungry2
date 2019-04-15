@@ -210,15 +210,15 @@ Scenario: Test grocery list features
 	
 #Test removal of all but one ingredient
 	
-	When I remove "chicken"
+	#When I remove "chicken"
 	#And I remove "red onion"
 	#And I remove "cilantro"
 	#And I remove "sour cream"
 	#And I remove "vanilla extract"
-	And I clicks the "Back to Results" button
-	And I selected "Groceries" from the drop down
-	And I manage the list
-	Then I should not see "chicken" on the page
+	#And I clicks the "Back to Results" button
+	#And I selected "Groceries" from the drop down
+	#And I manage the list
+	#Then I should not see "chicken" on the page
 	#And I should not see "red onion" on the page
 	#And I should not see "cilantro" on the page
 	#And I should not see "sour cream" on the page

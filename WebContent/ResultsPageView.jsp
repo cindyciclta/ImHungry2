@@ -401,7 +401,7 @@
                                 }
                                 if (rm.getNumberOfRecipes() == 0) {
                                     %>
-                                    <h3 id="small-radius-error">Error: No Results Found for Small Radius</h3>
+                                    <p id="small-radius-error">Error: No Results Found for Small Radius</p>
                                     <%
                                 }
                                 for (int i = 5 * (reci_pgnum - 1) ; i < reci_upperbound ; i++) {

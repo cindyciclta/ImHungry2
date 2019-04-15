@@ -7,7 +7,7 @@ Background:
 	Given I have navigated to the sign up page
 	And I sign up with username "test" and password "test"
 	
-Scenario: Test list persistence for favorites list
+Scenario: Test list persistence for Favorites list
 
 	When I searched for item "cake" with "6" results and was redirected to the Results page
 	And I clicked the link for "Golden Rum Cake"
@@ -33,7 +33,9 @@ Scenario: Test list persistence for favorites list
 	And I selected "Favorites" from the drop down
 	And I manage the list
 	And I remove "Golden Rum Cake"
-	And I clicks the "Back to Results" button
+	Then I do not see "Super Lemon Ice Cream"
+	
+	When I clicks the "Back to Results" button
 	And I click the sign out button
 	And I searched for item "cake" with "6" results and was redirected to the Results page
 	And I selected "Favorites" from the drop down
@@ -66,7 +68,9 @@ Scenario: Test list persistence for To Explore list
 	And I selected "To Explore" from the drop down
 	And I manage the list
 	And I remove "Broken Spanish"
-	And I clicks the "Back to Results" button
+	Then I do not see "Broken Spanish"
+	
+	When I clicks the "Back to Results" button
 	And I click the sign out button
 	And I searched for item "mexican" with "6" results and was redirected to the Results page
 	And I selected "To Explore" from the drop down
@@ -99,7 +103,9 @@ Scenario: Test list persistence for Do Not Show list
 	And I selected "Do Not Show" from the drop down
 	And I manage the list
 	And I remove "Super Lemon Ice Cream"
-	And I clicks the "Back to Results" button
+	Then I do not see "Super Lemon Ice Cream"
+	
+	When I clicks the "Back to Results" button
 	And I click the sign out button
 	And I searched for item "ice cream" with "6" results and was redirected to the Results page
 	Then I should see "Super Lemon Ice Cream" on the page
@@ -107,3 +113,125 @@ Scenario: Test list persistence for Do Not Show list
 	When I selected "Do Not Show" from the drop down
 	And I manage the list
 	Then I do not see "Super Lemon Ice Cream"
+	
+Scenario: Test persistent list re-ordering for Favorites list
+
+	When I searched for item "pasta" with "6" results and was redirected to the Results page
+	And I clicked the link for "Creamy Cajun Chicken Pasta"
+	Then I am on the "Creamy Cajun Chicken Pasta" page
+	
+	When I selected "Favorites" from the drop down
+	And I add it to the list
+	And I clicks the "Back to Results" button
+	And I clicked the link for "Colori Kitchen"
+	Then I am on the "Colori Kitchen" page
+	
+	When I selected "Favorites" from the drop down
+	And I add it to the list
+	And I clicks the "Back to Results" button
+	And I clicked the link for "Pasta Pomodoro"
+	Then I am on the "Pasta Pomodoro" page
+	
+	When I selected "Favorites" from the drop down
+	And I add it to the list
+	And I clicks the "Back to Results" button
+	And I selected "Favorites" from the drop down
+	And I manage the list
+	Then the first recipe in the list should be "Creamy Cajun Chicken Pasta"
+	And the first restaurant in the list should be "Colori Kitchen"
+	And the second recipe in the list should be "Pasta Pomodoro"
+	
+	#THIS COMMAND FAILS
+	When I drag the second recipe to the first recipe
+	
+	Then the first recipe in the list should be "Pasta Pomodoro"
+	And the second recipe in the list should be "Creamy Cajun Chicken Pasta"
+
+Scenario: Test persistent list re-ordering for To Explore list
+
+Scenario: Test persistent list re-ordering for Do Not Show list
+
+Scenario: Test navigating to grocery list page
+
+	When I searched for item "burger" with "3" results and was redirected to the Results page
+	And selected "Groceries" from the drop down
+	And I manage the list
+	Then I am on the "Grocery List" page
+
+Scenario: Test grocery list features
+
+#Add first recipe's ingredients to grocery list
+
+	When I searched for item "ecuadorian" with "6" results and was redirected to the Results page
+	And I clicked the link for "Ecuadorian Seco de Pollo"
+	Then I am on the "Ecuadorian Seco de Pollo" page
+	When I add the "chicken" to the grocery list
+	And I add the "red onion" to the grocery list
+	And I add the "cilantro" to the grocery list
+
+#Add second recipe's ingredients to grocery list
+
+	And I searched for item "coffee" with "6" results and was redirected to the Results page
+	And I clicked the link for "Blueberry Sour Cream Coffee Cake"
+	Then I am on the "Blueberry Sour Cream Coffee Cake" page
+	When I add the "sour cream" to the grocery list
+	And I add the "vanilla extract" to the grocery list
+	And I add the "chopped pecans" to the grocery list
+	
+#Check that the ingredients are all displayed in the grocery list
+	
+	And I clicks the "Back to Results" button
+	And I selected "Groceries" from the drop down
+	And I manage the list
+	Then I am on the "Grocery List" page
+	And I should see "chicken" on the page
+	And I should see "red onion" on the page
+	And I should see "cilantro" on the page
+	And I should see "sour cream" on the page
+	And I should see "vanilla extract" on the page
+	And I should see "chopped pecans" on the page
+	
+#Test that ingredients are persistent after signing out and back in
+	
+	When I clicks the "Back to Search" button
+	And I click the sign out button
+	And I searched for item "taco" with "3" results and was redirected to the Results page
+	And I selected "Groceries" from the drop down
+	And I manage the list
+	Then I am on the "Grocery List" page
+	And I should see "chicken" on the page
+	And I should see "red onion" on the page
+	And I should see "cilantro" on the page
+	And I should see "sour cream" on the page
+	And I should see "vanilla extract" on the page
+	And I should see "chopped pecans" on the page
+	
+#Test removal of all but one ingredient
+	
+	When I remove "chicken"
+	And I remove "red onion"
+	And I remove "cilantro"
+	And I remove "sour cream"
+	And I remove "vanilla extract"
+	Then I should not see "chicken" on the page
+	And I should not see "red onion" on the page
+	And I should not see "cilantro" on the page
+	And I should not see "sour cream" on the page
+	And I should not see "vanilla extract" on the page
+	And I should see "chopped pecans" on the page
+	
+#Test that remove ingredients remain remove after signing out and back in
+	
+	When I clicks the "Back to Search" button
+	And I click the sign out button
+	And I searched for item "taco" with "4" results and was redirected to the Results page
+	And I selected "groceries" from the drop down
+	And I manage the list
+	Then I am on the "Grocery List" page
+	And I should not see "red onion" on the page
+	And I should not see "cilantro" on the page
+	And I should not see "sour cream" on the page
+	And I should not see "vanilla extract" on the page
+	And I should see "chopped pecans" on the page
+	When I remove "chopped pecans"
+	Then I should not see "chopped pecans" on the page

@@ -153,7 +153,7 @@
         					<h5 class="title">Ingredients</h5>
         					<div class="container-fluid">
         						<!-- TODO make this table fill dynamically -->
-        						<table class="table-dark table-borderless">
+        						<table class="table-dark table-borderless" id="ingredient_table">
         							<thead>
         							</thead>
         							<tbody>
@@ -178,10 +178,9 @@
 											<td>
 			        							<li>
 			        								<h><%=count+1%>. <%=ing %><h> 
-			        							
 			        							</li>
 
-												<button type="button" id= "addtogrocery" onclick=<%= "addToGroceryList("+ count +","+index+","+ item+")" %> >Add To Grocery List</button>
+												<button type="button" class= "addtogrocery" onclick=<%= "addToGroceryList("+ count +","+index+","+ item+")" %> >Add To Grocery List</button>
         									</td>
 										
 										<%

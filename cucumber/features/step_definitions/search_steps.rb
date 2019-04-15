@@ -38,12 +38,35 @@ Given(/^I clicks the "([^"]*)" button$/) do |arg1|
   page.find('a.btn.btn-secondary', text: arg1, wait: 50).click
 end
 
+When(/^I add the "([^"]*)" to the grocery list$/) do |arg1|
+  td = page.find('#ingredient_table', wait:20).find('td', text: arg1, wait:35)
+  td.find('.addtogrocery', wait:15).click
+end
+
 Then(/^I should see a title$/) do
   find('h1')
 end
 
 When(/^I click on "([^"]*)"$/) do |arg1|
   click_link_or_button arg1
+end
+
+Then(/^the first recipe in the list should be "([^"]*)"$/) do |arg1|
+  expect(page.find('#recipe-0', wait:35)).to have_content(arg1)
+end
+
+Then(/^the second recipe in the list should be "([^"]*)"$/) do |arg1|
+  expect(page.find('#recipe-1', wait:35)).to have_content(arg1)
+end
+
+Then(/^the first restaurant in the list should be "([^"]*)"$/) do |arg1|
+  expect(page.find('#restaurant-0', wait:35)).to have_content(arg1)
+end
+
+When(/^I drag the second recipe to the first recipe$/) do
+  second_recipe_handle = page.find('#recipe-1-handle', wait:30)
+  first_recipe_handle = page.find('#recipe-0-handle', wait:30)
+  second_recipe_handle.drag_to(first_recipe_handle)
 end
 
 Then(/^there should be "([^"]*)" as the first recipe$/) do |arg1|
@@ -261,6 +284,10 @@ When(/^I press the next restaurant button$/) do
   page.find('#rest-page-alt-next', wait:50).click
 end
 
+Then(/^there should be a mini collage in the search history$/) do
+  expect(page).to have_css('.miniCollage', wait: 20)
+end
+
 Then(/^there should be no previous recipe button$/) do
   expect(page).not_to have_css('#reci-page-alt-prev', wait: 50)
 end
@@ -372,6 +399,26 @@ end
 Given(/^I type "([^"]*)" and I press enter$/) do |arg1|
   fill_in 'termInput', :with => arg1
   find('#termInput').native.send_keys(:return)
+end
+
+When(/^I go directly to the search page jsp$/) do
+  visit "http://localhost:8080/ImHungry/SearchPageView.jsp"
+end
+
+When(/^I go directly to the search page controller$/) do
+  visit "http://localhost:8080/ImHungry/SearchPageController"
+end
+
+When(/^I go directly to the results page jsp$/) do
+  visit "http://localhost:8080/ImHungry/ResultsPageView.jsp"
+end
+
+When(/^I go directly to the results page controller$/) do
+  visit "http://localhost:8080/ImHungry/ResultsPageController"
+end
+
+Then(/^the url should contain "([^"]*)"$/) do |arg1|
+  expect(page.current_url).to include(arg1)
 end
 
 Then(/^I should see prompt text enter food$/) do

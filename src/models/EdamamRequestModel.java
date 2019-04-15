@@ -280,53 +280,25 @@ public abstract class EdamamRequestModel implements ApiCallInterface<RecipeModel
 		}
 		return results.get(i).getFormattedFieldsForDetailsPage();
 	}
-
-	@Override
-	public boolean setFavoriteResult(int i, boolean value) {
-		if(i < 0) {
-			return false;
-		}
-		if(i >= results.size()) {
-			return false;
-		}
-		results.get(i).setInFavorites(value);
-		boolean removed = !value && results.get(i).isInFavorites();
-		addOrRemoveValue(results.get(i), value, removed);
-		return true;
-	}
-
-	@Override
-	public boolean setToExploreResult(int i, boolean value) {
-		if(i < 0) {
-			return false;
-		}
-		if(i >= results.size()) {
-			return false;
-		}
-		results.get(i).setInToExplore(value);
-		boolean removed = !value && results.get(i).isInToExplore();
-		addOrRemoveValue(results.get(i), value, removed);
-		return true;
-	}
 	
+	@Override
+	public boolean setListResult(int i, boolean value, ListTypeEnum list) {
+		if(i < 0) {
+			return false;
+		}
+		if(i >= results.size()) {
+			return false;
+		}
+		results.get(i).setInList(list, value);
+		boolean removed = !value && results.get(i).isInList(list);
+		addOrRemoveValue(results.get(i), value, removed);
+		return true;
+	}
+
 	private void addOrRemoveValue(RecipeModel recipe, boolean value, boolean removed) {
 		if(!listItems.contains(recipe) && value) {
 			listItems.add(recipe);
 		}
-	}
-
-	@Override
-	public boolean setDoNotShowResult(int i, boolean value) {
-		if(i < 0) {
-			return false;
-		}
-		if(i >= results.size()) {
-			return false;
-		}
-		boolean removed = !value && results.get(i).isInDoNotShow();
-		results.get(i).setInDoNotShow(value);
-		addOrRemoveValue(results.get(i), value, removed);
-		return true;
 	}
 
 	@Override

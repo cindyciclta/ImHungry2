@@ -75,7 +75,7 @@ public class RestaurantModel extends ListItemModel implements Comparable<Restaur
 	}
 	
 	public Map<String, String> getFormattedFieldsForResultsPage(){
-		Map<String, String> toReturn = new HashMap<>();
+		Map<String, String> toReturn = super.getFormattedFieldsForResultsPage();
 		
 		toReturn.put("name", name);
 		toReturn.put("address", address);
@@ -87,16 +87,6 @@ public class RestaurantModel extends ListItemModel implements Comparable<Restaur
 		toReturn.put("stars", stars);
 		toReturn.put("drivingTime", this.drivingTime + " minutes of driving");
 		toReturn.put("priceRange", String.format( "%.2f", lowEndPrice ) + " to " + String.format( "%.2f", highEndPrice ));
-		
-		String modifier = "";
-		if(isInDoNotShow()) {
-			modifier = ListTypeEnum.DONOTSHOW.type;
-		} else if(isInFavorites()) {
-			modifier = ListTypeEnum.FAVORITES.type;
-		} else if(isInToExplore()) {
-			modifier = ListTypeEnum.TOEXPLORE.type;
-		}
-		toReturn.put("modifier", modifier);
 		
 		return toReturn;
 	}
@@ -163,10 +153,10 @@ public class RestaurantModel extends ListItemModel implements Comparable<Restaur
 	@Override
 	public int compareTo(RestaurantModel arg0) {
 		// Puts favorites first
-		if(isInFavorites() && !arg0.isInFavorites()) {
+		if(isInList(ListTypeEnum.FAVORITES) && !arg0.isInList(ListTypeEnum.FAVORITES)) {
 			return -1;
 		}
-		if(!isInFavorites() && arg0.isInFavorites()) {
+		if(!isInList(ListTypeEnum.FAVORITES) && arg0.isInList(ListTypeEnum.FAVORITES)) {
 			return 1;
 		}
 		

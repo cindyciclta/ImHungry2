@@ -84,27 +84,11 @@ public class TestRecipeModel {
 	}
 	
 	@Test
-	public void testModifierDoNotShow() {
+	public void testModifier() {
 		RecipeModel rm = new RecipeModel();
-		rm.setInDoNotShow(true);
-		Map<String, String> res = rm.getFormattedFieldsForResults();
-		assertEquals(ListTypeEnum.DONOTSHOW.type, res.get("modifier"));
-	}
-	
-	@Test
-	public void testModifierFavorites() {
-		RecipeModel rm = new RecipeModel();
-		rm.setInFavorites(true);
+		rm.setInList(ListTypeEnum.FAVORITES, true);
 		Map<String, String> res = rm.getFormattedFieldsForResults();
 		assertEquals(ListTypeEnum.FAVORITES.type, res.get("modifier"));
-	}
-	
-	@Test
-	public void testToExplore() {
-		RecipeModel rm = new RecipeModel();
-		rm.setInToExplore(true);
-		Map<String, String> res = rm.getFormattedFieldsForResults();
-		assertEquals(ListTypeEnum.TOEXPLORE.type, res.get("modifier"));
 	}
 	
 	@Test
@@ -224,33 +208,33 @@ public class TestRecipeModel {
 	@Test
 	public void testThisFavorite() {
 		RecipeModel rm = new RecipeModel();
-		rm.setInFavorites(true);
+		rm.setInList(ListTypeEnum.FAVORITES, false);
 		
 		RecipeModel rmFavorite = new RecipeModel();
-		rmFavorite.setInFavorites(false);
+		rmFavorite.setInList(ListTypeEnum.FAVORITES, true);
 		
-		assertEquals(1, rmFavorite.compareTo(rm));
+		assertEquals(-1, rmFavorite.compareTo(rm));
 	}
 	
 	@Test
 	public void testOtherFavorite() {
 		RecipeModel rm = new RecipeModel();
-		rm.setInFavorites(true);
+		rm.setInList(ListTypeEnum.FAVORITES, false);
 		
 		RecipeModel rmFavorite = new RecipeModel();
-		rmFavorite.setInFavorites(false);
+		rmFavorite.setInList(ListTypeEnum.FAVORITES, true);
 		
-		assertEquals(-1, rm.compareTo(rmFavorite));
+		assertEquals(1, rm.compareTo(rmFavorite));
 	}
 	
 	@Test
 	public void testBothFavorite() {
 		RecipeModel rm = new RecipeModel();
-		rm.setInFavorites(true);
+		rm.setInList(ListTypeEnum.FAVORITES, true);
 		rm.setPrepTime(1);
 		
 		RecipeModel rmFavorite = new RecipeModel();
-		rmFavorite.setInFavorites(true);
+		rmFavorite.setInList(ListTypeEnum.FAVORITES, true);
 		rmFavorite.setPrepTime(2);
 		
 		assertEquals(-1, rm.compareTo(rmFavorite));
@@ -259,11 +243,11 @@ public class TestRecipeModel {
 	@Test
 	public void testNeitherFavorite() {
 		RecipeModel rm = new RecipeModel();
-		rm.setInFavorites(false);
+		rm.setInList(ListTypeEnum.FAVORITES, false);
 		rm.setPrepTime(1);
 		
 		RecipeModel rmFavorite = new RecipeModel();
-		rmFavorite.setInFavorites(false);
+		rmFavorite.setInList(ListTypeEnum.FAVORITES, false);
 		rmFavorite.setPrepTime(2);
 		
 		assertEquals(-1, rm.compareTo(rmFavorite));

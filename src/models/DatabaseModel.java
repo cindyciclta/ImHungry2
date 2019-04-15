@@ -451,12 +451,11 @@ public class DatabaseModel {
 	    	restaurant.next();
 	    	Gson g = new Gson();
 	    	RestaurantModel rm = g.fromJson(restaurant.getString("json_string"), RestaurantModel.class);
-	    	if(rs.getString("name").equals(ListTypeEnum.DONOTSHOW.type)) {
-	    		rm.setInDoNotShow(true);
-	    	}else if(rs.getString("name").equals(ListTypeEnum.TOEXPLORE.type)) {
-	    		rm.setInToExplore(true);
-	    	}else {
-	    		rm.setInFavorites(true);
+	    	
+	    	for(ListTypeEnum enumVal : ListTypeEnum.values()) {
+	    		if(rs.getString("name").equals(enumVal.type)){
+	    			rm.setInList(enumVal, true);
+	    		}
 	    	}
 	    	
 	    	// Get order in list
@@ -499,11 +498,11 @@ public class DatabaseModel {
 		int item_id = getItemIdFromRestaurant(rm);
 		
     	// Get Number of Items in list
-    	String name = ListTypeEnum.TOEXPLORE.type;
-    	if(rm.isInFavorites()) {
-    		name = ListTypeEnum.FAVORITES.type;
-    	}else if(rm.isInDoNotShow()) {
-    		name = ListTypeEnum.DONOTSHOW.type;
+    	String name = "";
+    	for(ListTypeEnum enumVal : ListTypeEnum.values()) {
+    		if(rm.isInList(enumVal)){
+    			name = enumVal.type;
+    		}
     	}
     	// Stop adding something that is already in list
     	Connection conn = getConnection();
@@ -580,12 +579,10 @@ public class DatabaseModel {
 	    	restaurant.next();
 	    	Gson g = new Gson();
 	    	RecipeModel rm = g.fromJson(restaurant.getString("json_string"), RecipeModel.class);
-	    	if(rs.getString("name").equals(ListTypeEnum.DONOTSHOW.type)) {
-	    		rm.setInDoNotShow(true);
-	    	}else if(rs.getString("name").equals(ListTypeEnum.TOEXPLORE.type)) {
-	    		rm.setInToExplore(true);
-	    	}else {
-	    		rm.setInFavorites(true);
+	    	for(ListTypeEnum enumVal : ListTypeEnum.values()) {
+	    		if(rs.getString("name").equals(enumVal.type)){
+	    			rm.setInList(enumVal, true);
+	    		}
 	    	}
 	    	
 	    	// Get order in list
@@ -631,11 +628,11 @@ public class DatabaseModel {
 		
     	
     	// Get Number of Items in list
-    	String name = ListTypeEnum.TOEXPLORE.type;
-    	if(rm.isInFavorites()) {
-    		name = ListTypeEnum.FAVORITES.type;
-    	}else if(rm.isInDoNotShow()) {
-    		name = ListTypeEnum.DONOTSHOW.type;
+    	String name = "";
+    	for(ListTypeEnum enumVal : ListTypeEnum.values()) {
+    		if(rm.isInList(enumVal)){
+    			name = enumVal.type;
+    		}
     	}
     	
     	// Stop adding something that is already in list

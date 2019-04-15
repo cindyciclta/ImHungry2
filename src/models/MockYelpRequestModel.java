@@ -77,40 +77,11 @@ public class MockYelpRequestModel extends YelpRequestModel{
 			for(RestaurantModel item : listItems) {
 				for(int i = 0 ; i < results.size() ; i++) {
 					if(item.equals(results.get(i))) {
-						results.get(i).setInFavorites(item.isInFavorites());
-						results.get(i).setInDoNotShow(item.isInDoNotShow());
-						results.get(i).setInToExplore(item.isInToExplore());
+						results.get(i).setListItem(item);
 					}
 				}
 			}
 			Collections.sort(this.results);
-	}
-	
-	@Override
-	public boolean setFavoriteResult(int i, boolean value) {
-		boolean ret = super.setFavoriteResult(i,  value);
-		if(!ret) {
-			return false;
-		}
-		return updateList(i);
-	}
-	
-	@Override
-	public boolean setToExploreResult(int i, boolean value) {
-		boolean ret = super.setToExploreResult(i,  value);
-		if(!ret) {
-			return false;
-		}
-		return updateList(i);
-	}
-	
-	@Override
-	public boolean setDoNotShowResult(int i, boolean value) {
-		boolean ret = super.setDoNotShowResult(i,  value);
-		if(!ret) {
-			return false;
-		}
-		return updateList(i); 
 	}
 	
 	public boolean updateList(int i) {
@@ -121,8 +92,7 @@ public class MockYelpRequestModel extends YelpRequestModel{
 				throw new Exception();
 				
 			}
-			if(!results.get(i).isInToExplore() && !results.get(i).isInFavorites() 
-					&& !results.get(i).isInDoNotShow()) {
+			if(results.get(i).inNoList()) {
 				ret = DatabaseModel.deleteRestaurant(results.get(i), searchId);
 			}else {
 				ret = DatabaseModel.insertRestaurantIntoList(searchId, results.get(i));
@@ -132,6 +102,15 @@ public class MockYelpRequestModel extends YelpRequestModel{
 			e.printStackTrace();
 		}
 		return ret;
+	}
+	
+	@Override
+	public boolean setListResult(int i, boolean value, ListTypeEnum list) {
+		boolean ret = super.setListResult(i,  value, list);
+		if(!ret) {
+			return false;
+		}
+		return updateList(i);
 	}
 
 	@Override

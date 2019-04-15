@@ -19,9 +19,7 @@ public interface ApiCallInterface<T> {
 	
 	public Map<String, String> getFormattedDetailsFieldsAt(int i);
 	
-	public boolean setFavoriteResult(int i, boolean value);
-	public boolean setToExploreResult(int i , boolean value);
-	public boolean setDoNotShowResult(int i, boolean value);
+	public boolean setListResult(int i, boolean value, ListTypeEnum list);
 	public boolean setGroceryListResult(int i, boolean value);
 	
 	public boolean moveUpDownList(int i, int oldPlace, int newPlace, String list);

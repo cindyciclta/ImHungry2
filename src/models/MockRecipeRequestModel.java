@@ -74,9 +74,7 @@ public class MockRecipeRequestModel extends EdamamRequestModel{
 			for(RecipeModel item : listItems) {
 				for(int i = 0 ; i < results.size() ; i++) {
 					if(item.equals(results.get(i))) {
-						results.get(i).setInFavorites(item.isInFavorites());
-						results.get(i).setInDoNotShow(item.isInDoNotShow());
-						results.get(i).setInToExplore(item.isInToExplore());
+						results.get(i).setListItem(item);
 					}
 				}
 			}
@@ -84,26 +82,8 @@ public class MockRecipeRequestModel extends EdamamRequestModel{
 	}
 	
 	@Override
-	public boolean setFavoriteResult(int i, boolean value) {
-		boolean ret = super.setFavoriteResult(i,  value);
-		if(!ret) {
-			return false;
-		}
-		return updateList(i);
-	}
-	
-	@Override
-	public boolean setToExploreResult(int i, boolean value) {
-		boolean ret = super.setToExploreResult(i,  value);
-		if(!ret) {
-			return false;
-		}
-		return updateList(i);
-	}
-	
-	@Override
-	public boolean setDoNotShowResult(int i, boolean value) {
-		boolean ret = super.setDoNotShowResult(i,  value);
+	public boolean setListResult(int i, boolean value, ListTypeEnum list) {
+		boolean ret = super.setListResult(i,  value, list);
 		if(!ret) {
 			return false;
 		}
@@ -117,8 +97,7 @@ public class MockRecipeRequestModel extends EdamamRequestModel{
 				ret = false;
 				throw new Exception();
 			}
-			if(!results.get(i).isInToExplore() && !results.get(i).isInFavorites() 
-					&& !results.get(i).isInDoNotShow()) {
+			if(results.get(i).inNoList()){
 				ret = DatabaseModel.deleteRecipe(results.get(i), searchId);
 			}else {
 				ret = DatabaseModel.insertRecipeIntoList(searchId, results.get(i));

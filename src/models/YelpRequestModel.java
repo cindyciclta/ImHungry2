@@ -172,44 +172,15 @@ public abstract class YelpRequestModel implements ApiCallInterface<RestaurantMod
 	}
 
 	@Override
-	public boolean setFavoriteResult(int i, boolean value) {
+	public boolean setListResult(int i, boolean value, ListTypeEnum list) {
 		if(i < 0) {
 			return false;
 		}
 		if(i >= results.size()) {
 			return false;
 		}
-		boolean removed = !value && results.get(i).isInFavorites();
-		results.get(i).setInFavorites(value);
-		addOrRemoveValue(results.get(i), value, removed);
-		return true;
-	}
-
-	@Override
-	public boolean setToExploreResult(int i, boolean value) {
-		if(i < 0) {
-			return false;
-		}
-		if(i >= results.size()) {
-			return false;
-		}
-		boolean removed = !value && results.get(i).isInToExplore();
-		results.get(i).setInToExplore(value);
-		addOrRemoveValue(results.get(i), value, removed);
-		return true;
-	}
-
-	@Override
-	public boolean setDoNotShowResult(int i, boolean value) {
-		if(i < 0) {
-			return false;
-		}
-		if(i >= results.size()) {
-			return false;
-		}
-		boolean removed = !value && results.get(i).isInDoNotShow();
-		results.get(i).setInDoNotShow(value);
-		
+		results.get(i).setInList(list, value);
+		boolean removed = !value && results.get(i).isInList(list);
 		addOrRemoveValue(results.get(i), value, removed);
 		return true;
 	}

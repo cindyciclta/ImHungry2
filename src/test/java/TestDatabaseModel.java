@@ -24,6 +24,7 @@ import java.sql.Connection;
 
 import models.DatabaseModel;
 import models.GroceryListModel;
+import models.ListTypeEnum;
 import models.RecipeModel;
 import models.RestaurantModel;
 import models.SearchTermModel;
@@ -417,7 +418,7 @@ public class TestDatabaseModel{
 		RestaurantModel rm = new RestaurantModel();
 		
 		rm.setName("blah");
-		rm.setInToExplore(true);
+		rm.setInList(ListTypeEnum.TOEXPLORE, true);
 		
 		DatabaseModel.AddSearchTermToHistory(id, "pizza", 10, 10);
 		int searchId = DatabaseModel.getSearchId("pizza", 10, 10);
@@ -429,47 +430,6 @@ public class TestDatabaseModel{
 		deleteUser(username);
 	}
 	
-	@Test
-	public void addRestaurantToListFavorites() throws Exception{
-		String username = "test";
-		String password = "test";
-		DatabaseModel.insertUser(username, password.toCharArray());
-		int id = DatabaseModel.GetUserID(username);
-		RestaurantModel rm = new RestaurantModel();
-		
-		rm.setName("blah");
-		rm.setInFavorites(true);
-		
-		DatabaseModel.AddSearchTermToHistory(id, "pizza", 10, 10);
-		int searchId = DatabaseModel.getSearchId("pizza", 10, 10);
-		DatabaseModel.insertRestaurant(rm, searchId);
-		DatabaseModel.insertRestaurantIntoList(searchId, rm);
-		
-		List<RestaurantModel> restaurants = DatabaseModel.getRestaurantsInList(searchId);
-		assertEquals(1, restaurants.size());
-		deleteUser(username);
-	}
-	
-	@Test
-	public void addRestaurantToDoNotShow() throws Exception{
-		String username = "test";
-		String password = "test";
-		DatabaseModel.insertUser(username, password.toCharArray());
-		int id = DatabaseModel.GetUserID(username);
-		RestaurantModel rm = new RestaurantModel();
-		
-		rm.setName("blah");
-		rm.setInDoNotShow(true);
-		
-		DatabaseModel.AddSearchTermToHistory(id, "pizza", 10, 10);
-		int searchId = DatabaseModel.getSearchId("pizza", 10, 10);
-		DatabaseModel.insertRestaurant(rm, searchId);
-		DatabaseModel.insertRestaurantIntoList(searchId, rm);
-		
-		List<RestaurantModel> restaurants = DatabaseModel.getRestaurantsInList(searchId);
-		assertEquals(1, restaurants.size());
-		deleteUser(username);
-	}
 	
 	@Test
 	public void addRecipeToListExplore() throws Exception{
@@ -480,7 +440,7 @@ public class TestDatabaseModel{
 		RecipeModel rm = new RecipeModel();
 		
 		rm.setName("blah");
-		rm.setInToExplore(true);
+		rm.setInList(ListTypeEnum.TOEXPLORE, true);
 		
 		DatabaseModel.AddSearchTermToHistory(id, "pizza", 10, 10);
 		int searchId = DatabaseModel.getSearchId("pizza", 10, 10);
@@ -501,7 +461,7 @@ public class TestDatabaseModel{
 		
 		RecipeModel rm2 = new RecipeModel();
 		rm2.setName("blasdfsdfsh");
-		rm2.setInToExplore(true);
+		rm2.setInList(ListTypeEnum.TOEXPLORE, true);
 		DatabaseModel.AddSearchTermToHistory(id, "pizzalol", 10, 10);
 		int searchId = DatabaseModel.getSearchId("pizzalol", 10, 10);
 		DatabaseModel.insertRecipe(rm2, searchId);
@@ -512,14 +472,14 @@ public class TestDatabaseModel{
 		
 		RecipeModel rm = new RecipeModel();
 		rm.setName("blah");
-		rm.setInToExplore(true);
+		rm.setInList(ListTypeEnum.TOEXPLORE, true);
 		DatabaseModel.AddSearchTermToHistory(id, "pizza", 10, 10);
 		searchId = DatabaseModel.getSearchId("pizza", 10, 10);
 		DatabaseModel.insertRecipe(rm, searchId);
 		DatabaseModel.insertRecipeIntoList(searchId, rm);
 		assertEquals(2, rm.getOrder());
 		
-		rm.setInDoNotShow(true);
+		rm.setInList(ListTypeEnum.DONOTSHOW, true);
 		DatabaseModel.insertRecipeIntoList(searchId, rm);
 		assertEquals(1, rm.getOrder());
 		
@@ -537,7 +497,7 @@ public class TestDatabaseModel{
 		
 		RestaurantModel rm2 = new RestaurantModel();
 		rm2.setName("blasdfsdfsh");
-		rm2.setInToExplore(true);
+		rm2.setInList(ListTypeEnum.TOEXPLORE, true);
 		DatabaseModel.AddSearchTermToHistory(id, "pizzalol", 10, 10);
 		int searchId = DatabaseModel.getSearchId("pizzalol", 10, 10);
 		DatabaseModel.insertRestaurant(rm2, searchId);
@@ -548,14 +508,14 @@ public class TestDatabaseModel{
 		
 		RestaurantModel rm = new RestaurantModel();
 		rm.setName("blah");
-		rm.setInToExplore(true);
+		rm.setInList(ListTypeEnum.TOEXPLORE, true);
 		DatabaseModel.AddSearchTermToHistory(id, "pizza", 10, 10);
 		searchId = DatabaseModel.getSearchId("pizza", 10, 10);
 		DatabaseModel.insertRestaurant(rm, searchId);
 		DatabaseModel.insertRestaurantIntoList(searchId, rm);
 		assertEquals(2, rm.getOrder());
 		
-		rm.setInDoNotShow(true);
+		rm.setInList(ListTypeEnum.DONOTSHOW, true);
 		DatabaseModel.insertRestaurantIntoList(searchId, rm);
 		assertEquals(1, rm.getOrder());
 		
@@ -573,7 +533,7 @@ public class TestDatabaseModel{
 		
 		RestaurantModel rm4 = new RestaurantModel();
 		rm4.setName("blasdfsdfshss");
-		rm4.setInToExplore(true);
+		rm4.setInList(ListTypeEnum.TOEXPLORE, true);
 		DatabaseModel.AddSearchTermToHistory(id, "pizzalossl", 10, 10);
 		int searchId = DatabaseModel.getSearchId("pizzalossl", 10, 10);
 		DatabaseModel.insertRestaurant(rm4, searchId);
@@ -582,7 +542,7 @@ public class TestDatabaseModel{
 		
 		RestaurantModel rm2 = new RestaurantModel();
 		rm2.setName("blasdfsdfsh");
-		rm2.setInToExplore(true);
+		rm2.setInList(ListTypeEnum.TOEXPLORE, true);
 		DatabaseModel.AddSearchTermToHistory(id, "pizzalol", 10, 10);
 		searchId = DatabaseModel.getSearchId("pizzalol", 10, 10);
 		DatabaseModel.insertRestaurant(rm2, searchId);
@@ -592,7 +552,7 @@ public class TestDatabaseModel{
 		
 		RestaurantModel rm = new RestaurantModel();
 		rm.setName("blah");
-		rm.setInToExplore(true);
+		rm.setInList(ListTypeEnum.TOEXPLORE, true);
 		DatabaseModel.AddSearchTermToHistory(id, "pizza", 10, 10);
 		searchId = DatabaseModel.getSearchId("pizza", 10, 10);
 		DatabaseModel.insertRestaurant(rm, searchId);
@@ -601,7 +561,7 @@ public class TestDatabaseModel{
 		
 		RestaurantModel rm3 = new RestaurantModel();
 		rm3.setName("bjjhijijilah");
-		rm3.setInToExplore(true);
+		rm3.setInList(ListTypeEnum.TOEXPLORE, true);
 		DatabaseModel.AddSearchTermToHistory(id, "pizdfdfza", 10, 10);
 		searchId = DatabaseModel.getSearchId("pizdfdfza", 10, 10);
 		DatabaseModel.insertRestaurant(rm3, searchId);
@@ -630,7 +590,7 @@ public class TestDatabaseModel{
 		
 		RestaurantModel rm2 = new RestaurantModel();
 		rm2.setName("blasdfsdfsh");
-		rm2.setInToExplore(true);
+		rm2.setInList(ListTypeEnum.TOEXPLORE, true);
 		DatabaseModel.AddSearchTermToHistory(id, "pizzalol", 10, 10);
 		int searchId = DatabaseModel.getSearchId("pizzalol", 10, 10);
 		DatabaseModel.insertRestaurant(rm2, searchId);
@@ -639,7 +599,7 @@ public class TestDatabaseModel{
 		
 		RestaurantModel rm = new RestaurantModel();
 		rm.setName("blah");
-		rm.setInToExplore(true);
+		rm.setInList(ListTypeEnum.TOEXPLORE, true);
 		DatabaseModel.AddSearchTermToHistory(id, "pizza", 10, 10);
 		searchId = DatabaseModel.getSearchId("pizza", 10, 10);
 		DatabaseModel.insertRestaurant(rm, searchId);
@@ -648,7 +608,7 @@ public class TestDatabaseModel{
 		
 		RestaurantModel rm3 = new RestaurantModel();
 		rm3.setName("aaaablah");
-		rm3.setInToExplore(true);
+		rm3.setInList(ListTypeEnum.TOEXPLORE, true);
 		DatabaseModel.AddSearchTermToHistory(id, "pizzaa", 10, 10);
 		searchId = DatabaseModel.getSearchId("pizzaa", 10, 10);
 		DatabaseModel.insertRestaurant(rm3, searchId);
@@ -679,7 +639,7 @@ public class TestDatabaseModel{
 		
 		RecipeModel rm2 = new RecipeModel();
 		rm2.setName("blasdfsdfsh");
-		rm2.setInToExplore(true);
+		rm2.setInList(ListTypeEnum.TOEXPLORE, true);
 		DatabaseModel.AddSearchTermToHistory(id, "pizzalol", 10, 10);
 		int searchId = DatabaseModel.getSearchId("pizzalol", 10, 10);
 		DatabaseModel.insertRecipe(rm2, searchId);
@@ -689,7 +649,7 @@ public class TestDatabaseModel{
 		
 		RecipeModel rm = new RecipeModel();
 		rm.setName("blah");
-		rm.setInToExplore(true);
+		rm.setInList(ListTypeEnum.TOEXPLORE, true);
 		DatabaseModel.AddSearchTermToHistory(id, "pizza", 10, 10);
 		int search2 = DatabaseModel.getSearchId("pizza", 10, 10);
 		DatabaseModel.insertRecipe(rm, search2);
@@ -713,7 +673,7 @@ public class TestDatabaseModel{
 		
 		RecipeModel rm = new RecipeModel();
 		rm.setName("blah");
-		rm.setInToExplore(true);
+		rm.setInList(ListTypeEnum.TOEXPLORE, true);
 		DatabaseModel.AddSearchTermToHistory(id, "pizza", 10, 10);
 		int search2 = DatabaseModel.getSearchId("pizza", 10, 10);
 		DatabaseModel.insertRecipe(rm, search2);
@@ -734,7 +694,7 @@ public class TestDatabaseModel{
 		
 		RestaurantModel rm = new RestaurantModel();
 		rm.setName("blah");
-		rm.setInToExplore(true);
+		rm.setInList(ListTypeEnum.TOEXPLORE, true);
 		DatabaseModel.AddSearchTermToHistory(id, "pizza", 10, 10);
 		int search2 = DatabaseModel.getSearchId("pizza", 10, 10);
 		DatabaseModel.insertRestaurant(rm, search2);
@@ -745,49 +705,7 @@ public class TestDatabaseModel{
 		assertEquals(1, DatabaseModel.getRestaurantsInList(search2).size());
 		deleteUser(username);
 	}
-	
-	@Test
-	public void addRecipeToListFavorites() throws Exception{
-		String username = "test";
-		String password = "test";
-		DatabaseModel.insertUser(username, password.toCharArray());
-		int id = DatabaseModel.GetUserID(username);
-		RecipeModel rm = new RecipeModel();
-		
-		rm.setName("blah");
-		rm.setInFavorites(true);
-		
-		DatabaseModel.AddSearchTermToHistory(id, "pizza", 10, 10);
-		int searchId = DatabaseModel.getSearchId("pizza", 10, 10);
-		DatabaseModel.insertRecipe(rm, searchId);
-		DatabaseModel.insertRecipeIntoList(searchId, rm);
-		
-		List<RecipeModel> recipes = DatabaseModel.getRecipesInList(searchId);
-		assertEquals(1, recipes.size());
-		deleteUser(username);
-	}
-	
-	@Test
-	public void addRecipeToDoNotShow() throws Exception{
-		String username = "test";
-		String password = "test";
-		DatabaseModel.insertUser(username, password.toCharArray());
-		int id = DatabaseModel.GetUserID(username);
-		RecipeModel rm = new RecipeModel();
-		
-		rm.setName("blah");
-		rm.setInDoNotShow(true);
-		
-		DatabaseModel.AddSearchTermToHistory(id, "pizza", 10, 10);
-		int searchId = DatabaseModel.getSearchId("pizza", 10, 10);
-		DatabaseModel.insertRecipe(rm, searchId);
-		DatabaseModel.insertRecipeIntoList(searchId, rm);
-		
-		List<RecipeModel> recipes = DatabaseModel.getRecipesInList(searchId);
-		assertEquals(1, recipes.size());
-		deleteUser(username);
-	}
-	
+
 	@Test
 	public void deleteRestaurantFromList() throws Exception{
 		String username = "test";
@@ -797,7 +715,7 @@ public class TestDatabaseModel{
 		
 		RestaurantModel rm2 = new RestaurantModel();
 		rm2.setName("blasdfsdfsh");
-		rm2.setInToExplore(true);
+		rm2.setInList(ListTypeEnum.TOEXPLORE, true);
 		DatabaseModel.AddSearchTermToHistory(id, "pizzalol", 10, 10);
 		int searchId = DatabaseModel.getSearchId("pizzalol", 10, 10);
 		DatabaseModel.insertRestaurant(rm2, searchId);
@@ -807,7 +725,7 @@ public class TestDatabaseModel{
 		
 		RestaurantModel rm = new RestaurantModel();
 		rm.setName("blah");
-		rm.setInToExplore(true);
+		rm.setInList(ListTypeEnum.TOEXPLORE, true);
 		DatabaseModel.AddSearchTermToHistory(id, "pizza", 10, 10);
 		int search2 = DatabaseModel.getSearchId("pizza", 10, 10);
 		DatabaseModel.insertRestaurant(rm, search2);

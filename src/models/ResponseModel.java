@@ -176,20 +176,16 @@ public class ResponseModel {
 				throw new Exception();
 			}
 			if(type.equals("restaurant")) {
-				if(list.equals(ListTypeEnum.DONOTSHOW.type)) {
-					ret = restaurants.setDoNotShowResult(i, value);
-				} else if(list.equals(ListTypeEnum.FAVORITES.type)) {
-					ret = restaurants.setFavoriteResult(i, value);
-				} else {
-					ret = restaurants.setToExploreResult(i, value);
+				for(ListTypeEnum listVal : ListTypeEnum.values()) {
+					if(list.equals(listVal.type)) {
+						ret = restaurants.setListResult(i, value, listVal);
+					}
 				}
 			}else {
-				if(list.equals(ListTypeEnum.DONOTSHOW.type)) {
-					ret = recipes.setDoNotShowResult(i, value);
-				} else if(list.equals(ListTypeEnum.FAVORITES.type)) {
-					ret = recipes.setFavoriteResult(i, value);
-				} else{
-					ret = recipes.setToExploreResult(i, value);
+				for(ListTypeEnum listVal : ListTypeEnum.values()) {
+					if(list.equals(listVal.type)) {
+						ret = recipes.setListResult(i, value, listVal);
+					}
 				}
 			}
 			

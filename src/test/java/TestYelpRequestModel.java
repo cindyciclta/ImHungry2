@@ -96,45 +96,47 @@ public class TestYelpRequestModel {
 	
 	@Test
 	public void testSetFavorites() {
-		assertTrue(cached.setFavoriteResult(0, true));
-		assertFalse(cached.setFavoriteResult(-1, true));
-		assertFalse(cached.setFavoriteResult(100, true));
+		assertTrue(cached.setListResult(0, true, ListTypeEnum.FAVORITES));
+		assertFalse(cached.setListResult(-1, true, ListTypeEnum.FAVORITES));
+		assertFalse(cached.setListResult(100, true, ListTypeEnum.FAVORITES));
 	}
 	
 	@Test
 	public void testSetFavoritesWithOldFavorite() throws Exception{
-		assertTrue(cached.setFavoriteResult(0, true));
+		assertTrue(cached.setListResult(0, true, ListTypeEnum.FAVORITES));
 		int searchId = DatabaseModel.AddSearchTermToHistory(id, "coffee", 5, 1000);
 		MockYelpRequestModel m = new MockYelpRequestModel(searchId);
 		assertTrue(m.checkParameters("coffee", 5, 1000));
 		assertEquals(ResponseCodeModel.OK, m.completeTask());
 	}
 	
-	@Test
-	public void testSetToExplore() {
-		//assertEquals(ResponseCodeModel.OK, cached.completeTask("coffee", 5));
-		assertTrue(cached.setToExploreResult(0, true));
-		assertFalse(cached.setToExploreResult(-1, true));
-		assertFalse(cached.setToExploreResult(100, true));
-	}
-	
 	
 	@Test
 	public void testSetDoNotShow() {
-		assertTrue(cached.setDoNotShowResult(0, true));
+		assertTrue(cached.setListResult(0, true, ListTypeEnum.DONOTSHOW));
 		for(int i = 0 ; i < cached.getResultsSize() ; i++) {
-			cached.setDoNotShowResult(i, false);
-			cached.setToExploreResult(i, false);
-			cached.setFavoriteResult(i, false);
+			assertTrue(cached.setListResult(i, true, ListTypeEnum.DONOTSHOW));
+			assertTrue(cached.setListResult(i, true, ListTypeEnum.TOEXPLORE));
+			assertTrue(cached.setListResult(i, true, ListTypeEnum.FAVORITES));
 		}
 		
 		cached.checkParameters("coffee", 5, 1000);
 		assertEquals(ResponseCodeModel.OK, cached.completeTask());
 		assertEquals(5, cached.getResultsSize());
-		assertTrue(cached.setDoNotShowResult(0, true));
-		assertFalse(cached.setDoNotShowResult(-1, true));
-		assertFalse(cached.setDoNotShowResult(100, true));
+		assertTrue(cached.setListResult(0, true, ListTypeEnum.DONOTSHOW));
+		assertFalse(cached.setListResult(-1, true, ListTypeEnum.DONOTSHOW));
+		assertFalse(cached.setListResult(100, true, ListTypeEnum.DONOTSHOW));
 		cached.sort();
+	}
+	
+	@Test
+	public void testSetDelete() {
+		assertTrue(cached.setListResult(0, true, ListTypeEnum.DONOTSHOW));
+		for(int i = 0 ; i < cached.getResultsSize() ; i++) {
+			assertTrue(cached.setListResult(i, false, ListTypeEnum.DONOTSHOW));
+			assertTrue(cached.setListResult(i, false, ListTypeEnum.TOEXPLORE));
+			assertTrue(cached.setListResult(i, false, ListTypeEnum.FAVORITES));
+		}
 	}
 	
 	@Test
@@ -142,8 +144,8 @@ public class TestYelpRequestModel {
 		cached.checkParameters("coffee", 5, 1000);
 		assertEquals(ResponseCodeModel.OK, cached.completeTask());
 		assertEquals(5, cached.getResultsSize());
-		assertTrue(cached.setDoNotShowResult(0, true));
-		assertTrue(cached.setDoNotShowResult(1, true));
+		assertTrue(cached.setListResult(0, true, ListTypeEnum.DONOTSHOW));
+		assertTrue(cached.setListResult(0, true, ListTypeEnum.DONOTSHOW));
 		assertTrue(cached.moveUpDownList(0, 1, 2, ListTypeEnum.DONOTSHOW.type));
 		cached.sort();
 	}

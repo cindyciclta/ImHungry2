@@ -109,25 +109,30 @@ public class TestRecipeRequestModel{
 		assertNotNull(cached.getResults());
 	}
 	@Test
-	public void testSetFavorites() {
+	public void testSetList() {
 		//assertEquals(ResponseCodeModel.OK, cached.completeTask("coffee", 5));
-		assertTrue(cached.setFavoriteResult(0, true));
-		assertFalse(cached.setFavoriteResult(-1, true));
-		assertFalse(cached.setFavoriteResult(100, true));
+		assertTrue(cached.setListResult(0, true, ListTypeEnum.FAVORITES));
+		assertFalse(cached.setListResult(-1, true, ListTypeEnum.FAVORITES));
+		assertFalse(cached.setListResult(100, true, ListTypeEnum.FAVORITES));
 	}
 	
 	@Test
-	public void testSetToExplore() {
-		//assertEquals(ResponseCodeModel.OK, cached.completeTask("coffee", 5));
-		assertTrue(cached.setToExploreResult(0, true));
-		assertFalse(cached.setToExploreResult(-1, true));
-		assertFalse(cached.setToExploreResult(100, true));
+	public void testSetDelete() {
+		assertTrue(cached.setListResult(0, true, ListTypeEnum.DONOTSHOW));
+		for(int i = 0 ; i < cached.getResultsSize() ; i++) {
+			assertTrue(cached.setListResult(i, false, ListTypeEnum.DONOTSHOW));
+			assertTrue(cached.setListResult(i, false, ListTypeEnum.TOEXPLORE));
+			assertTrue(cached.setListResult(i, false, ListTypeEnum.FAVORITES));
+		}
 	}
 	
 	@Test
 	public void testMoveUpDown() {
-		assertTrue(cached.setDoNotShowResult(0, true));
-		assertTrue(cached.setDoNotShowResult(1, true));
+		cached.checkParameters("coffee", 5);
+		assertEquals(ResponseCodeModel.OK, cached.completeTask());
+		assertEquals(5, cached.getResultsSize());
+		assertTrue(cached.setListResult(0, true, ListTypeEnum.DONOTSHOW));
+		assertTrue(cached.setListResult(0, true, ListTypeEnum.DONOTSHOW));
 		assertTrue(cached.moveUpDownList(0, 1, 2, ListTypeEnum.DONOTSHOW.type));
 		cached.sort();
 	}
@@ -142,23 +147,6 @@ public class TestRecipeRequestModel{
 		assertFalse(cached.moveUpDownList(-1, 1, 2, ListTypeEnum.FAVORITES.type));
 	}
 	
-	
-	@Test
-	public void testSetDoNotShow() {
-		//assertEquals(ResponseCodeModel.OK, cached.completeTask("coffee", 5));
-		assertTrue(cached.setDoNotShowResult(0, true));
-		for(int i = 0 ; i < cached.getResultsSize() ; i++) {
-			cached.setDoNotShowResult(i, false);
-			cached.setToExploreResult(i, false);
-			cached.setFavoriteResult(i, false);
-		}
-		
-		assertTrue(cached.setDoNotShowResult(0, true));
-		assertFalse(cached.setDoNotShowResult(-1, true));
-		assertFalse(cached.setDoNotShowResult(100, true));
-		cached.sort();
-	}
-	
 	@Test
 	public void testBadLimit() {
 		cached.ExistRequest("term", -1);
@@ -169,6 +157,24 @@ public class TestRecipeRequestModel{
 		MockRecipeRequestModel m = new MockRecipeRequestModel(id);
 		m.checkParameters("DROP DATABASE", 5);
 		m.completeTask();
+	}
+	
+	@Test
+	public void testSetDoNotShow() {
+		assertTrue(cached.setListResult(0, true, ListTypeEnum.DONOTSHOW));
+		for(int i = 0 ; i < cached.getResultsSize() ; i++) {
+			assertTrue(cached.setListResult(i, true, ListTypeEnum.DONOTSHOW));
+			assertTrue(cached.setListResult(i, true, ListTypeEnum.TOEXPLORE));
+			assertTrue(cached.setListResult(i, true, ListTypeEnum.FAVORITES));
+		}
+		
+		cached.checkParameters("coffee", 5);
+		assertEquals(ResponseCodeModel.OK, cached.completeTask());
+		assertEquals(5, cached.getResultsSize());
+		assertTrue(cached.setListResult(0, true, ListTypeEnum.DONOTSHOW));
+		assertFalse(cached.setListResult(-1, true, ListTypeEnum.DONOTSHOW));
+		assertFalse(cached.setListResult(100, true, ListTypeEnum.DONOTSHOW));
+		cached.sort();
 	}
 
 }

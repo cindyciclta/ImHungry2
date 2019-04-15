@@ -86,25 +86,9 @@ public class TestRestaurantModel {
 	@Test
 	public void testModifierDoNotShow() {
 		RestaurantModel rm = new RestaurantModel();
-		rm.setInDoNotShow(true);
+		rm.setInList(ListTypeEnum.DONOTSHOW, true);
 		Map<String, String> res = rm.getFormattedFieldsForResultsPage();
 		assertEquals(ListTypeEnum.DONOTSHOW.type, res.get("modifier"));
-	}
-	
-	@Test
-	public void testModifierFavorites() {
-		RestaurantModel rm = new RestaurantModel();
-		rm.setInFavorites(true);
-		Map<String, String> res = rm.getFormattedFieldsForResultsPage();
-		assertEquals(ListTypeEnum.FAVORITES.type, res.get("modifier"));
-	}
-	
-	@Test
-	public void testToExplore() {
-		RestaurantModel rm = new RestaurantModel();
-		rm.setInToExplore(true);
-		Map<String, String> res = rm.getFormattedFieldsForResultsPage();
-		assertEquals(ListTypeEnum.TOEXPLORE.type, res.get("modifier"));
 	}
 	
 	@Test
@@ -188,10 +172,10 @@ public class TestRestaurantModel {
 	@Test
 	public void testThisFavorite() {
 		RestaurantModel rm = new RestaurantModel();
-		rm.setInFavorites(true);
+		rm.setInList(ListTypeEnum.FAVORITES, true);
 		
 		RestaurantModel rmFavorite = new RestaurantModel();
-		rmFavorite.setInFavorites(false);
+		rmFavorite.setInList(ListTypeEnum.FAVORITES, false);
 		
 		assertEquals(1, rmFavorite.compareTo(rm));
 	}
@@ -199,10 +183,10 @@ public class TestRestaurantModel {
 	@Test
 	public void testOtherFavorite() {
 		RestaurantModel rm = new RestaurantModel();
-		rm.setInFavorites(true);
+		rm.setInList(ListTypeEnum.FAVORITES, true);
 		
 		RestaurantModel rmFavorite = new RestaurantModel();
-		rmFavorite.setInFavorites(false);
+		rmFavorite.setInList(ListTypeEnum.FAVORITES, false);
 		
 		assertEquals(-1, rm.compareTo(rmFavorite));
 	}
@@ -210,11 +194,11 @@ public class TestRestaurantModel {
 	@Test
 	public void testBothFavorite() {
 		RestaurantModel rm = new RestaurantModel();
-		rm.setInFavorites(true);
+		rm.setInList(ListTypeEnum.FAVORITES, true);
 		rm.setDrivingTime(1);
 		
 		RestaurantModel rmFavorite = new RestaurantModel();
-		rmFavorite.setInFavorites(true);
+		rmFavorite.setInList(ListTypeEnum.FAVORITES, true);
 		rmFavorite.setDrivingTime(2);
 		
 		assertEquals(-1, rm.compareTo(rmFavorite));
@@ -223,11 +207,11 @@ public class TestRestaurantModel {
 	@Test
 	public void testNeitherFavorite() {
 		RestaurantModel rm = new RestaurantModel();
-		rm.setInFavorites(false);
+		rm.setInList(ListTypeEnum.FAVORITES, false);
 		rm.setDrivingTime(1);
 		
 		RestaurantModel rmFavorite = new RestaurantModel();
-		rmFavorite.setInFavorites(false);
+		rmFavorite.setInList(ListTypeEnum.FAVORITES, false);
 		rmFavorite.setDrivingTime(2);
 		
 		assertEquals(-1, rm.compareTo(rmFavorite));

@@ -140,6 +140,22 @@ public class RestaurantModel extends ListItemModel implements Comparable<Restaur
 		return true;
 	}
 	
+	public int getDistanceFromTT_meters() {
+		double earthRadius = 6378.137;
+		double d2r = (Math.PI / 180);
+		
+		double lat_TT = 34.020564;
+		double lon_TT = -118.28545;
+		
+		double dlong = (lon_TT - lon) * d2r;
+		double dlat = (lat_TT - lat) * d2r;
+		double a = Math.pow(Math.sin(dlat / 2), 2) + Math.cos(lat * d2r) * Math.cos(lat_TT * d2r) * Math.pow(Math.sin(dlong / 2), 2);
+	    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	    double d = earthRadius * c;
+
+	    return (int)(1000 * d);
+	}
+	
 	public boolean setLatLong(double lat, double lon) {
 		this.lat = lat;
 		this.lon = lon;

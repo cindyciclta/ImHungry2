@@ -388,7 +388,7 @@
        </div>
    </div>
    
-	<div class="col-md-auto order-1">
+	<div class="col-md-auto order-1" style="position: absolute; top: 6vh; right: 10vw;">
        <div id="sidebar-wrapper" class="navbar navbar-light">
            <div class="navbar-nav" >
                <ul class="navbar-nav">

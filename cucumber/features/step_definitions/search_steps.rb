@@ -297,6 +297,11 @@ When(/^I press the next restaurant button$/) do
   page.find('#rest-page-alt-next', wait:50).click
 end
 
+Then(/^the results should be high-contrast$/) do
+  color = page.find('table-dark.table-striped tbody tr:nth-of-type(odd)').native.css_value('background-color')
+  expect(color).to eq('rgba(255,255,255,.2)')
+end
+
 Then(/^there should be a mini collage in the search history$/) do
   expect(page).to have_css('.miniCollage', wait: 20)
 end

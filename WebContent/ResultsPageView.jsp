@@ -568,10 +568,13 @@
 								i++;
 								continue;
 							}
-							
+							String editterm = search.term;
+							if (editterm.contains("_")) {
+								editterm = editterm.replace("_"," ");
+							}
 						%>
 						<td class="text-center">
-							<p1 id=<%="searchHist" + i%>><a href=<%="\"/ImHungry/SearchPageController?action=search&term=" + search.term + "&token=" + token + "&limit=" + search.limit + "&radius=" + search.radius + "&page=1\""%>><%=search.term%></a></p1>
+							<p1 id=<%="searchHist" + i%>><a href=<%="\"/ImHungry/SearchPageController?action=search&term=" + search.term + "&token=" + token + "&limit=" + search.limit + "&radius=" + search.radius + "&page=1\""%>><%=editterm%></a></p1>
 						</td>
 						<%
 						i++;

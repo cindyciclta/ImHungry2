@@ -89,13 +89,22 @@
 		}
 		
 		function redirectToManageList(index){
-			var tokenCheck = <%=tokenCheck%>;
+			var term ="<%= term %>";
+			var trimmed = term.replace(" ", "_");
+			var list = "";
 			var e = document.getElementById("managelistselect");
 			list = e.options[e.selectedIndex].value;
-			if(list != ""){
-				var term ="<%= term %>";
-				var trimmed = term.replace(" ", "_");
-				window.location.replace("/ImHungry/RedirectionController?action=managelist&term="+trimmed + "&index=" + index + "&list=" + list + "&token=" + tokenCheck);
+			
+			
+			if(list !== ""){
+				var token = <%="\"" + token + "\""%>;
+				if(list === "grocery"){
+					var link = "/ImHungry/RedirectionController?action=managegrocerylist" +"&index=" + index + "&token=" + token + "&term=" + trimmed + "&token=" + token;
+					window.location = link;
+				}else{
+					var link = "/ImHungry/RedirectionController?action=managelist" +"&index=" + index + "&list=" + list + "&term=" + trimmed + "&token=" + token;
+					window.location = link;
+				}
 			}
 		}
 		
@@ -390,6 +399,7 @@
                                <option value="favorites">Favorites</option>
                                <option value="toexplore">To Explore</option>
                                <option value="donotshow">Do Not Show</option>
+                               <option value="grocery">Groceries</option>
                            </select>
                        </div>
                    </li>

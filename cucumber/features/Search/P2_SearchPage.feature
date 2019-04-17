@@ -16,10 +16,10 @@ Scenario: Check negative radius value
 	When I enter a negative radius
 	Then the text box should not accept the value
 	
-#Scenario: Check bad radius value
+Scenario: Check bad radius value
 
-#	When I searched for item "Chihhjlhjklhjklhjkhjkhkjlhj;js" with "1" radius
-#	Then the page should have an error message
+	When I searched for item "Chlhjjs" with "1" radius and was redirected to the Results page
+	Then the page should have an error message
 	
 Scenario: Remain on search page if radius is too small
 	

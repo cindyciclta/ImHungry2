@@ -64,7 +64,7 @@
 	body {
 		background-color: #f5f5f5;
 	     		counter-reset: h7counter;
-	 		}
+		}
 	   h7:before {
 	       content: counter(h7counter) ".\0000a0\0000a0";
 	       counter-increment: h7counter;
@@ -75,6 +75,11 @@
 	   h {
 	   	font-size: 17px !important;
 	   }
+	   
+	   /* for making every other table row higher contrast than default */
+		.table-dark.table-striped tbody tr:nth-of-type(odd) {
+		    background-color: rgba(255,255,255,.2);
+		}
 </style>
 		
 </head>

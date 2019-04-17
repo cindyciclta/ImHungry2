@@ -78,6 +78,11 @@ h1 {
 	font-size: 60px;
 
 }
+
+/* for making every other table row higher contrast than default */
+.table-dark.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255,255,255,.2);
+}
 </style>
 </head>
 

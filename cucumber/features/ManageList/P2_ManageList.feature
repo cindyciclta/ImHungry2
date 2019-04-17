@@ -81,6 +81,28 @@ Scenario: Test list persistence for To Explore list
 	And I manage the list
 	Then I do not see "Broken Spanish"
 	
+Scenario: Test Navigation to Grocery List from Manage List
+	When I searched for item "ice cream" with "6" results and was redirected to the Results page
+	When I selected "Do Not Show" from the drop down
+	And I manage the list
+	When I selected "Groceries" from the drop down
+	And I manage the list
+	Then I am on the "Grocery List" page
+
+Scenario: Test Navigation from Results Page to Manage List
+	When I searched for item "ice cream" with "6" results and was redirected to the Results page
+	When I selected "Groceries" from the drop down
+	And I manage the list
+	Then I am on the "Grocery List" page
+
+Scenario: Test Navigation from Grocery List to Grocery list
+	When I searched for item "ice cream" with "6" results and was redirected to the Results page
+	When I selected "Groceries" from the drop down
+	And I manage the list
+	When I selected "Groceries" from the drop down
+	And I manage the list
+	Then I am on the "Grocery List" page
+	
 Scenario: Test list persistence for Do Not Show list
 
 	When I searched for item "ice cream" with "6" results and was redirected to the Results page
@@ -120,7 +142,7 @@ Scenario: Test list persistence for Do Not Show list
 	And I manage the list
 	Then I do not see "Super Lemon Ice Cream"
 	
-Scenario: Test persistent list re-ordering for Favorites list
+Scenario: Test persistent list re-ordering for Manage List
 
 	When I searched for item "pasta" with "6" results and was redirected to the Results page
 	And I clicked the link for "Creamy Cajun Chicken Pasta"
@@ -139,8 +161,7 @@ Scenario: Test persistent list re-ordering for Favorites list
 	And I manage the list
 	Then the first recipe in the list should be "Creamy Cajun Chicken Pasta"
 	And the second recipe in the list should be "Pasta Pomodoro"
-	
-	#THIS COMMAND FAILS
+
 	When I drag the second recipe to the first recipe
 	
 	And I selected "Favorites" from the drop down
@@ -148,10 +169,6 @@ Scenario: Test persistent list re-ordering for Favorites list
 	
 	Then there should be "Pasta Pomodoro" as the first recipe name
 	And there should be "Creamy Cajun Chicken Pasta" as the second recipe name
-
-Scenario: Test persistent list re-ordering for To Explore list
-
-Scenario: Test persistent list re-ordering for Do Not Show list
 
 Scenario: Test navigating to grocery list page
 

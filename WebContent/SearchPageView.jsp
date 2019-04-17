@@ -155,7 +155,7 @@ h1 {
 <script>
 	function redirectToResults(){
 		
-		document.getElementById("emojiImage").src = "https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/apple/155/grinning-face_1f600.png";
+		document.getElementById("emojiImage").src = "happy.png";
 		
 		setTimeout(function(){
 			var query = document.getElementById("termInput").value;
@@ -184,10 +184,10 @@ h1 {
 			  		<div class="form-group">
 			  			<div id="emojiButton" class="img-container" onclick="redirectToResults()">
 			  				<img id="emojiImage" src="
-							https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/320/apple/155/pouting-face_1f621.png"
+							angry.png"
 							class="img-fluid" alt="Responsive image">
 						  		<div class="overlay">
-						  			<span id="feed-me">Feed me!</span>
+						  
 						  		</div>
 			  				</div>
 			  			</div>

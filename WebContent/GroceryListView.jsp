@@ -50,6 +50,10 @@
 		    50%{background-position:51% 100%}
 		    100%{background-position:50% 0%}
 		}
+		/* for making every other table row higher contrast than default */
+		.table-dark.table-striped tbody tr:nth-of-type(odd) {
+		    background-color: rgba(255,255,255,.2);
+		}
 	</style>
 </head>
 <body>

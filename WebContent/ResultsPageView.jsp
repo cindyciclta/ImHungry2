@@ -82,6 +82,10 @@
 		#table-outer-scroll {
 			overflow-x: scroll;
 		}
+		/* for making every other table row higher contrast than default */
+		.table-dark.table-striped tbody tr:nth-of-type(odd) {
+		    background-color: rgba(255,255,255,.2);
+		}
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<title>Results Page - I'm Hungry</title>

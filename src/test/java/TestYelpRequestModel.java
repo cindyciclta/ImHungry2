@@ -2,15 +2,17 @@ package test.java;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import models.YelpRequestModel;
 import models.DatabaseModel;
 import models.ListTypeEnum;
 import models.MockYelpRequestModel;
 import models.ResponseCodeModel;
+import models.RestaurantModel;
 
 public class TestYelpRequestModel {
 
@@ -182,5 +184,15 @@ public class TestYelpRequestModel {
 		m.completeTask();
 	}
 	
-	
+	@Test
+	public void testRadiusFilter() {
+		MockYelpRequestModel m = new MockYelpRequestModel(id);
+		// 1500 meters in miles
+		m.checkParameters("pasta", 15, 0.9320568);
+		m.completeTask();
+		List<RestaurantModel> results = m.getResults();
+		for (RestaurantModel r : results) {
+			assertTrue(r.getDistanceFromTT_meters() <= 1500);
+		}
+	}
 }

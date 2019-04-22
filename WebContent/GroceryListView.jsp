@@ -105,7 +105,7 @@
 		ResponseModel rm = ((ResponseModel)request.getAttribute("response"));
 		GroceryListModel g = ((GroceryListModel)request.getAttribute("groceries"));
 		
-		int index = (int)request.getAttribute("index");
+		String index = (String)request.getAttribute("index");
 	%>
 
    <div id="wrapper" class="container">
@@ -221,7 +221,7 @@
                        </div>
                    </li>
                    <li class="nav-item mb-3">
-                       <input id="manage_lists_btn" class="btn btn-secondary" onclick=<%="redirectToManageList("+ index + ")"%> type="button" value="Manage Lists">
+                       <input id="manage_lists_btn" class="btn btn-secondary" onclick=<%="redirectToManageList("+ "\"" + index + "\"" +  ")"%> type="button" value="Manage Lists">
                    </li>
                    <li class="nav-item">
                        <a class="btn btn-secondary" onclick=<%= "redirectToRecipe(\"" + "/ImHungry/ResultsPageController?action=search&term="+ term + "&index=" + index + "&token=" + token + "\")" %>>Back to Search</a>

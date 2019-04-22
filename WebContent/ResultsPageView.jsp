@@ -119,12 +119,12 @@
 	JSONArray jsArray = new JSONArray();
 	int length = 0;
 	String term = "";
-	int index = -1;
+	String index = "";
 	int lim = -1;
 	int rad = -1;
 	if(rm != null){
 		String title = rm.getSearchTerm();
-		index = (int)request.getAttribute("index");
+		index = (String)request.getAttribute("index");
 		
 		jsArray = (JSONArray) request.getAttribute("jsonarray");
 		length = (int) request.getAttribute("length");
@@ -308,7 +308,7 @@
 									%>
                                 	
                                     <tr id=<%="rest-result"+i%> onclick=<%="redirectToRestaurant(\"" + "/ImHungry/RedirectionController?action=restaurant&term="+term +"&index=" + 
-                                    index + "&item=" + i + "&token=" +token + "\")"%>>
+                                    		index + "&item=" + i + "&token=" +token + "\")"%>>
                                         <td class="col">
                                             <table class="table text-white">
                                                 <tbody>
@@ -512,10 +512,10 @@
                             </li>
                            
                             <li class="nav-item mb-3">
-		                       <input id="manage_lists_btn" class="btn btn-secondary" onclick=<%="redirectManageList("+ index +")"%> type="button" value="Manage Lists"/>
+		                       <input id="manage_lists_btn" class="btn btn-secondary" onclick=<%="redirectManageList(\""+ index +"\")"%> type="button" value="Manage Lists"/>
 		                   </li>
                             <li class="nav-item mb-3">
-                                <a class="btn btn-secondary" onclick=<%="redirectToRecipe(\"" + "/ImHungry/ResultsPageController?action=search&term="+ term +"&reci_page="+ reci_pgnum+ "&index=" + index +  "&token=" + token + "\")"%>>Return to Search</a>
+                                <a class="btn btn-secondary" onclick=<%="redirectToRecipe(\"" + "/ImHungry/ResultsPageController?action=search&term="+ term +"&reci_page="+ reci_pgnum + "&index=" + index +  "&token=" + token + "\")"%>>Return to Search</a>
                             </li>
                             <li class="nav-item">
                                 <a id="signOutLink" class="btn btn-secondary" onclick=<%="redirectToRecipe(\"" + "/ImHungry/SignInView.jsp\")"%>>Sign Out</a>

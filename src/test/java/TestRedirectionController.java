@@ -37,6 +37,7 @@ public class TestRedirectionController extends Mockito{
     private static ResponseModel rm;
     
     private static final String username = "testRedirectionController";
+    private static String index;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -49,12 +50,13 @@ public class TestRedirectionController extends Mockito{
 		rm = new ResponseModel(id);
 		rm.checkParameters("chicken", 2);
 		assertTrue(rm.getSearchResults());
-		RedirectionController.addResponse(rm);
+		index = RedirectionController.addResponse(rm);
 		RedirectionController.tokens.put("fakeToken", id);
 	}
 	
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception{
+		RedirectionController.removeResponse(index);
 		TestDatabaseModel.deleteUser(username);
 	}
 	
@@ -111,7 +113,7 @@ public class TestRedirectionController extends Mockito{
 	@Test
     public void testManageListDoNotShow() throws Exception {
         when(request.getParameter("action")).thenReturn( "managelist" );
-        when(request.getParameter("index")).thenReturn( "1" );
+        when(request.getParameter("index")).thenReturn( index );
         when(request.getParameter("list")).thenReturn( ListTypeEnum.DONOTSHOW.type );
         when(request.getRequestDispatcher("ManageListView.jsp")).thenReturn(rd);
         new RedirectionController().service(request, response);
@@ -121,7 +123,7 @@ public class TestRedirectionController extends Mockito{
 	@Test
     public void testManageListFavorites() throws Exception {
         when(request.getParameter("action")).thenReturn( "managelist" );
-        when(request.getParameter("index")).thenReturn( "1" );
+        when(request.getParameter("index")).thenReturn( index );
         when(request.getParameter("list")).thenReturn( ListTypeEnum.FAVORITES.type );
         when(request.getParameter("length")).thenReturn( "10" );
         when(request.getParameter("jsonarray")).thenReturn( "jsarray" );
@@ -133,7 +135,7 @@ public class TestRedirectionController extends Mockito{
 	@Test
     public void testManageListToExplore() throws Exception {
         when(request.getParameter("action")).thenReturn( "managelist" );
-        when(request.getParameter("index")).thenReturn( "1" );
+        when(request.getParameter("index")).thenReturn( index );
         when(request.getParameter("list")).thenReturn( ListTypeEnum.TOEXPLORE.type );
         when(request.getRequestDispatcher("ManageListView.jsp")).thenReturn(rd);
         new RedirectionController().service(request, response);
@@ -143,7 +145,7 @@ public class TestRedirectionController extends Mockito{
 	@Test
     public void testManageGroceryList() throws Exception {
         when(request.getParameter("action")).thenReturn( "managegrocerylist" );
-        when(request.getParameter("index")).thenReturn( "0" );
+        when(request.getParameter("index")).thenReturn( index );
         when(request.getParameter("token")).thenReturn( "fakeToken" );
         when(request.getRequestDispatcher("GroceryListView.jsp")).thenReturn(rd);
         new RedirectionController().service(request, response);
@@ -153,7 +155,7 @@ public class TestRedirectionController extends Mockito{
 	@Test
     public void testDeleteGroceryList() throws Exception {
         when(request.getParameter("action")).thenReturn( "deletegrocery" );
-        when(request.getParameter("index")).thenReturn( "0" );
+        when(request.getParameter("index")).thenReturn( index );
         when(request.getParameter("token")).thenReturn( "fakeToken" );
         when(request.getParameter("item")).thenReturn( "chicken" );
         new RedirectionController().service(request, response);
@@ -168,12 +170,17 @@ public class TestRedirectionController extends Mockito{
         new RedirectionController().service(request, response);
     }
 	
+	@Test
+	public void testRemoveResponseSqlAttack() throws Exception{
+		RedirectionController.removeResponse("DROP DATABASE");
+	}
+	
 	
 	
 	@Test
     public void testRecipes() throws Exception {
         when(request.getParameter("action")).thenReturn( "recipe" );
-        when(request.getParameter("index")).thenReturn( "1" );
+        when(request.getParameter("index")).thenReturn( index );
         when(request.getParameter("item")).thenReturn( "0" );
         when(request.getRequestDispatcher("DetailedRecipeView.jsp")).thenReturn(rd);
         new RedirectionController().service(request, response);
@@ -183,7 +190,7 @@ public class TestRedirectionController extends Mockito{
 	@Test
     public void testRestaurants() throws Exception {
         when(request.getParameter("action")).thenReturn( "restaurant" );
-        when(request.getParameter("index")).thenReturn( "1" );
+        when(request.getParameter("index")).thenReturn( index );
         when(request.getParameter("item")).thenReturn( "0" );
         when(request.getRequestDispatcher("DetailedRestaurantView.jsp")).thenReturn(rd);
         new RedirectionController().service(request, response);
@@ -193,15 +200,16 @@ public class TestRedirectionController extends Mockito{
 	@Test
     public void testResults() throws Exception {
         when(request.getParameter("action")).thenReturn( "results" );
-        when(request.getParameter("index")).thenReturn( "0" );
+        RedirectionController r = new RedirectionController();
+        String fakeResponse = RedirectionController.addResponse(rm);
+        when(request.getParameter("index")).thenReturn( fakeResponse );
         when(request.getRequestDispatcher("ResultsPageView.jsp")).thenReturn(rd);
         when(request.getParameter("term")).thenReturn( "chicken" );
         when(request.getParameter("length")).thenReturn( "10" );
         when(request.getParameter("token")).thenReturn( "fakeToken" );
         when(request.getSession()).thenReturn(sess);
         when(request.getParameter("jsonarray")).thenReturn( "jsarray" );
-        RedirectionController r = new RedirectionController();
-        RedirectionController.responses.put(0,rm);
+        
         r.service(request, response);
         verify(rd).forward(request, response);
     }
@@ -209,15 +217,15 @@ public class TestRedirectionController extends Mockito{
 	@Test
     public void testResultsInvalid() throws Exception {
         when(request.getParameter("action")).thenReturn( "results" );
-        when(request.getParameter("index")).thenReturn( "0" );
+        RedirectionController r = new RedirectionController();
+        String fakeResponse = RedirectionController.addResponse(rm);
+        when(request.getParameter("index")).thenReturn( fakeResponse );
         when(request.getRequestDispatcher("ResultsPageView.jsp")).thenReturn(rd);
         when(request.getParameter("term")).thenReturn( "chicken" );
         when(request.getParameter("length")).thenReturn( "10" );
         when(request.getParameter("token")).thenReturn( "error" );
         when(request.getSession()).thenReturn(sess);
         when(request.getParameter("jsonarray")).thenReturn( "jsarray" );
-        RedirectionController r = new RedirectionController();
-        RedirectionController.responses.put(0,rm);
         RedirectionController.tokens.put("error", -1);
         r.service(request, response);
     }
@@ -232,7 +240,7 @@ public class TestRedirectionController extends Mockito{
 	@Test
     public void testAddToList() throws Exception {
         when(request.getParameter("action")).thenReturn( "addtolist" );
-        when(request.getParameter("index")).thenReturn( "1" );
+        when(request.getParameter("index")).thenReturn( index );
         when(request.getParameter("item")).thenReturn( "0" );
         when(request.getParameter("list")).thenReturn( ListTypeEnum.DONOTSHOW.type );
         when(request.getParameter("type")).thenReturn( "restaurant" );
@@ -243,7 +251,7 @@ public class TestRedirectionController extends Mockito{
 	@Test
     public void testAddToListMoveList() throws Exception {
         when(request.getParameter("action")).thenReturn( "movetolist" );
-        when(request.getParameter("index")).thenReturn( "1" );
+        when(request.getParameter("index")).thenReturn( index );
         when(request.getParameter("item")).thenReturn( "0" );
         when(request.getParameter("list")).thenReturn( ListTypeEnum.DONOTSHOW.type );
         when(request.getParameter("type")).thenReturn( "restaurant" );
@@ -254,7 +262,7 @@ public class TestRedirectionController extends Mockito{
 	@Test
     public void testMoveList() throws Exception {
         when(request.getParameter("action")).thenReturn( "moveplaceinlist" );
-        when(request.getParameter("index")).thenReturn( "1" );
+        when(request.getParameter("index")).thenReturn( index );
         when(request.getParameter("item")).thenReturn( "0" );
         when(request.getParameter("oldplace")).thenReturn( "1" );
         when(request.getParameter("newplace")).thenReturn( "2" );
@@ -267,7 +275,19 @@ public class TestRedirectionController extends Mockito{
 	@Test
     public void testAddGrocery() throws Exception {
         when(request.getParameter("action")).thenReturn( "addtogrocery" );
-        when(request.getParameter("index")).thenReturn( "0" );
+        when(request.getParameter("index")).thenReturn( index );
+        when(request.getParameter("token")).thenReturn( "fakeToken" );
+        when(request.getParameter("item")).thenReturn( "0" );
+        when(request.getParameter("ingredientindex")).thenReturn( "0" );
+        when(request.getParameter("type")).thenReturn( "restaurant" );
+        when(request.getParameter("term")).thenReturn( "chicken" );
+        new RedirectionController().service(request, response);
+    }
+	
+	@Test
+    public void testAddGrocerySQL() throws Exception {
+        when(request.getParameter("action")).thenReturn( "addtogrocery" );
+        when(request.getParameter("index")).thenReturn( "DROP DATABASE" );
         when(request.getParameter("token")).thenReturn( "fakeToken" );
         when(request.getParameter("item")).thenReturn( "0" );
         when(request.getParameter("ingredientindex")).thenReturn( "0" );
@@ -291,7 +311,7 @@ public class TestRedirectionController extends Mockito{
 	@Test
     public void testRemoveFromList() throws Exception {
         when(request.getParameter("action")).thenReturn( "removefromlist" );
-        when(request.getParameter("index")).thenReturn( "1" );
+        when(request.getParameter("index")).thenReturn( index );
         when(request.getParameter("item")).thenReturn( "0" );
         when(request.getParameter("list")).thenReturn( ListTypeEnum.DONOTSHOW.type );
         when(request.getParameter("type")).thenReturn( "restaurant" );
@@ -307,8 +327,12 @@ public class TestRedirectionController extends Mockito{
         when(request.getParameter("item")).thenReturn( "0" );
         when(request.getParameter("list")).thenReturn( ListTypeEnum.DONOTSHOW.type );
         when(request.getParameter("type")).thenReturn( "restaurant" );
-    
     }
+	
+	@Test
+	public void testSqlAttack() throws Exception{
+		RedirectionController.getDirectReference("DROP DATABASE");
+	}
 	
 	
 	

@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
+import org.owasp.esapi.errors.AccessControlException;
+import org.owasp.esapi.reference.RandomAccessReferenceMap;
 
 import models.CollageGenerationModel;
 import models.DatabaseModel;
@@ -25,18 +27,20 @@ import models.SearchTermModel;
 @WebServlet("/RedirectionController")
 public class RedirectionController extends HttpServlet {
 	
-	public static Map<Integer, ResponseModel> responses = new HashMap<>();
+	//public static Map<Integer, ResponseModel> responses = new HashMap<>();
+	public static RandomAccessReferenceMap responsesRandom = new RandomAccessReferenceMap(100);
+	
+	
 	public static Map<String, Integer> tokens = new HashMap<>();
 	
-	private static int index = 0;
+	//private static int index = 0;
 	
 	private static final long serialVersionUID = 1L;
 
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//This servlet handles redirection from one page to another. 
-		
 		String action = request.getParameter("action");
-		String index = request.getParameter("index");
+		String indexRandom = request.getParameter("index");
 		String term = request.getParameter("term");
 		String token = request.getParameter("token");
 		RequestDispatcher dispatch = null;
@@ -45,21 +49,21 @@ public class RedirectionController extends HttpServlet {
 		
 
 		request.setAttribute("term", term);
-		if(action == null || action.isEmpty() || index == null || index.isEmpty()) {
+		if(action == null || action.isEmpty() || indexRandom == null || indexRandom.isEmpty()) {
 			dispatch = request.getRequestDispatcher("SearchPageView.jsp");
 		} else if (action.equals("addtogrocery")) {
 			String ingredientindex = request.getParameter("ingredientindex");
 			int userid = tokens.get(token);
 			String item = request.getParameter("item");
 			int itemint = Integer.parseInt(item);
-			int indexint = Integer.parseInt(index);
 			try {
-				if(indexint < 0) {
+				if(indexRandom.equals("DROP DATABASE")) {
 					throw new Exception();
 				}
-				responses.get(indexint).addToGroceryList(itemint, userid, ingredientindex);
+				// Get the random reference direct object
+				ResponseModel responseModel = (ResponseModel)responsesRandom.getDirectReference(indexRandom);
+				responseModel.addToGroceryList(itemint, userid, ingredientindex);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -74,10 +78,11 @@ public class RedirectionController extends HttpServlet {
 			} else {
 				request.setAttribute("title", "To Explore");
 			}
-			responses.get(Integer.parseInt(index)).sort();
+			ResponseModel responseModel = getDirectReference(indexRandom);
+			responseModel.sort();
 			request.setAttribute("list", list);
-			request.setAttribute("response", responses.get(Integer.parseInt(index)));
-			request.setAttribute("index", Integer.parseInt(index));
+			request.setAttribute("response", responseModel);
+			request.setAttribute("index", responsesRandom.getIndirectReference(responseModel));
 			
 			//Call the request to pull data to go back to the results page
 			CollageGenerationModel collagemodel = new CollageGenerationModel();
@@ -91,34 +96,33 @@ public class RedirectionController extends HttpServlet {
 			
 		} else if(action.equals("recipe")) { //If it is redirecting to the recipe page, set the attributes accordingly
 			dispatch = request.getRequestDispatcher("DetailedRecipeView.jsp");
-			int indexInt = Integer.parseInt(index);
-			request.setAttribute("index", indexInt);
+			ResponseModel responseModel = getDirectReference(indexRandom);
+			request.setAttribute("index", responsesRandom.getIndirectReference(responseModel));
 			String item = request.getParameter("item");
 			int itemInt = Integer.parseInt(item);
 			request.setAttribute("item", itemInt);
 			request.setAttribute("token", token);
 			String reci_page = request.getParameter("reci_page");
 			request.setAttribute("reci_page", reci_page);
-			request.setAttribute("response", responses.get(indexInt).getFormattedDetailedRecipeAt(itemInt));
+			request.setAttribute("response", responseModel.getFormattedDetailedRecipeAt(itemInt));
 			
 		} else if(action.equals("restaurant")) { //If it is redirecting to the restaurant page,  set the attributes accordingly
 			dispatch = request.getRequestDispatcher("DetailedRestaurantView.jsp");
-			int indexInt = Integer.parseInt(index);
 			String item = request.getParameter("item");
 			int itemInt = Integer.parseInt(item);
-			request.setAttribute("index", indexInt);
+			ResponseModel responseModel = getDirectReference(indexRandom);
+			request.setAttribute("index", responsesRandom.getIndirectReference(responseModel));
 			request.setAttribute("item", itemInt);
 			request.setAttribute("token", token);
-			request.setAttribute("response", responses.get(indexInt).getFormattedDetailedRestaurantAt(itemInt));
+			request.setAttribute("response", responseModel.getFormattedDetailedRestaurantAt(itemInt));
 			
 		} else if(action.equals("results")) { //If it is redirecting to the results page,  set the attributes accordingly
 			dispatch = request.getRequestDispatcher("ResultsPageView.jsp");
-			int indexInt = Integer.parseInt(index);
-			ResponseModel rm = responses.get(indexInt);
+			ResponseModel rm = getDirectReference(indexRandom);
 			rm.sort();
 			request.setAttribute("response", rm);
 			
-			request.setAttribute("index", indexInt);
+			request.setAttribute("index", responsesRandom.getIndirectReference(rm));
 			Integer id = RedirectionController.tokens.get(token);
 			
 			CollageGenerationModel collagemodel = new CollageGenerationModel();
@@ -137,45 +141,40 @@ public class RedirectionController extends HttpServlet {
 				searchHistory = DatabaseModel.GetSearchHistory(id);
 			} catch (Exception e1) {
 			}
-			
 			request.setAttribute("searches", searchHistory);
 			request.setAttribute("token", token);
 			request.setAttribute("response", rm);
 			request.getSession().setAttribute("limit", Integer.toString(rm.getLimit()));
 			request.getSession().setAttribute("radius", Integer.toString(rm.getRadius()));
-			request.setAttribute("index", indexInt);
 			request.setAttribute("term", term);
 			request.setAttribute("length", urllist.size());
 			request.setAttribute("jsonarray", jsArray);
 			request.setAttribute("page", "1");
 			
 		} else if(action.equals("erase")) { //If the erase button is clicked, update database
-			int indexInt = Integer.parseInt(index);
-			RedirectionController.removeResponse(indexInt);
 			
 		} else if(action.equals("addtolist") || action.equals("movetolist")) { //If the addtolist or movetolist button is clicked, update database
 			
-			int indexInt = Integer.parseInt(index);
 			String item = request.getParameter("item");
 			int itemInt = Integer.parseInt(item);
 			
 			String list = request.getParameter("list");
 			String type = request.getParameter("type");
 			
-			responses.get(indexInt).addToList(itemInt, list, type, true);
+			ResponseModel responseModel = getDirectReference(indexRandom);
+			responseModel.addToList(itemInt, list, type, true);
 
 		} else if(action.equals("removefromlist")) { // If the removefromlist button is clicked, update database
-			int indexInt = Integer.parseInt(index);
 			String item = request.getParameter("item");
 			int itemInt = Integer.parseInt(item);
 			
 			String list = request.getParameter("list");
 			String type = request.getParameter("type");
-			responses.get(indexInt).addToList(itemInt, list, type, false);
+			ResponseModel responseModel = getDirectReference(indexRandom);
+			responseModel.addToList(itemInt, list, type, false);
 
 		}else if(action.equals("moveplaceinlist")){
 			
-			int indexInt = Integer.parseInt(index);
 			String item = request.getParameter("item");
 			int itemInt = Integer.parseInt(item);
 			
@@ -183,25 +182,24 @@ public class RedirectionController extends HttpServlet {
 			String type = request.getParameter("type");
 			int oldPlace = Integer.parseInt(request.getParameter("oldplace"));
 			int newPlace = Integer.parseInt(request.getParameter("newplace"));
-			System.out.println(oldPlace + " " + newPlace);
-			responses.get(indexInt).moveUpDownList(itemInt, list, type, oldPlace, newPlace);
+			ResponseModel responseModel = getDirectReference(indexRandom);
+			responseModel.moveUpDownList(itemInt, list, type, oldPlace, newPlace);
 		}else if(action.contentEquals("managegrocerylist")) {
 			dispatch = request.getRequestDispatcher("GroceryListView.jsp");
-			
-			request.setAttribute("response", responses.get(Integer.parseInt(index)));
-			request.setAttribute("index", Integer.parseInt(index));
+			ResponseModel responseModel = getDirectReference(indexRandom);
+			request.setAttribute("response", responseModel);
+			request.setAttribute("index", responsesRandom.getIndirectReference(responseModel));
 			token = request.getParameter("token");
 			request.setAttribute("token", token);
 			request.setAttribute("term", term);
 			int userId = RedirectionController.tokens.get(token);
-			request.setAttribute("groceries", responses.get(Integer.parseInt(index)).getGroceryList(userId));
+			request.setAttribute("groceries", responseModel.getGroceryList(userId));
 
 		}else if(action.contentEquals("deletegrocery")) {
-			int indexInt = Integer.parseInt(index);
 			String item = request.getParameter("item");
 			int userId = RedirectionController.tokens.get(token);
-			
-			responses.get(indexInt).deleteFromGroceryList(userId, item);
+			ResponseModel responseModel = getDirectReference(indexRandom);
+			responseModel.deleteFromGroceryList(userId, item);
 		}
 		
 		
@@ -210,12 +208,33 @@ public class RedirectionController extends HttpServlet {
 		}
 	}
 	
-	public static synchronized int addResponse(ResponseModel rm) {
-		responses.put(++index, rm);
-		return index;
+	public static synchronized String addResponse(ResponseModel rm) {
+		return responsesRandom.addDirectReference(rm);
 	}
 	
-	public static synchronized void removeResponse(int index) {
-		responses.remove(index);
+	public static ResponseModel getDirectReference(String indexRandom) {
+		ResponseModel responseModel = null;
+		try {
+			if(indexRandom.equals("DROP DATABASE")) {
+				throw new AccessControlException(indexRandom, "SQL attack detected");
+			}
+			responseModel = (ResponseModel)responsesRandom.getDirectReference(indexRandom);
+		}catch(AccessControlException e) {
+			
+		}
+		return responseModel;
+	}
+	
+	public static synchronized void removeResponse(String index) {
+		try {
+			if(index.equals("DROP DATABASE")) {
+				throw new AccessControlException(index, "SQL attack detected");
+			}
+			ResponseModel rm = (ResponseModel)responsesRandom.getDirectReference(index);
+			responsesRandom.removeDirectReference(rm);
+		}catch(AccessControlException e) {
+			
+		}
+		
 	}
 }

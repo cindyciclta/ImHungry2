@@ -181,7 +181,7 @@
 									                                        	itemNow += item1 + "-";	
 									                                        }
 									                                        %>
-									                                        	onclick=<%= "removeFromList(" + index + "," + "\"" + itemNow + "\"" + ")"%>>
+									                                        	onclick=<%= "removeFromList(" + "\"" + index + "\""  + "," + "\"" + itemNow + "\"" + ")"%>>
 									                                            <i style="color:white" class="fas fa-times"></i>
 									                                        </button>
 									                                    </td>

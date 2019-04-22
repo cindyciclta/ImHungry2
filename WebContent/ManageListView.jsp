@@ -255,7 +255,7 @@
 									                                <tr style="background-color:inherit">
 									                                    <td>
 									                                        <button type="button" class="btn btn-default btn-sm"
-									                                        	onclick=<%= "removeFromList(" + index + "," + resultsFields.get("originalindex") + "," + "\"" + resultsFields.get("modifier") + "\"" + ",\"recipe\")"%>>
+									                                        	onclick=<%= "removeFromList(" + "\"" + index + "\"" + "," + resultsFields.get("originalindex") + "," + "\"" + resultsFields.get("modifier") + "\"" + ",\"recipe\")"%>>
 									                                            <i style="color:white" class="fas fa-times"></i>
 									                                        </button>
 									                                    </td>
@@ -263,7 +263,7 @@
 									                                <tr style="background-color:inherit">
 									                                    <td>
 									                                        <button type="button" class="btn btn-default btn-sm"
-									                                        	onclick=<%= "moveToList(" + index + "," + resultsFields.get("originalindex") + ",\"recipe\")"%> >
+									                                        	onclick=<%= "moveToList(" + "\"" + index + "\"" + "," + resultsFields.get("originalindex") + ",\"recipe\")"%> >
 									                                            <i style="color:white" class="fas fa-sign-out-alt"></i>
 									                                        </button>
 									                                    </td>
@@ -345,7 +345,7 @@
 		                                                           <tr style="background-color:inherit">
 		                                                               <td>
 		                                                                   <button type="button" class="btn btn-default btn-sm"
-		                                                                  		onclick=<%= "removeFromList("+ index + "," + resultsFields.get("originalindex") + "," + "\"" + resultsFields.get("modifier") + "\"" + ",\"restaurant\")"%>>
+		                                                                  		onclick=<%= "removeFromList("+ "\"" + index +"\"" + "," + resultsFields.get("originalindex") + "," + "\"" + resultsFields.get("modifier") + "\"" + ",\"restaurant\")"%>>
 		                                                                       <i style="color:white" class="fas fa-times"></i>
 		                                                                   </button>
 		                                                               </td>
@@ -353,7 +353,7 @@
 		                                                           <tr style="background-color:inherit">
 		                                                               <td>
 		                                                                   <button type="button" class="btn btn-default btn-sm"
-		                                                                  		onclick=<%= "moveToList(" + index + "," + resultsFields.get("originalindex") + ",\"restaurant\")"%>>
+		                                                                  		onclick=<%= "moveToList(" + "\"" +index +"\"" + "," + resultsFields.get("originalindex") + ",\"restaurant\")"%>>
 		                                                                       <i style="color:white" class="fas fa-sign-out-alt"></i>
 		                                                                   </button>
 		                                                               </td>

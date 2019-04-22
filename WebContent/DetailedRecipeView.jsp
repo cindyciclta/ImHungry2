@@ -184,7 +184,7 @@
 			        								<h><%=count+1%>. <%=ing %><h> 
 			        							</li>
 
-												<button type="button" class= "addtogrocery" onclick=<%= "addToGroceryList("+ count +","+index+","+ item+")" %> >Add To Grocery List</button>
+												<button type="button" class= "addtogrocery" onclick=<%= "addToGroceryList("+ count +",\""+index+"\","+ item+")" %> >Add To Grocery List</button>
         									</td>
 										
 										<%

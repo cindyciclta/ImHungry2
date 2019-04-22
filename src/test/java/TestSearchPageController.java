@@ -43,7 +43,7 @@ public class TestSearchPageController extends Mockito{
 	public static void setUpBeforeClass() throws Exception {
 		if(!DatabaseModel.userExists(username)) {
 			DatabaseModel.insertUser(username, password.toCharArray());
-			id = DatabaseModel.signInUser(username, password.toCharArray());
+			id = DatabaseModel.signInUser(username, password.toCharArray()).getId();
 			RedirectionController.tokens.put(token, id);
 		}
 	}

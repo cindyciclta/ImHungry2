@@ -59,6 +59,15 @@ public class TestSignInController extends Mockito{
     }
 	
 	@Test
+    public void testSignInvalidBadPassword() throws Exception {
+        when(request.getParameter("username")).thenReturn( username );
+        when(request.getParameter("password")).thenReturn( "sdf" );
+        when(request.getRequestDispatcher("SignInView.jsp")).thenReturn(rd);
+        new SignInController().service(request, response);
+        verify(rd).forward(request, response);
+    }
+	
+	@Test
     public void testSignInNoExist() throws Exception {
         when(request.getParameter("username")).thenReturn( "aaaah" );
         when(request.getParameter("password")).thenReturn( password );

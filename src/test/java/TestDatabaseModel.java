@@ -28,6 +28,7 @@ import models.ListTypeEnum;
 import models.RecipeModel;
 import models.RestaurantModel;
 import models.SearchTermModel;
+import models.SignInResponseEnum;
 
 public class TestDatabaseModel{
 	
@@ -148,7 +149,17 @@ public class TestDatabaseModel{
 		String password = "test";
 		
 		DatabaseModel.insertUser(username, password.toCharArray());
-		assertTrue(DatabaseModel.signInUser(username, password.toCharArray()) != -1);
+		assertTrue(DatabaseModel.signInUser(username, password.toCharArray()).getId() != -1);
+		deleteUser(username);
+	}
+	
+	@Test
+	public void testSignInDoesNotExist() throws Exception{
+		String username = "test";
+		String password = "test";
+		
+		DatabaseModel.insertUser(username, password.toCharArray());
+		assertTrue(DatabaseModel.signInUser("blah", password.toCharArray()).getId() == -1);
 		deleteUser(username);
 	}
 	
@@ -158,7 +169,7 @@ public class TestDatabaseModel{
 		String password = "test";
 		
 		DatabaseModel.insertUser(username, password.toCharArray());
-		assertTrue(DatabaseModel.signInUser("invalid", password.toCharArray()) == -1);
+		assertTrue(DatabaseModel.signInUser("invalid", password.toCharArray()).getId() == -1);
 		deleteUser(username);
 	}
 	
@@ -168,7 +179,8 @@ public class TestDatabaseModel{
 		String password = "test";
 		
 		DatabaseModel.insertUser(username, password.toCharArray());
-		assertTrue(DatabaseModel.signInUser(username, new char[5]) == -1);
+		SignInResponseEnum s = DatabaseModel.signInUser(username, new char[5]);
+		assertTrue(s.getId() == -1);
 		deleteUser(username);
 	}
 	
@@ -762,6 +774,21 @@ public class TestDatabaseModel{
 		
 		boolean success = DatabaseModel.InsertIntoGroceryList(username, "apple");
 		assertEquals(false, success);
+		deleteUser(username);
+	
+	}
+	
+	@Test
+	public void duplicateCheckNoDuplicate() throws Exception{
+		String username = "test";
+		String password = "test";
+		DatabaseModel.insertUser(username, password.toCharArray());
+		DatabaseModel.InsertIntoGroceryList(username, "apple");
+		GroceryListModel gl = DatabaseModel.getGroceryListFromUser(username);
+		assertEquals("apple", gl.getItem(0));
+		
+		boolean success = DatabaseModel.InsertIntoGroceryList(username, "");
+		assertEquals(true, success);
 		deleteUser(username);
 	
 	}

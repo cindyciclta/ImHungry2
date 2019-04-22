@@ -54,7 +54,7 @@ public class ResultsPageController extends HttpServlet {
 		
 		if(checkErrorAction(action)) {
 			if(checkErrorIndex(index)) {
-				RedirectionController.removeResponse(Integer.parseInt(index));
+				RedirectionController.removeResponse(index);
 			}
 			
 			String token = request.getParameter("token");
@@ -92,7 +92,7 @@ public class ResultsPageController extends HttpServlet {
 				} else {
 					rm.getSearchResults();
 					dispatch = request.getRequestDispatcher("ResultsPageView.jsp");
-					int indexInt = RedirectionController.addResponse(rm);
+					String indexRandom = RedirectionController.addResponse(rm);
 					
 					ArrayList<String> urllist = (ArrayList<String>) collagemodel.getList();
 					
@@ -115,7 +115,7 @@ public class ResultsPageController extends HttpServlet {
 					request.setAttribute("response", rm);
 					request.getSession().setAttribute("limit", limit);
 					request.getSession().setAttribute("radius", radius);
-					request.setAttribute("index", indexInt);
+					request.setAttribute("index", indexRandom);
 					request.setAttribute("term", term);
 					request.setAttribute("length", urllist.size());
 					request.setAttribute("jsonarray", jsArray);

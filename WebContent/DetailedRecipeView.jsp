@@ -129,7 +129,7 @@
 	
 	<%
 	Map<String, String> fields = ((Map<String, String>)request.getAttribute("response"));
-	int index = (int)request.getAttribute("index");
+	String index = (String)request.getAttribute("index");
 	int item = (int)request.getAttribute("item");
 	String reci_page = (String)request.getAttribute("reci_page");
 	String link = fields.get("imageUrl");
@@ -244,7 +244,7 @@
 		                       </div>
 		                   </li>
 		                   <li class="nav-item">
-		                       <input id="add_to_list_btn" class="btn btn-secondary" onclick=<%="addToList("+ index + "," + item + "," + "\"recipe\"" + ")"%> type="button" value="Add to List">
+		                       <input id="add_to_list_btn" class="btn btn-secondary" onclick=<%="addToList("+ "\"" + index + "\"" + "," + item + "," + "\"recipe\"" + ")"%> type="button" value="Add to List">
 		                   </li>
 		                   <li class="nav-item my-3">
 		                       <a class="btn btn-secondary" onclick=<%="backToResults(\"" + "/ImHungry/RedirectionController?action=results&term="+term +"&index=" + index + "&token=" + token + "\")"%>>Back to Results</a>

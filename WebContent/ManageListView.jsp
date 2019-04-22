@@ -69,9 +69,9 @@
 		term = "";
 	}
 	String ecodedValue = URLEncoder.encode(term, "UTF-8");
-	int index = -1;
+	String index = "";
 	try{
-		index = (int)request.getAttribute("index");	
+		index = (String)request.getAttribute("index");	
 	}catch(Exception e){
 		
 	}
@@ -130,7 +130,7 @@
 			var list = <%="\"" + (String)request.getAttribute("list") + "\""%>;
 			var xhr = new XMLHttpRequest();
 			var term ="<%= term %>";
-			var index = <%=index%>;
+			var index = "<%=index%>";
 			var trimmed = term.replace(" ", "_");
 			xhr.open("GET", "/ImHungry/RedirectionController?action=moveplaceinlist&term="+trimmed + "&index=" + index + "&list=" + list + "&item=" + item + "&type=" + type +"&oldplace=" + oldIndex + "&newplace=" + newIndex + "&token=" + tokenCheck);
 			xhr.send();
@@ -408,10 +408,10 @@
                        </div>
                    </li>
                    <li class="nav-item mb-3">
-                       <input id="manage_lists_btn" class="btn btn-secondary" onclick=<%="redirectToManageList("+ index + ")"%> type="button" value="Manage Lists">
+                       <input id="manage_lists_btn" class="btn btn-secondary" onclick=<%="redirectToManageList("+ "\"" + index + "\"" + ")"%> type="button" value="Manage Lists">
                    </li>
                    <li class="nav-item">
-                       <a class="btn btn-secondary" onclick=<%= "redirectToRecipe(\"" + "/ImHungry/ResultsPageController?action=search&term="+ term + "&index=" + index +  "&token=" + token + "\")" %>>Back to Search</a>
+                       <a class="btn btn-secondary" onclick=<%= "redirectToRecipe(\"" + "/ImHungry/ResultsPageController?action=search&term="+ term + "&index=" + index + "&token=" + token + "\")" %>>Back to Search</a>
                    </li>
                    <li class="nav-item my-3">
                        <a class="btn btn-secondary" onclick=<%= "redirectToRecipe(\"" + "/ImHungry/RedirectionController?action=results&term="+ term +"&index=" + index + "&token=" + token + "\")" %>>Back to Results</a>

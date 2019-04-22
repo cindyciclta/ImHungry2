@@ -4,260 +4,255 @@ import java.util.List;
 import java.util.Map;
 
 public class ResponseModel {
-	
-	private int searchId; 
+
+	private int searchId;
 	private int userId;
-	
+
 	private int limit;
 	private int radius;
-	
+
 	private String term;
-	private ApiCallInterface<RestaurantModel> restaurants  = new MockYelpRequestModel(-1);
+	private ApiCallInterface<RestaurantModel> restaurants = new MockYelpRequestModel(-1);
 	private ApiCallInterface<RecipeModel> recipes = new MockRecipeRequestModel(-1);
-	
+
 	public ResponseModel(int userId) {
 		this.userId = userId;
 	}
-	
+
 	public int getSearchId() {
 		return searchId;
 	}
-	
+
 	public String getSearchTerm() {
 		return term;
 	}
-	
+
 	public int getRadius() {
 		return radius;
 	}
-	
+
 	public int getLimit() {
 		return limit;
 	}
-	
+
 	public void sort() {
 		recipes.sort();
 		restaurants.sort();
 	}
-	
+
 	public Map<String, String> getFormattedDetailedRecipeAt(int i) {
 		return recipes.getFormattedDetailsFieldsAt(i);
 	}
-	
+
 	public Map<String, String> getFormattedDetailedRestaurantAt(int i) {
 		return restaurants.getFormattedDetailsFieldsAt(i);
 	}
-	
+
 	public Map<String, String> getFormattedRecipeResultsAt(int i) {
 		return recipes.getFormattedResultsFieldsAt(i);
 	}
-	
+
 	public Map<String, String> getFormattedRestaurantResultsAt(int i) {
 		return restaurants.getFormattedResultsFieldsAt(i);
 	}
 
-	
 	public int getNumberOfRecipes() {
 		return recipes.getResultsSize();
 	}
+
 	public int getNumberOfRestaurants() {
 		return restaurants.getResultsSize();
 	}
-	
+
 	public int getNumberOfListItems(String list) {
-		
+
 		int count = 0;
-		for(int k = 0 ; k < restaurants.getListSize() ; k++) {
+		for (int k = 0; k < restaurants.getListSize(); k++) {
 			String place = restaurants.getFormattedResultsFieldsListAt(k).get("modifier");
-			if(place.equals(list)) {
+			if (place.equals(list)) {
 				count += 1;
 			}
 		}
-		
-		for(int k = 0 ; k < recipes.getListSize() ; k++) {
-			if(recipes.getFormattedResultsFieldsListAt(k).get("modifier").equals(
-					list) ) {
+
+		for (int k = 0; k < recipes.getListSize(); k++) {
+			if (recipes.getFormattedResultsFieldsListAt(k).get("modifier").equals(list)) {
 				count += 1;
 			}
 		}
-		
-		
+
 		return count;
 	}
-	
-	public Map<String, String> getFormattedResultListAt(int i, String list){
+
+	public Map<String, String> getFormattedResultListAt(int i, String list) {
 		Map<String, String> ret = null;
-		for(int k = 0 ; k < restaurants.getListSize() ; k++) {
+		for (int k = 0; k < restaurants.getListSize(); k++) {
 			String place = restaurants.getFormattedResultsFieldsListAt(k).get("place");
 			String modifier = restaurants.getFormattedResultsFieldsListAt(k).get("modifier");
-			if(place.equals(
-					Integer.toString(i+1)) && modifier.equals(list)) 
-					 {
+			if (place.equals(Integer.toString(i + 1)) && modifier.equals(list)) {
 				ret = restaurants.getFormattedResultsFieldsListAt(k);
 			}
 		}
-		
-		for(int k = 0 ; k < recipes.getListSize() ; k++) {
+
+		for (int k = 0; k < recipes.getListSize(); k++) {
 			String modifier = recipes.getFormattedResultsFieldsListAt(k).get("modifier");
-			if(recipes.getFormattedResultsFieldsListAt(k).get("place").equals(
-					Integer.toString(i+1) ) && modifier.equals(list)) {
+			if (recipes.getFormattedResultsFieldsListAt(k).get("place").equals(Integer.toString(i + 1))
+					&& modifier.equals(list)) {
 				ret = recipes.getFormattedResultsFieldsListAt(k);
 			}
 		}
-	
-		
+
 		return ret;
 	}
-	
+
 	public boolean checkParameters(String term, int limit) {
-		if(limit < 0) {
+		if (limit < 0) {
 			return false;
 		}
-		
-		if(term == null) {
+
+		if (term == null) {
 			return false;
 		}
 		term = term.trim();
-		if(term.isEmpty()) {
+		if (term.isEmpty()) {
 			return false;
 		}
 		this.term = term;
 		this.limit = limit;
 		return true;
 	}
-	
+
 	public boolean checkParameters(String term, int limit, int radius) {
 		boolean checked = checkParameters(term, limit);
-		if(!checked || radius < 0) {
+		if (!checked || radius < 0) {
 			return false;
 		}
 		this.radius = radius;
 		return checked;
 	}
-	
+
 	public boolean getSearchResults() {
 		boolean response = true;
-		
+
 		try {
-			if(userId < 0) {
+			if (userId < 0) {
 				throw new Exception();
 			}
 			searchId = DatabaseModel.getSearchIdUser(userId, term, limit, radius);
-			if(searchId == -1) {
+			if (searchId == -1) {
 				searchId = DatabaseModel.AddSearchTermToHistory(userId, term, limit, radius);
-			}else {
+			} else {
 				DatabaseModel.AddSearchTermToHistory(userId, term, limit, radius);
 			}
-			
+
 			MockRecipeRequestModel edamam = new MockRecipeRequestModel(searchId);
 			response = edamam.checkParameters(term, limit);
 			edamam.completeTask();
 			this.recipes = edamam;
-			
+
 			MockYelpRequestModel yelp = new MockYelpRequestModel(searchId);
-			response = yelp.checkParameters(term, limit,radius);
+			response = yelp.checkParameters(term, limit, radius);
 			yelp.completeTask();
 			this.restaurants = yelp;
-			
-		}catch(Exception e) {
-			
+
+		} catch (Exception e) {
+
 			e.printStackTrace();
 		}
-		
+
 		return response;
 	}
-	
+
 	public boolean addToList(int i, String list, String type, boolean value) {
 		boolean ret = true;
-		
+
 		try {
-			
-			if(i < 0) {
+
+			if (i < 0) {
 				throw new Exception();
 			}
-			if(type.equals("restaurant")) {
-				for(ListTypeEnum listVal : ListTypeEnum.values()) {
-					if(list.equals(listVal.type)) {
+			if (type.equals("restaurant")) {
+				for (ListTypeEnum listVal : ListTypeEnum.values()) {
+					if (list.equals(listVal.type)) {
 						ret = restaurants.setListResult(i, value, listVal);
 					}
 				}
-			}else {
-				for(ListTypeEnum listVal : ListTypeEnum.values()) {
-					if(list.equals(listVal.type)) {
+			} else {
+				for (ListTypeEnum listVal : ListTypeEnum.values()) {
+					if (list.equals(listVal.type)) {
 						ret = recipes.setListResult(i, value, listVal);
 					}
 				}
 			}
-			
+
 			recipes.recreateListWithoutSorting();
 			restaurants.recreateListWithoutSorting();
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return ret;
 	}
-	
+
 	public boolean addToGroceryList(int i, int userid, String ingredientindex) throws Exception {
-		
+
 		List<IngredientModel> list = recipes.getIngredients(i);
 		int k = Integer.parseInt(ingredientindex);
 		IngredientModel ingredient = list.get(k);
-		//add to database now
+		// add to database now
 		DatabaseModel.InsertIntoGroceryList(userid, ingredient.getIngredientName());
 		return true;
 	}
-	
-	public GroceryListModel getGroceryList(int userId){
+
+	public GroceryListModel getGroceryList(int userId) {
 		System.out.println("user ID : " + userId);
 		GroceryListModel groceryList = null;
 		try {
-			if(userId < 0) {
+			if (userId < 0) {
 				throw new Exception();
 			}
 			groceryList = DatabaseModel.getGroceryListFromUser(userId);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return groceryList;
 	}
-	
+
 	public boolean deleteFromGroceryList(int userId, String groceryItem) {
 		try {
-			if(groceryItem == null) {
+			if (groceryItem == null) {
 				throw new Exception();
 			}
-			
+
 			String[] words = groceryItem.split("-");
 			groceryItem = "";
-			for(String word : words) {
+			for (String word : words) {
 				groceryItem += word + " ";
 			}
 			groceryItem = groceryItem.trim();
-			
+
 			DatabaseModel.deleteFromGroceryList(userId, groceryItem);
 			return true;
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return false;
 	}
-	
-	public boolean moveUpDownList(int i, String list, String type, int oldPlace, int newPlace ) {
+
+	public boolean moveUpDownList(int i, String list, String type, int oldPlace, int newPlace) {
 		try {
-			if(i < 0) {
+			if (i < 0) {
 				throw new Exception();
 			}
-			if(type.equals("restaurant")) {
+			if (type.equals("restaurant")) {
 				restaurants.moveUpDownList(i, oldPlace, newPlace, list);
-			}else {
+			} else {
 				recipes.moveUpDownList(i, oldPlace, newPlace, list);
 			}
 			recipes.recreateList();
 			restaurants.recreateList();
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	
+
 		return true;
 	}
 }

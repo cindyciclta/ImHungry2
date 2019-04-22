@@ -93,7 +93,7 @@
 	
 	<%
 	Map<String, String> fields = ((Map<String, String>)request.getAttribute("response"));
-	int index = (int)request.getAttribute("index");
+	String index = (String)request.getAttribute("index");
 	int item = (int)request.getAttribute("item");
 	String link = fields.get("imageUrl");
 	
@@ -123,33 +123,6 @@
                 </div>
             </div>
             
-   <%--          <div class="col-md-auto order-1" id="navigationSide">
-                <div id="sidebar-wrapper" class="navbar navbar-light">
-                    <div class="navbar-nav" >
-                        <ul class="navbar-nav">
-                            <li class="nav-item">
-                                <a class="btn btn-secondary" onclick="printPage()">Printable Version</a>
-                            </li>
-                            <li class="nav-item my-3">
-                                <a class="btn btn-secondary" onclick=<%="backToResults(" + "\"" + "/ImHungry/RedirectionController?action=results&term="+term +"&index=" + index + "\""  + ")"%>>Return to Results</a>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <div class="form-group">
-                                    <select required class="form-control" id="managelist">
-                                        <option value=""><!-- None --></option>
-                                        <option value="favorites">Favorites</option>
-                                        <option value="toexplore">To Explore</option>
-                                        <option value="donotshow">Do Not Show</option>
-                                    </select>
-                                </div>
-                            </li>
-                            <li class="nav-item">
-		                       <input class="btn btn-secondary" onclick=<%="addToList("+term +"," + index + "," + item + "," + "\"restaurant\"" + ")"%> type="button" value="Add to List">
-		                    </li>
-                        </ul>
-                    </div>
-                </div>
-            </div> --%>
             <div class="col-md-auto order-1">
 		       <div id="sidebar-wrapper" class="navbar navbar-light">
 		           <div class="navbar-nav" >
@@ -165,7 +138,7 @@
 		                       </div>
 		                   </li>
 		                   <li class="nav-item">
-		                       <input id="add_to_list_btn" class="btn btn-secondary" onclick=<%="addToList("+ index + "," + item + "," + "\"restaurant\"" + ")"%> type="button" value="Add to List">
+		                       <input id="add_to_list_btn" class="btn btn-secondary" onclick=<%="addToList("+ "\"" + index + "\"" + "," + item + "," + "\"restaurant\"" + ")"%> type="button" value="Add to List">
 		                   </li>
 		                   <li class="nav-item my-3">
 		                       <a class="btn btn-secondary" onclick=<%="backToResults(\"" + "/ImHungry/RedirectionController?action=results&term="+term +"&index=" + index + "&token=" + token + "\")"%>>Back to Results</a>

@@ -134,8 +134,3 @@ Scenario: Check that search history is separate for each account
 	And I sign in with username "testSearchHist" and password "searchHistPW"
 	And I type "diffUser" and I press enter
 	Then the search history should be empty or first search history should say "diffUser"
-	
-Scenario: Check color contrast for result table cells
-
-	When I searched for item "donut" with "5" results and was redirected to the Results page
-	Then the results should be high-contrast

@@ -187,6 +187,11 @@ Scenario: Test grocery list features
 	When I add the "chicken" to the grocery list
 	And I add the "red onion" to the grocery list
 	And I add the "cilantro" to the grocery list
+	
+#duplicate ingredients added
+
+	And I add the "chicken" to the grocery list
+	And I add the "chicken" to the grocery list
 
 #Add second recipe's ingredients to grocery list
 
@@ -204,6 +209,7 @@ Scenario: Test grocery list features
 	And I manage the list
 	Then I am on the "Grocery List" page
 	And I should see "chicken" on the page
+	And there should only be one "chicken"
 	And I should see "red onion" on the page
 	And I should see "cilantro" on the page
 	And I should see "sour cream" on the page

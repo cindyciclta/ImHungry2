@@ -19,12 +19,13 @@ public class DatabaseModel {
 	
 	private static Connection conn;
 	
-	public static int signInUser(String username, char[] password) throws Exception {
+	public static SignInResponseEnum signInUser(String username, char[] password) throws Exception {
 		
 		// Get from SQL
 		Connection conn = null;
 		ResultSet rs = null;
 		int returnVal = -1;
+		SignInResponseEnum signIn = SignInResponseEnum.DOES_NOT_EXIST;
 		
 		conn = getConnection();
 		
@@ -36,8 +37,18 @@ public class DatabaseModel {
 		rs = preparedStmt.executeQuery();
 		if(rs.next()) {
 			returnVal = rs.getInt("user_id");
+			signIn = SignInResponseEnum.VALID;
+			signIn.setId(returnVal);
+		}else {
+			query = "SELECT (user_id) from users where user_name = (?)";
+			preparedStmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			preparedStmt.setString (1, username);
+			ResultSet rs2 = preparedStmt.executeQuery();
+			if(rs2.next()) {
+				signIn = SignInResponseEnum.INVALID_CREDENTIALS;
+			}
 		}
-		return returnVal;
+		return signIn;
 	}
 	
 	public static Connection getConnection() throws ClassNotFoundException, SQLException {

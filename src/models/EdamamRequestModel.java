@@ -347,6 +347,7 @@ public abstract class EdamamRequestModel implements ApiCallInterface<RecipeModel
 		return results.get(index).getIngredients();
 	}
 	
+	
 	@Override
 	public void recreateList() throws Exception{
 		

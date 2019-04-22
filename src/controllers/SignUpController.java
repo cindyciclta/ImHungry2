@@ -42,7 +42,8 @@ public class SignUpController extends HttpServlet {
 		    	if(!created) {
 		    		dispatch = request.getRequestDispatcher("SignUpView.jsp");
 		    	} else {
-		    		id = DatabaseModel.signInUser(username, password.toCharArray());
+		    		// Implicity correct on first sign in
+		    		id = DatabaseModel.signInUser(username, password.toCharArray()).getId();
 		    		String token = "";
 		    		for(int i = 0 ; i < 10 ; i++) {
 		    			token += String.valueOf((int)(Math.random() * 9  + 1));

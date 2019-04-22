@@ -235,6 +235,6 @@ public abstract class YelpRequestModel implements ApiCallInterface<RestaurantMod
 	
 	@Override
 	public void recreateList() throws Exception{
-		
+		// NOT USED -> subclassed in MockYelpRequestModel
 	}
 }

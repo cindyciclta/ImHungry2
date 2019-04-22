@@ -302,6 +302,10 @@ Then(/^the results should be high-contrast$/) do
   expect(color).to eq('rgba(255, 255, 255, 0.2)')
 end
 
+Then(/^there should only be one "([^"]*)"$/) do |arg1|
+  expect(page).to have_content(arg1, wait: 30, count: 1)
+end
+
 Then(/^there should be a mini collage in the search history$/) do
   expect(page).to have_css('.miniCollage', wait: 20)
 end

@@ -15,7 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class DatabaseModel {
-	static final String SQL_PASSWORD = "root"; // SET YOUR MYSQL PASSWORD HERE TO GET DATABASE WORKING!!!!!!!
+	static final String SQL_PASSWORD = "NewPassword"; // SET YOUR MYSQL PASSWORD HERE TO GET DATABASE WORKING!!!!!!!
 	
 	private static Connection conn;
 	
@@ -353,20 +353,17 @@ public class DatabaseModel {
 		}
 		return recipes;
 	}
-	public static boolean InsertIntoGroceryList(String username, String groceryitem) throws Exception {
-		int userid = GetUserID(username);
-		String sql = "INSERT INTO grocery_list (selected_item, user_id, ordering) VALUES (?, ?, ?)";
-		if (userid != -1) {
-			return InsertIntoGroceryList(userid, groceryitem);
-			
-			 
-		}
-		return true;
-	}
 	public static boolean InsertIntoGroceryList(int userid,  String groceryitem) throws Exception {
 
 		String sql = "INSERT INTO grocery_list (selected_item, user_id, ordering) VALUES (?, ?, ?)";
-
+		//check if the grocery item already exist
+		GroceryListModel grocerylist = getGroceryListFromUser(userid);
+		for (int i = 0; i < grocerylist.getSize(); i++) {
+			if (grocerylist.getItem(i).equals(groceryitem)) {
+				System.out.println("duplicated grocery list!");
+				return false;
+			}
+		}
 		Connection conn = getConnection();
 		PreparedStatement ps = conn.prepareStatement(sql);
 		
@@ -377,6 +374,16 @@ public class DatabaseModel {
 		ps.executeUpdate();
 		return true;
 	}
+	public static boolean InsertIntoGroceryList(String username, String groceryitem) throws Exception {
+		int userid = GetUserID(username);
+		String sql = "INSERT INTO grocery_list (selected_item, user_id, ordering) VALUES (?, ?, ?)";
+		if (userid != -1) {
+			return InsertIntoGroceryList(userid, groceryitem);
+			 
+		}
+		return true;
+	}
+
 	
 	public static boolean deleteFromGroceryList(int userId, String groceryItem)  throws Exception{
 		

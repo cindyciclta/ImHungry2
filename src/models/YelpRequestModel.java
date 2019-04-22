@@ -223,18 +223,11 @@ public abstract class YelpRequestModel implements ApiCallInterface<RestaurantMod
 	}
 
 	public boolean setGroceryListResult(int i, boolean value) {
-		//NOT USED
-		return false;
+		throw new RuntimeException();
 	}
 
 	@Override
 	public List<IngredientModel> getIngredients(int i) {
-		// NOT USED
-		return null;
-	}
-	
-	@Override
-	public void recreateList() throws Exception{
-		// NOT USED -> subclassed in MockYelpRequestModel
+		throw new RuntimeException();
 	}
 }

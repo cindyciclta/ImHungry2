@@ -5,6 +5,16 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
   <build>
+  <resources>
+	    <resource>
+	        <filtering>false</filtering>
+	        <directory>src</directory>
+	        <includes>
+	            <include>**/*.properties</include>
+	            <include>../properties/**</include>
+	        </includes>
+	    </resource>
+	</resources>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
 	    <plugin>

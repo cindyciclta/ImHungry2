@@ -420,7 +420,7 @@ public class TestDatabaseModel{
 		assertEquals(0, gl.getSize());
 		deleteUser(username);
 	}
-
+	@Test
 	public void addRestaurantToListExplore() throws Exception{
 		String username = "test";
 		String password = "test";
@@ -750,5 +750,21 @@ public class TestDatabaseModel{
 		assertEquals(1, recipes.get(0).getOrder());
 		deleteUser(username);
 	}
+	
+	@Test
+	public void deleteDuplicatedGrocery() throws Exception{
+		String username = "test";
+		String password = "test";
+		DatabaseModel.insertUser(username, password.toCharArray());
+		DatabaseModel.InsertIntoGroceryList(username, "apple");
+		GroceryListModel gl = DatabaseModel.getGroceryListFromUser(username);
+		assertEquals("apple", gl.getItem(0));
+		
+		boolean success = DatabaseModel.InsertIntoGroceryList(username, "apple");
+		assertEquals(false, success);
+		deleteUser(username);
+	
+	}
+	
 
 }

@@ -298,8 +298,8 @@ When(/^I press the next restaurant button$/) do
 end
 
 Then(/^the results should be high-contrast$/) do
-  color = page.find('table-dark.table-striped tbody tr:nth-of-type(odd)').native.css_value('background-color')
-  expect(color).to eq('rgba(255,255,255,.2)')
+  color = page.all('table.table-dark.table-striped.table-borderless tbody tr:nth-of-type(odd)')[0].native.css_value('background-color')
+  expect(color).to eq('rgba(255, 255, 255, 0.2)')
 end
 
 Then(/^there should be a mini collage in the search history$/) do

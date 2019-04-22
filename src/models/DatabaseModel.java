@@ -353,15 +353,6 @@ public class DatabaseModel {
 		}
 		return recipes;
 	}
-	public static boolean InsertIntoGroceryList(String username, String groceryitem) throws Exception {
-		int userid = GetUserID(username);
-		String sql = "INSERT INTO grocery_list (selected_item, user_id, ordering) VALUES (?, ?, ?)";
-		if (userid != -1) {
-			return InsertIntoGroceryList(userid, groceryitem);
-			 
-		}
-		return true;
-	}
 	public static boolean InsertIntoGroceryList(int userid,  String groceryitem) throws Exception {
 
 		String sql = "INSERT INTO grocery_list (selected_item, user_id, ordering) VALUES (?, ?, ?)";
@@ -383,6 +374,16 @@ public class DatabaseModel {
 		ps.executeUpdate();
 		return true;
 	}
+	public static boolean InsertIntoGroceryList(String username, String groceryitem) throws Exception {
+		int userid = GetUserID(username);
+		String sql = "INSERT INTO grocery_list (selected_item, user_id, ordering) VALUES (?, ?, ?)";
+		if (userid != -1) {
+			return InsertIntoGroceryList(userid, groceryitem);
+			 
+		}
+		return true;
+	}
+
 	
 	public static boolean deleteFromGroceryList(int userId, String groceryItem)  throws Exception{
 		

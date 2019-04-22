@@ -8,11 +8,13 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import junit.framework.Assert;
 import models.DatabaseModel;
 import models.ListTypeEnum;
 import models.MockYelpRequestModel;
 import models.ResponseCodeModel;
 import models.RestaurantModel;
+import models.YelpRequestModel;
 
 public class TestYelpRequestModel {
 
@@ -182,6 +184,16 @@ public class TestYelpRequestModel {
 		MockYelpRequestModel m = new MockYelpRequestModel(id);
 		m.checkParameters("DROP DATABASE", 5, 1000);
 		m.completeTask();
+	}
+	
+	@Test(expected = RuntimeException.class)
+	public void testSetGroceryThrows() {
+		cached.setGroceryListResult(0, true);
+	}
+	
+	@Test(expected = RuntimeException.class)
+	public void testGetGroceryThrows() {
+		cached.getIngredients(0);
 	}
 	
 	@Test
